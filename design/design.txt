@@ -1,0 +1,58 @@
+descript: arena clone + autochess
+
+turn: move+attack
+
+
+unit design space:
+dps ranged
+dps melee
+tanks
+knockback
+snipers
+aoe
+healers
+slowers
+stunners
+kamikazes
+attrition (battery damage)
+commanders
+
+
+units composition:
+component robots, they are made of components
+basic bot: brain, chassis, weapon, batteries.
+.brain
+.chassis
+  .locomotion
+  --motors (what are they needed for? actuators, meeeeh) meeeeeeeh
+  weapons slots
+  battery slots
+  augments slots
+  armor slots
+.batteries
+.powergens
+.armor (set of floats for every damage type)
+.weapons
+.augments (sensors, ai enhancers (priority targeting, tactics))
+
+
+units stats:
+damage (float)
+damage type
+  pierce bullet
+  impact
+  spread
+  explosive
+  laser
+  fusion
+  emp
+armor (set of floats derived from chassis and armor slots and augments)
+reload (turns in between shots)
+speed (turn in between movement)
+
+
+further expansion:
+roguelike (1-3 hrs runs, build an army along the way and fight 50 times to win)
+rpg (5-30 hrs, long game with map and npcs a story and whatnot)
+long rogue (1-10 hrs, open ended roguelike, infinite battles, map)
+^ those but multiplayer (yikes for devtime but nice for lols) up to 8 ppl tcp

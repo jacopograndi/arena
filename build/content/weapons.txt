@@ -1,0 +1,192 @@
+[
+    {
+        "name": "smg",
+        "damage_type": "pierce", "weight": "10", "cooldown": "1", 
+        "damage": "10", "range": "4"
+    },
+    {
+        "name": "machinegun",
+        "damage_type": "pierce", "weight": "25", "cooldown": "1", 
+        "damage": "15", "range": "5"
+    },
+    {
+        "name": "heavy machinegun",
+        "damage_type": "pierce", "weight": "40", "cooldown": "1", 
+        "damage": "20", "range": "5"
+    },
+    {
+        "name": "semi autocannon",
+        "damage_type": "pierce", "weight": "70", "cooldown": "2", 
+        "damage": "32", "range": "6"
+    },
+    {
+        "name": "autocannon",
+        "damage_type": "pierce", "weight": "100", "cooldown": "1", 
+        "damage": "40", "range": "6"
+    },
+    {
+        "name": "high velocity cannon",
+        "damage_type": "pierce", "weight": "120", "cooldown": "4", 
+        "damage": "250", "range": "7"
+    },
+    {
+        "name": "scrap gun",
+        "damage_type": "spread", "weight": "5", "cooldown": "2", 
+        "damage": "8", "range": "3"
+    },
+    {
+        "name": "burst cannon",
+        "damage_type": "spread", "weight": "15", "cooldown": "2", 
+        "damage": "25", "range": "4"
+    },
+    {
+        "name": "heavy burst cannon",
+        "damage_type": "spread", "weight": "30", "cooldown": "2", 
+        "damage": "40", "range": "5"
+    },
+    {
+        "name": "maul",
+        "damage_type": "impact", "weight": "200", "cooldown": "3", 
+        "damage": "400", "range": "1", "knockback": "2"
+    },
+    {
+        "name": "slam",
+        "damage_type": "impact", "weight": "0", "cooldown": "1", 
+        "damage": "6", "range": "1"
+    },
+    {
+        "name": "warhammer",
+        "damage_type": "impact", "weight": "40", "cooldown": "1", 
+        "damage": "60", "range": "1", "knockback": "1"
+    },
+    {
+        "name": "rocket",
+        "damage_type": "explosive", "weight": "60", "cooldown": "3", 
+        "damage": "100", "range": "8"
+    },
+    {
+        "name": "rocket swarm",
+        "damage_type": "explosive", "weight": "120", "cooldown": "3", 
+        "damage": "60", "range": "7", "aoe": "2"
+    },
+    {
+        "name": "tactical rocket",
+        "damage_type": "explosive", "weight": "160", "cooldown": "1", 
+        "damage": "100", "range": "8", "aoe": "1"
+    },
+    {
+        "name": "nuclear rocket",
+        "damage_type": "explosive", "weight": "200", "cooldown": "6", 
+        "damage": "300", "range": "9", "aoe": "3"
+    },
+    {
+        "name": "light laser",
+        "damage_type": "laser", "weight": "20", "cooldown": "1", 
+        "damage": "8", "range": "5"
+    },
+    {
+        "name": "combined light laser",
+        "damage_type": "laser", "weight": "50", "cooldown": "1", 
+        "damage": "20", "range": "6"
+    },
+    {
+        "name": "heavy laser",
+        "damage_type": "laser", "weight": "130", "cooldown": "1", 
+        "damage": "45", "range": "6"
+    },
+    {
+        "name": "combined heavy laser",
+        "damage_type": "laser", "weight": "300", "cooldown": "1", 
+        "damage": "150", "range": "7"
+    },
+    {
+        "name": "plasma cannon",
+        "damage_type": "fusion", "weight": "80", "cooldown": "2", 
+        "damage": "125", "range": "5"
+    },
+    {
+        "name": "plasma autocannon",
+        "damage_type": "fusion", "weight": "170", "cooldown": "1", 
+        "damage": "110", "range": "5"
+    },
+    {
+        "name": "plasma artillery",
+        "damage_type": "fusion", "weight": "200", "cooldown": "3", 
+        "damage": "100", "range": "7", "aoe": "2"
+    },
+    {
+        "name": "fusion blade",
+        "damage_type": "fusion", "weight": "15", "cooldown": "1", 
+        "damage": "15", "range": "1"
+    },
+    {
+        "name": "fusion lance",
+        "damage_type": "fusion", "weight": "50", "cooldown": "1", 
+        "damage": "45", "range": "2"
+    },
+    {
+        "name": "light railgun",
+        "damage_type": "impact", "weight": "50", "cooldown": "2", 
+        "damage": "90", "range": "6"
+    },
+    {
+        "name": "heavy railgun",
+        "damage_type": "impact", "weight": "190", "cooldown": "3", 
+        "damage": "450", "range": "7"
+    },
+    {
+        "name": "supercharged railgun",
+        "damage_type": "impact", "weight": "240", "cooldown": "4", 
+        "damage": "1000", "range": "8"
+    },
+    {
+        "name": "discharge beam",
+        "damage_type": "emp", "weight": "40", "cooldown": "2", 
+        "damage_battery": "3", "range": "4"
+    },
+    {
+        "name": "haywire beam",
+        "damage_type": "emp", "weight": "50", "cooldown": "5", 
+        "damage": "80", "damage_battery": "5", "range": "6"
+    },
+    {
+        "name": "stun beam",
+        "damage_type": "emp", "weight": "80", "cooldown": "5", 
+        "stun": "1", "range": "4"
+    },
+    {
+        "name": "amplified discharge impulse",
+        "damage_type": "emp", "weight": "150", "cooldown": "3", 
+        "damage_battery": "10", "range": "5", "aoe": "1"
+    },
+    {
+        "name": "amplified haywire beam",
+        "damage_type": "emp", "weight": "120", "cooldown": "5", 
+        "damage": "200", "damage_battery": "12", "range": "6"
+    },
+    {
+        "name": "amplified stun beam",
+        "damage_type": "emp", "weight": "200", "cooldown": "6", 
+        "stun": "1", "range": "4"
+    },
+    {
+        "name": "ion cannon",
+        "damage_type": "emp", "weight": "75", "cooldown": "2", 
+        "reduce_fusion": "1", "reduce_laser": "1", "range": "5"
+    },
+    {
+        "name": "heavy ion cannon",
+        "damage_type": "emp", "weight": "150", "cooldown": "1", 
+        "reduce_fusion": "1", "reduce_laser": "1", "range": "6"
+    },
+    {
+        "name": "explosive charges",
+        "damage_type": "explosive", "weight": "5", "cooldown": "10", 
+        "damage": "100", "range": "0", "aoe": "2"
+    },
+    {
+        "name": "javelin",
+        "damage_type": "explosive", "weight": "60", "cooldown": "2", 
+        "damage": "40", "range": "7"
+    }
+]

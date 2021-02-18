@@ -1,0 +1,130 @@
+components have levels (maxelevel field, log stats or exp stats or logistic stats?)
+
+brain: (bonus augments slots only for brain augs)
+state machine
+weak supervised learner
+strong supervised learner
+weak self learner
+strong self learner
+general ai
+
+.chassis: (slots for weapon, battery, armor, augments), max weight, *hp
+light two legged bot (1, 0, 1), 20
+heavy two legged bot (1, 1, 3), 45
+light four legged bot (2, 1, 2), 50
+heavy four legged bot (2, 2, 5), 150
+light six legged bot (2, 2, 3), 210
+heavy six legged bot (2, 4, 6), 300
+light buggy (1, 1, 1), 50
+buggy (2, 2, 2), 150
+light wheeled vehicle (1, 0, 2), 60
+medium wheeled vehicle (2, 2, 3), 200
+heavy wheeled vehicle (2, 4, 4), 270
+light tank (1, 3, 2), 300
+medium tank (1, 4, 4), 400
+heavy tank (2, 5, 5), 450
+super heavy tank (3, 6, 6), 500
+hovercraft (2, 0, 3), 40
+jet floater (1, 0, 2), 30
+one wheeler (1, 0, 4), 15
+armored crawler (1, 4, 2), 200
+motorcycle bot (1, 1, 1), 30
+
+.batteries: weight
+small alkaline pack (not rech), 3
+big alkaline pack (not rech), 10
+small lithium pack,  5
+big lithium pack, 15
+lead battery, 20
+small molten salt battery (military use), 40
+big molten salt battery (military use), 70
+atomic battery (not rech), 150
+
+.weapons: (type), weight, damage, range, cooldown, knockback, aoe
+smg (pierce), 10
+machinegun (pierce), 25
+heavy machinegun (pierce), 40
+semi autocannon (pierce), 70
+autocannon (pierce), 100
+high velocity cannon (pierce), 120
+scrap gun (spread), 5
+burst cannon (spread), 15
+heavy burst cannon (spread), 30
+maul (impact), 200
+slam (impact), 0
+warhammer (impact), 40
+rocket (explosive), 60
+rocket swarm (explosive), 120
+tactical rocket (explosive), 160
+nuclear rocket (explosive), 200
+light laser (laser), 20
+combined light laser (laser), 50
+heavy laser (laser), 130
+combined heavy laser (laser), 300
+plasma cannon (fusion), 80
+plasma autocannon (fusion), 170
+plasma artillery (fusion), 200
+fusion blade (fusion), 15
+fusion lance (fusion), 50
+light railgun (impact), 50
+heavy railgun (impact), 190
+supercharged railgun (impact), 240
+discharge beam (battery dmg), 40
+haywire beam (battery dmg and damage), 50
+stun beam (disables target), 80
+amplified haywire beam, 120
+amplified discharge impulse (aoe on target), 150
+amplified stun beam, 200
+ion cannon (reduces fusion and laser armor), 75 
+heavy ion cannon (reduces fusion and laser armor), 150
+body explosives (explosive), 5
+
+.armor:
+metal plating (pierce and spread armor), 50
+heavy metal plating (pierce, spread and impact armor), 80
+reflective plating (laser armor), 40
+heat resistent plating (fusion armor), 50
+padding (spread and impact armor), 20
+reactive armor (explosive armor), 75
+energy shields (overall armor but kinetic), 25
+composite armor (pierce, spread and impact armor), 30
+plastic armor (pierce armor), 10
+sloped armor (pierce, spread armor), 45
+charged armor (explosive armor), 100
+
+augments:
+charged ammo (% emp damage)
+extra radiator (better fusion armor), 10
+priority module (attacks the most costly), 2
+communication array (improves armor of adjacent units), 5
+long range targeting (better range), 1
+fast target acquisition (better cooldown), 3
+overcharger (better laser damage, more battery use), 10
+focus lens (better laser damage), 3
+amplifier (better fusion and laser damage), 30
+shrapnel (better explosive damage), 5
+reloader (better cooldown), 40
+antijammer (stun resistance %), 5
+fusion ammo (% damage is fusion), 10
+stability module (if bot, faster), 20
+torque boost (if wheeled vehicle or tank, +speed), 50
+weight stripping (additional weight +base%10, less hp), 0
+barebone gadgets (additional weight +base%15, less damage), 0
+
+--engines (actuators):
+servos, 5
+brushless, 10
+hydraulics, 30
+diesel engine (vehicles), 60
+hydrogen engine (vehicles), 100
+
+--powergens:
+small diesel engine, 20
+medium diesel engine, 50
+big diesel engine, 120
+small hydrogen engine, 2
+medium hydrogen engine, 25
+big hydrogen engine, 60
+solar panels, 10
+nuclear power core, 100
+critical nuclear power core, 200

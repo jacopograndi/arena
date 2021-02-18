@@ -1,0 +1,20 @@
+[
+    {
+        "name": "search and destroy"
+    },
+    { 
+        "name": "follower"
+    },
+    { 
+        "name": "defensive"
+    },
+    { 
+        "name": "kamikaze"
+    },
+    { 
+        "name": "run and gun"
+    },
+    {
+        "name": "flank"
+    }
+]

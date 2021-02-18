@@ -1,0 +1,97 @@
+[
+    {
+        "name": "charged ammo",
+        "weight": "10", 
+        "damage_emp": "5"
+    },
+    {
+        "name": "fusion ammo",
+        "weight": "10",
+        "damage_fusion": "4"
+    },
+    {
+        "name": "explosive ammo",
+        "weight": "30",
+        "armor_explosive": "8"
+    },
+    {
+        "name": "radiator",
+        "weight": "10", 
+        "armor_fusion": "2"
+    },
+    {
+        "name": "priority module",
+        "weight": "0"
+    },
+    {
+        "name": "communication array",
+        "weight": "50", 
+        "armor_pierce": "1",
+        "armor_impact": "1",
+        "armor_fusion": "1",
+        "aoe": "2"
+    },
+    {
+        "name": "long range targeting",
+        "weight": "0", 
+        "add_range": "1"
+    },
+    {
+        "name": "long range targeting",
+        "weight": "0", 
+        "range": "1"
+    },
+    {
+        "name": "fast target acquisition",
+        "weight": "5",
+        "add_cooldown": "-0.1"
+    },
+    {
+        "name": "overcharger",
+        "weight": "10",
+        "damage_laser": "8",
+        "recharge": "-5"
+    },
+    {
+        "name": "focus lens",
+        "weight": "3",
+        "damage_laser": "3"
+    },
+    {
+        "name": "amplifier",
+        "weight": "30",
+        "damage_laser": "3",
+        "damage_fusion": "5"
+    },
+    {
+        "name": "shrapnel",
+        "weight": "5",
+        "damage_explosive": "5"
+    },
+    {
+        "name": "reloader",
+        "weight": "40",
+        "add_cooldown": "-0.1"
+    },
+    {
+        "name": "anti jamming device",
+        "weight": "2",
+        "armor_emp": "5"
+    },
+    {
+        "name": "weight stripping",
+        "weight": "-10",
+        "add_hp": "-10"
+    },
+    {
+        "name": "barebone weapon setup",
+        "weight": "-30",
+        "damage_pierce": "-25",
+        "damage_laser": "-25",
+        "damage_impact": "-25",
+        "damage_fusion": "-25",
+        "damage_explosive": "-25",
+        "damage_emp": "-25",
+        "damage_spread": "-25"
+    }
+]

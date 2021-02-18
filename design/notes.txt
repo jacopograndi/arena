@@ -1,0 +1,79 @@
+tasks: (commit number)
+
+[x] implement rm unit (issued on 6, done on 6)
+[x] implement armor calculation (issued on 6, done on 6)
+[x] implement augment calculations (issued on 6, done on 6)
+[x] implement augment hud view (issued on 6, done on 6)
+[ ] implement sound (issued on 6)
+[ ] implement stats hud view (issued on 6)
+[ ] implement battery calculation (issued on 6)
+[ ] implement brain behaviour (issued on 6)
+[ ] implement component levels (issued on 6)
+[ ] implement persistent settings (issued on 6)
+[ ] implement net hud and minilobby (issued on 6)
+[ ] implement army hud view (issued on 6)
+[ ] implement cost function (issued on 6)
+[ ] implement lobby cost constraints (issued on 6)
+[ ] implement edit unit directly (issued on 6)
+[ ] implement naming template and army (issued on 6)
+[ ] implement move animation (issued on 6)
+[ ] implement fire animation (issued on 6)
+[ ] implement explosions (issued on 6)
+[ ] design 3d units (issued on 6)
+[ ] design 3d map tiles (issued on 6)
+[ ] implement 3d units (issued on 6)
+[ ] design component sprites (issued on 6)
+
+
+bugs:
+
+[ ] symmetric integration (found on 6)
+    (on army movement and fire, equal armies should fair equally)
+
+
+testing:
+
+[ ] armor calculations (issued on 6)
+
+
+balance:
+
+[ ] balance components (issued on 6)
+
+
+view from 6 to the end:
+    game is make templates, assemble for army, fight other army
+    multiplayer up to 2 ppl
+    armies, templates and settings are persistent
+    
+
+
+details:
+
+implement rm unit: -> done, paper note solution
+
+implement armor calculation:
+    consider bonuses for damage reduction
+    aggregate them and spit out a percentage
+    editor remove units funct to make it possible to have a test case
+    army has to rebuild grid ref on load
+-> done, barely tested
+
+implement augment calculation:
+    there are a lot of bonuses to keep track. do one at a time.
+    ok add_armor as a malus %
+    ok add_damage (only if same damage type weapon) as a bonus %
+    ok add_range as a fixed sum
+    ok add_cooldown
+    ok add_hp
+    ok add_speed
+-> done, not tested
+
+implement stats hud view:
+? stats have to include individual weapon cooldowns and damage, what to do
+    either put all as lines in stats (clean, but ugly)
+    or modify the components directly (messy)
+! put them in stats later
+
+implement sound:
+    partially done, need sound design

@@ -1,0 +1,180 @@
+[
+    {
+        "name": "light two legged bot",
+        "slot_weapon": "1",
+        "slot_armor": "0",
+        "slot_aug": "1",
+        "weight_max": "20",
+        "hp": "100",
+        "speed": "1.5"
+    },
+    {
+        "name": "heavy two legged bot",
+        "slot_weapon": "1",
+        "slot_armor": "1",
+        "slot_aug": "3",
+        "weight_max": "45",
+        "hp": "350",
+        "speed": "1"
+    },
+    {
+        "name": "light four legged bot",
+        "slot_weapon": "2",
+        "slot_armor": "1",
+        "slot_aug": "2",
+        "weight_max": "50",
+        "hp": "400",
+        "speed": "1"
+    },
+    {
+        "name": "heavy four legged bot",
+        "slot_weapon": "2",
+        "slot_armor": "2",
+        "slot_aug": "5",
+        "weight_max": "150",
+        "hp": "1200",
+        "speed": "0.67"
+    },
+    {
+        "name": "light six legged bot",
+        "slot_weapon": "2",
+        "slot_armor": "2",
+        "slot_aug": "3",
+        "weight_max": "210",
+        "hp": "640",
+        "speed": "1"
+    },
+    {
+        "name": "heavy six legged bot",
+        "slot_weapon": "2",
+        "slot_armor": "4",
+        "slot_aug": "6",
+        "weight_max": "300",
+        "hp": "1500",
+        "speed": "1"
+    },
+    {
+        "name": "light buggy",
+        "slot_weapon": "1",
+        "slot_armor": "1",
+        "slot_aug": "1",
+        "weight_max": "50",
+        "hp": "200",
+        "speed": "1"
+    },
+    {
+        "name": "buggy",
+        "slot_weapon": "2",
+        "slot_armor": "2",
+        "slot_aug": "2",
+        "weight_max": "150",
+        "hp": "400",
+        "speed": "1"
+    },
+    {
+        "name": "light wheeled vehicle",
+        "slot_weapon": "1",
+        "slot_armor": "0",
+        "slot_aug": "2",
+        "weight_max": "60",
+        "hp": "320",
+        "speed": "1",
+        "recharge": "0.3"
+    },
+    {
+        "name": "medium wheeled vehicle",
+        "slot_weapon": "2",
+        "slot_armor": "2",
+        "slot_aug": "3",
+        "weight_max": "200",
+        "hp": "720",
+        "speed": "1",
+        "recharge": "0.2"
+    },
+    {
+        "name": "heavy wheeled vehicle",
+        "slot_weapon": "2",
+        "slot_armor": "4",
+        "slot_aug": "4",
+        "weight_max": "270",
+        "hp": "950",
+        "speed": "1",
+        "recharge": "0.2"
+    },
+    {
+        "name": "light tank",
+        "slot_weapon": "1",
+        "slot_armor": "3",
+        "slot_aug": "2",
+        "weight_max": "300",
+        "hp": "700",
+        "speed": "1",
+        "recharge": "0.4"
+    },
+    {
+        "name": "medium tank",
+        "slot_weapon": "1",
+        "slot_armor": "4",
+        "slot_aug": "4",
+        "weight_max": "400",
+        "hp": "1250",
+        "speed": "1",
+        "recharge": "0.5"
+    },
+    {
+        "name": "heavy tank",
+        "slot_weapon": "2",
+        "slot_armor": "5",
+        "slot_aug": "5",
+        "weight_max": "450",
+        "hp": "1600",
+        "speed": "1"
+    },
+    {
+        "name": "super heavy tank",
+        "slot_weapon": "3",
+        "slot_armor": "6",
+        "slot_aug": "6",
+        "weight_max": "500",
+        "hp": "2000",
+        "speed": "1"
+    },
+    {
+        "name": "hovercraft",
+        "slot_weapon": "2",
+        "slot_armor": "0",
+        "slot_aug": "3",
+        "weight_max": "40",
+        "hp": "300",
+        "speed": "1",
+        "recharge": "-0.2"
+    },
+    {
+        "name": "jet floater",
+        "slot_weapon": "1",
+        "slot_armor": "0",
+        "slot_aug": "2",
+        "weight_max": "30",
+        "hp": "60",
+        "speed": "1"
+    },
+    {
+        "name": "one wheeler",
+        "slot_weapon": "1",
+        "slot_armor": "0",
+        "slot_aug": "4",
+        "weight_max": "15",
+        "hp": "40",
+        "speed": "1"
+    },
+    {
+        "name": "armored crawler",
+        "slot_weapon": "1",
+        "slot_armor": "4",
+        "slot_aug": "2",
+        "weight_max": "200",
+        "hp": "750",
+        "speed": "1",
+        "recharge": "-0.4"
+    }
+]
