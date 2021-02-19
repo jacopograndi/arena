@@ -1,34 +1,131 @@
 [
     {
         "name": "small alkaline pack",
-        "weight": "0", "capacity": "50"
+        "weight": [
+            0.0,
+            0.0,
+            0.0
+        ],
+        "capacity": [
+            50.0,
+            50.0,
+            50.0
+        ]
     },
     {
         "name": "big alkaline pack",
-        "weight": "2", "capacity": "200"
+        "weight": [
+            2.0,
+            2.0,
+            2.0
+        ],
+        "capacity": [
+            200.0,
+            200.0,
+            200.0
+        ]
     },
     {
         "name": "small lithium pack",
-        "weight": "5", "capacity": "150", "recharge": "1"
+        "weight": [
+            5.0,
+            5.0,
+            5.0
+        ],
+        "capacity": [
+            150.0,
+            150.0,
+            150.0
+        ],
+        "recharge": [
+            1.0,
+            1.0,
+            1.0
+        ]
     },
     {
         "name": "big lithium pack",
-        "weight": "15", "capacity": "500", "recharge": "1"
+        "weight": [
+            15.0,
+            15.0,
+            15.0
+        ],
+        "capacity": [
+            500.0,
+            500.0,
+            500.0
+        ],
+        "recharge": [
+            1.0,
+            1.0,
+            1.0
+        ]
     },
     {
         "name": "lead battery",
-        "weight": "20", "capacity": "800", "recharge": "1"
+        "weight": [
+            20.0,
+            20.0,
+            20.0
+        ],
+        "capacity": [
+            800.0,
+            800.0,
+            800.0
+        ],
+        "recharge": [
+            1.0,
+            1.0,
+            1.0
+        ]
     },
     {
         "name": "small molten salt battery",
-        "weight": "40", "capacity": "1500", "recharge": "1"
+        "weight": [
+            40.0,
+            40.0,
+            40.0
+        ],
+        "capacity": [
+            1500.0,
+            1500.0,
+            1500.0
+        ],
+        "recharge": [
+            1.0,
+            1.0,
+            1.0
+        ]
     },
     {
         "name": "big molten salt battery",
-        "weight": "70", "capacity": "2000", "recharge": "1"
+        "weight": [
+            70.0,
+            70.0,
+            70.0
+        ],
+        "capacity": [
+            2000.0,
+            2000.0,
+            2000.0
+        ],
+        "recharge": [
+            1.0,
+            1.0,
+            1.0
+        ]
     },
     {
         "name": "atomic battery",
-        "weight": "150", "capacity": "10000"
+        "weight": [
+            150.0,
+            150.0,
+            150.0
+        ],
+        "capacity": [
+            10000.0,
+            10000.0,
+            10000.0
+        ]
     }
 ]

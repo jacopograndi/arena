@@ -78,5 +78,6 @@ void gst_process (gamestate *gst, infos *info, float t) {
         gst_get_maparmy(gst, &m, &ar);
         army_move(info, ar, m);
         army_fire(info, ar, m);
+        army_upkeep(info, ar, m);
     }
 }

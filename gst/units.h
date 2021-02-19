@@ -36,5 +36,6 @@ void army_destory(army *ar);
 void army_spawn (army *ar, map *m, unit u);
 void army_move (infos *info, army *ar, map *m);
 void army_fire (infos *info, army *ar, map *m);
+void army_upkeep (infos *info, army *ar, map *m);
 
 #endif

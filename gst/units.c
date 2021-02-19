@@ -36,6 +36,7 @@ void unit_init (infos *info, army *ar, map *m,
     u->owner = owner;
     u->hp = info_unit_get_health(info, iu);
     u->move_points = 0;
+    u->charge = info_unit_get_capacity(info, iu);
     for (int i=0; i<8; u->cooldown[i] = 1, i++);
 }
 
@@ -113,6 +114,7 @@ int army_move_step (infos *info, army *ar, map *m) {
         unit *u = ar->us+i;
         if (u->move_points <= 0) continue;
         if (u->hp <= 0) continue;
+        if (u->charge <= 0) continue;
         // search target
         unit *t[32];
         unit_search(info, ar, m, u, t, 100);
@@ -180,7 +182,8 @@ void army_move (infos *info, army *ar, map *m) {
 void army_fire (infos *info, army *ar, map *m) {
     for (int i=0; i<ar->uslen; i++) {
         unit *u = ar->us+i;
-        for (int j=0; j<info->chassis[u->info.chassis].slot_weapon; j++) {
+        int lw = u->info.levels[LEVEL_CHASSIS];
+        for (int j=0; j<info->chassis[u->info.chassis].slot_weapon[lw]; j++) {
             u->cooldown[j] += 1;
         }
     }
@@ -189,7 +192,9 @@ void army_fire (infos *info, army *ar, map *m) {
     for (int i=0; i<ar->uslen; i++) {
         unit *u = ar->us+i;
         if (u->hp <= 0) continue;
-        for (int j=0; j<info->chassis[u->info.chassis].slot_weapon; j++) {
+        if (u->charge <= 0) continue;
+        int lw = u->info.levels[LEVEL_CHASSIS];
+        for (int j=0; j<info->chassis[u->info.chassis].slot_weapon[lw]; j++) {
             if (u->info.weapons[j] == -1) continue;
             if (u->cooldown[j] <= 0) continue;
             float range = info_unit_get_range(info, &u->info, j);
@@ -200,6 +205,8 @@ void army_fire (infos *info, army *ar, map *m) {
                     info, &u->info, j, &t[0]->info);
                 dmgslen++;
                 u->cooldown[j] -= info_unit_get_cooldown(info, &u->info, j);
+                u->charge -= info_unit_get_charge_per_shot(info, &u->info, j);
+                if (u->charge < 0) u->charge = 0;
             }
         }
     }
@@ -208,5 +215,15 @@ void army_fire (infos *info, army *ar, map *m) {
         if (dmgs[i].u->hp <= 0) {
             unit_dead(ar, m, dmgs[i].u);
         }
+    }
+}
+
+void army_upkeep (infos *info, army *ar, map *m) {
+    // battery drain or recharge
+    for (int i=0; i<ar->uslen; i++) {
+        unit *u = ar->us+i;
+        if (u->hp <= 0) continue;
+        u->charge -= info_unit_get_upkeep(info, &u->info);
+        if (u->charge < 0) u->charge = 0;
     }
 }

@@ -1,97 +1,273 @@
 [
     {
         "name": "charged ammo",
-        "weight": "10", 
-        "damage_emp": "5"
+        "weight": [
+            10.0,
+            10.0,
+            10.0
+        ],
+        "damage_emp": [
+            5.0,
+            5.0,
+            5.0
+        ]
     },
     {
         "name": "fusion ammo",
-        "weight": "10",
-        "damage_fusion": "4"
+        "weight": [
+            10.0,
+            10.0,
+            10.0
+        ],
+        "damage_fusion": [
+            4.0,
+            4.0,
+            4.0
+        ]
     },
     {
         "name": "explosive ammo",
-        "weight": "30",
-        "armor_explosive": "8"
+        "weight": [
+            30.0,
+            30.0,
+            30.0
+        ],
+        "armor_explosive": [
+            8.0,
+            8.0,
+            8.0
+        ]
     },
     {
         "name": "radiator",
-        "weight": "10", 
-        "armor_fusion": "2"
+        "weight": [
+            10.0,
+            10.0,
+            10.0
+        ],
+        "armor_fusion": [
+            2.0,
+            2.0,
+            2.0
+        ]
     },
     {
         "name": "priority module",
-        "weight": "0"
+        "weight": [
+            0.0,
+            0.0,
+            0.0
+        ]
     },
     {
         "name": "communication array",
-        "weight": "50", 
-        "armor_pierce": "1",
-        "armor_impact": "1",
-        "armor_fusion": "1",
-        "aoe": "2"
+        "weight": [
+            50.0,
+            50.0,
+            50.0
+        ],
+        "armor_pierce": [
+            1.0,
+            1.0,
+            1.0
+        ],
+        "armor_impact": [
+            1.0,
+            1.0,
+            1.0
+        ],
+        "armor_fusion": [
+            1.0,
+            1.0,
+            1.0
+        ],
+        "aoe": [
+            2.0,
+            2.0,
+            2.0
+        ]
     },
     {
         "name": "long range targeting",
-        "weight": "0", 
-        "add_range": "1"
+        "weight": [
+            0.0,
+            0.0,
+            0.0
+        ],
+        "add_range": [
+            1.0,
+            1.0,
+            1.0
+        ]
     },
     {
         "name": "long range targeting",
-        "weight": "0", 
-        "range": "1"
+        "weight": [
+            0.0,
+            0.0,
+            0.0
+        ],
+        "range": [
+            1.0,
+            1.0,
+            1.0
+        ]
     },
     {
         "name": "fast target acquisition",
-        "weight": "5",
-        "add_cooldown": "-0.1"
+        "weight": [
+            5.0,
+            5.0,
+            5.0
+        ],
+        "add_cooldown": [
+            -0.1,
+            -0.1,
+            -0.1
+        ]
     },
     {
         "name": "overcharger",
-        "weight": "10",
-        "damage_laser": "8",
-        "recharge": "-5"
+        "weight": [
+            10.0,
+            10.0,
+            10.0
+        ],
+        "damage_laser": [
+            8.0,
+            8.0,
+            8.0
+        ],
+        "recharge": [
+            -5.0,
+            -5.0,
+            -5.0
+        ]
     },
     {
         "name": "focus lens",
-        "weight": "3",
-        "damage_laser": "3"
+        "weight": [
+            3.0,
+            3.0,
+            3.0
+        ],
+        "damage_laser": [
+            3.0,
+            3.0,
+            3.0
+        ]
     },
     {
         "name": "amplifier",
-        "weight": "30",
-        "damage_laser": "3",
-        "damage_fusion": "5"
+        "weight": [
+            30.0,
+            30.0,
+            30.0
+        ],
+        "damage_laser": [
+            3.0,
+            3.0,
+            3.0
+        ],
+        "damage_fusion": [
+            5.0,
+            5.0,
+            5.0
+        ]
     },
     {
         "name": "shrapnel",
-        "weight": "5",
-        "damage_explosive": "5"
+        "weight": [
+            5.0,
+            5.0,
+            5.0
+        ],
+        "damage_explosive": [
+            5.0,
+            5.0,
+            5.0
+        ]
     },
     {
         "name": "reloader",
-        "weight": "40",
-        "add_cooldown": "-0.1"
+        "weight": [
+            40.0,
+            40.0,
+            40.0
+        ],
+        "add_cooldown": [
+            -0.1,
+            -0.1,
+            -0.1
+        ]
     },
     {
         "name": "anti jamming device",
-        "weight": "2",
-        "armor_emp": "5"
+        "weight": [
+            2.0,
+            2.0,
+            2.0
+        ],
+        "armor_emp": [
+            5.0,
+            5.0,
+            5.0
+        ]
     },
     {
         "name": "weight stripping",
-        "weight": "-10",
-        "add_hp": "-10"
+        "weight": [
+            -10.0,
+            -10.0,
+            -10.0
+        ],
+        "add_hp": [
+            -10.0,
+            -10.0,
+            -10.0
+        ]
     },
     {
         "name": "barebone weapon setup",
-        "weight": "-30",
-        "damage_pierce": "-25",
-        "damage_laser": "-25",
-        "damage_impact": "-25",
-        "damage_fusion": "-25",
-        "damage_explosive": "-25",
-        "damage_emp": "-25",
-        "damage_spread": "-25"
+        "weight": [
+            -30.0,
+            -30.0,
+            -30.0
+        ],
+        "damage_pierce": [
+            -25.0,
+            -25.0,
+            -25.0
+        ],
+        "damage_laser": [
+            -25.0,
+            -25.0,
+            -25.0
+        ],
+        "damage_impact": [
+            -25.0,
+            -25.0,
+            -25.0
+        ],
+        "damage_fusion": [
+            -25.0,
+            -25.0,
+            -25.0
+        ],
+        "damage_explosive": [
+            -25.0,
+            -25.0,
+            -25.0
+        ],
+        "damage_emp": [
+            -25.0,
+            -25.0,
+            -25.0
+        ],
+        "damage_spread": [
+            -25.0,
+            -25.0,
+            -25.0
+        ]
     }
 ]

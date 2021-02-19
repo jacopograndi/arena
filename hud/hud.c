@@ -115,7 +115,8 @@ int hud_fnu_check (info_unit *u, infos *info) {
     if (u->battery == -1) return 2;
     if (u->brain == -1) return 3;
     float curweight = info_unit_get_weight(info, u);
-    float maxweight = info->chassis[u->chassis].weight_max;
+    int chassis_lvl = u->levels[LEVEL_CHASSIS];
+    float maxweight = info->chassis[u->chassis].weight_max[chassis_lvl];
     if (curweight > maxweight) { return 4; }
     return 0;
 }
@@ -272,8 +273,9 @@ void hud_process_form_new_unit (graphic_settings *gs, hud *h, MKb *mkb,
             hud_open_sel(gs, h, t, info, &h->fnu.rect_brain);
         }
         if (h->fnu.uinfo.chassis != -1) {
+            int lc = h->fnu.uinfo.levels[LEVEL_CHASSIS];
             for (int i=0; 
-                i<info->chassis[h->fnu.uinfo.chassis].slot_armor; i++) 
+                i<info->chassis[h->fnu.uinfo.chassis].slot_armor[lc]; i++) 
             {
                 float possa[2] = { 
                     h->fnu.rect_armor[i].x, h->fnu.rect_armor[i].y };
@@ -285,7 +287,7 @@ void hud_process_form_new_unit (graphic_settings *gs, hud *h, MKb *mkb,
                 }
             }
             for (int i=0; 
-                i<info->chassis[h->fnu.uinfo.chassis].slot_weapon; i++) 
+                i<info->chassis[h->fnu.uinfo.chassis].slot_weapon[lc]; i++) 
             {
                 float possa[2] = { 
                     h->fnu.rect_weapons[i].x, h->fnu.rect_weapons[i].y };
@@ -297,7 +299,7 @@ void hud_process_form_new_unit (graphic_settings *gs, hud *h, MKb *mkb,
                 }
             }
             for (int i=0; 
-                i<info->chassis[h->fnu.uinfo.chassis].slot_aug; i++) 
+                i<info->chassis[h->fnu.uinfo.chassis].slot_aug[lc]; i++) 
             {
                 float possa[2] = { 
                     h->fnu.rect_augs[i].x, h->fnu.rect_augs[i].y };
@@ -552,12 +554,12 @@ void hud_render_sel (hud_sel *sc, MKb *mkb, info_unit *u,
         SDL_RenderFillRect(rend, &r);
         SDL_SetRenderDrawColor(rend, 0, 0, 0, 255);
         SDL_RenderDrawRect(rend, &r);
-        if (sel==0) render_view_chassis(rend, t, x, y, info, i, sprites);
-        if (sel==1) render_view_battery(rend, t, x, y, info, i);
-        if (sel==2) render_view_armor_detail(rend, t, x, y, info, i);
-        if (sel==3) render_view_weapon_detail(rend, t, x, y, info, i);
-        if (sel==4) render_view_aug_detail(rend, t, x, y, info, i);
-        if (sel==5) render_view_brain(rend, t, x, y, info, i);
+        if (sel==0) render_view_chassis(rend, t, x, y, info, i, 0, sprites);
+        if (sel==1) render_view_battery(rend, t, x, y, info, i, 0);
+        if (sel==2) render_view_armor_detail(rend, t, x, y, info, i, 0);
+        if (sel==3) render_view_weapon_detail(rend, t, x, y, info, i, 0);
+        if (sel==4) render_view_aug_detail(rend, t, x, y, info, i, 0);
+        if (sel==5) render_view_brain(rend, t, x, y, info, i, 0);
     }
     SDL_RenderSetClipRect(rend, NULL);
 }
@@ -586,33 +588,37 @@ void hud_render_form_new_unit (form_new_unit *fnu, MKb *mkb,
     render_view_stats(rend, t, fnu->rect_stats.x, fnu->rect_stats.y, 
         info, &fnu->uinfo);
     
+    int lc = fnu->uinfo.levels[LEVEL_CHASSIS];
     if (fnu->uinfo.chassis != -1) {
-        for (int i=0; i<info->chassis[fnu->uinfo.chassis].slot_weapon; i++) {
+        for (int i=0; i<info->chassis[fnu->uinfo.chassis].slot_weapon[lc]; i++) {
             SDL_SetRenderDrawColor(rend, 200, 100, 255, 255);
             SDL_RenderFillRect(rend, fnu->rect_weapons+i);
             SDL_SetRenderDrawColor(rend, 0, 0, 0, 255);
             SDL_RenderDrawRect(rend, fnu->rect_weapons+i);
             render_view_weapon(rend, t, 
                 fnu->rect_weapons[i].x, 
-                fnu->rect_weapons[i].y, info, fnu->uinfo.weapons[i]); 
+                fnu->rect_weapons[i].y, info, fnu->uinfo.weapons[i], 
+                fnu->uinfo.levels[LEVEL_WEAPONS+i]); 
         }
-        for (int i=0; i<info->chassis[fnu->uinfo.chassis].slot_armor; i++) {
+        for (int i=0; i<info->chassis[fnu->uinfo.chassis].slot_armor[lc]; i++) {
             SDL_SetRenderDrawColor(rend, 200, 200, 255, 255);
             SDL_RenderFillRect(rend, fnu->rect_armor+i);
             SDL_SetRenderDrawColor(rend, 0, 0, 0, 255);
             SDL_RenderDrawRect(rend, fnu->rect_armor+i);
             render_view_armor(rend, t, 
                 fnu->rect_armor[i].x, 
-                fnu->rect_armor[i].y, info, fnu->uinfo.armor[i]); 
+                fnu->rect_armor[i].y, info, fnu->uinfo.armor[i], 
+                fnu->uinfo.levels[LEVEL_ARMOR+i]); 
         }
-        for (int i=0; i<info->chassis[fnu->uinfo.chassis].slot_aug; i++) {
+        for (int i=0; i<info->chassis[fnu->uinfo.chassis].slot_aug[lc]; i++) {
             SDL_SetRenderDrawColor(rend, 200, 200, 255, 255);
             SDL_RenderFillRect(rend, fnu->rect_augs+i);
             SDL_SetRenderDrawColor(rend, 0, 0, 0, 255);
             SDL_RenderDrawRect(rend, fnu->rect_augs+i);
             render_view_aug(rend, t, 
                 fnu->rect_augs[i].x, 
-                fnu->rect_augs[i].y, info, fnu->uinfo.augs[i]); 
+                fnu->rect_augs[i].y, info, fnu->uinfo.augs[i], 
+                fnu->uinfo.levels[LEVEL_AUGS+i]); 
         }
     }
     
@@ -681,11 +687,14 @@ void hud_render_form_new_unit (form_new_unit *fnu, MKb *mkb,
 
     render_view_chassis(rend, t, 
         fnu->rect_chassis.x, fnu->rect_chassis.y, 
-        info, fnu->uinfo.chassis, sprites); 
+        info, fnu->uinfo.chassis, 
+        fnu->uinfo.levels[LEVEL_CHASSIS], sprites); 
     render_view_battery(rend, t, 
-        fnu->rect_battery.x, fnu->rect_battery.y, info, fnu->uinfo.battery);
+        fnu->rect_battery.x, fnu->rect_battery.y, info, fnu->uinfo.battery, 
+        fnu->uinfo.levels[LEVEL_BATTERY]);
     render_view_brain(rend, t, 
-        fnu->rect_brain.x, fnu->rect_brain.y, info, fnu->uinfo.brain); 
+        fnu->rect_brain.x, fnu->rect_brain.y, info, fnu->uinfo.brain, 
+        fnu->uinfo.levels[LEVEL_BRAIN]); 
 }
 
 void hud_render_overlay_game (overlay_game *og, MKb *mkb, 
@@ -708,7 +717,7 @@ void hud_render_overlay_game (overlay_game *og, MKb *mkb,
     for (int i=0; i<info->templateslen; i++) {
         float x = og->rect_templates.x+5;
         float y = og->rect_templates.y+5 + i*20 + 30;
-        render_view_template(rend, t, x, y, info, i);
+        render_view_template(rend, t, x, y, info, i, 0);
     }
     
     SDL_SetRenderDrawColor(rend, 0, 200, 120, 255);

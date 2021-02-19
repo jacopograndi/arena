@@ -1,57 +1,200 @@
 [
     {
         "name": "metal plating",
-        "weight": "50", 
-        "pierce": "5", "spread": "8"
+        "weight": [
+            50.0,
+            50.0,
+            50.0
+        ],
+        "pierce": [
+            5.0,
+            5.0,
+            5.0
+        ],
+        "spread": [
+            8.0,
+            8.0,
+            8.0
+        ]
     },
     {
         "name": "heavy metal plating",
-        "weight": "80", 
-        "pierce": "7", "spread": "10", "impact": "5"
+        "weight": [
+            80.0,
+            80.0,
+            80.0
+        ],
+        "pierce": [
+            7.0,
+            7.0,
+            7.0
+        ],
+        "spread": [
+            10.0,
+            10.0,
+            10.0
+        ],
+        "impact": [
+            5.0,
+            5.0,
+            5.0
+        ]
     },
     {
         "name": "reflective plating",
-        "weight": "40", 
-        "laser": "10"
+        "weight": [
+            40.0,
+            40.0,
+            40.0
+        ],
+        "laser": [
+            10.0,
+            10.0,
+            10.0
+        ]
     },
     {
         "name": "heat resistent plating",
-        "weight": "50", 
-        "fusion": "8"
+        "weight": [
+            50.0,
+            50.0,
+            50.0
+        ],
+        "fusion": [
+            8.0,
+            8.0,
+            8.0
+        ]
     },
     {
         "name": "padding",
-        "weight": "20", 
-        "spread": "5", "impact": "8"
+        "weight": [
+            20.0,
+            20.0,
+            20.0
+        ],
+        "spread": [
+            5.0,
+            5.0,
+            5.0
+        ],
+        "impact": [
+            8.0,
+            8.0,
+            8.0
+        ]
     },
     {
         "name": "reactive armor",
-        "weight": "75", 
-        "explosive": "12"
+        "weight": [
+            75.0,
+            75.0,
+            75.0
+        ],
+        "explosive": [
+            12.0,
+            12.0,
+            12.0
+        ]
     },
     {
         "name": "energy shields",
-        "weight": "25", 
-        "pierce": "3", "spread": "3", "fusion": "3", "explosive": "3", "laser": "3"
+        "weight": [
+            25.0,
+            25.0,
+            25.0
+        ],
+        "pierce": [
+            3.0,
+            3.0,
+            3.0
+        ],
+        "spread": [
+            3.0,
+            3.0,
+            3.0
+        ],
+        "fusion": [
+            3.0,
+            3.0,
+            3.0
+        ],
+        "explosive": [
+            3.0,
+            3.0,
+            3.0
+        ],
+        "laser": [
+            3.0,
+            3.0,
+            3.0
+        ]
     },
     {
         "name": "composite armor",
-        "weight": "30", 
-        "pierce": "6", "spread": "4", "impact": "3"
+        "weight": [
+            30.0,
+            30.0,
+            30.0
+        ],
+        "pierce": [
+            6.0,
+            6.0,
+            6.0
+        ],
+        "spread": [
+            4.0,
+            4.0,
+            4.0
+        ],
+        "impact": [
+            3.0,
+            3.0,
+            3.0
+        ]
     },
     {
         "name": "plastic armor",
-        "weight": "10", 
-        "pierce": "4"
+        "weight": [
+            10.0,
+            10.0,
+            10.0
+        ],
+        "pierce": [
+            4.0,
+            4.0,
+            4.0
+        ]
     },
     {
         "name": "sloped steel armor",
-        "weight": "45", 
-        "pierce": "10", "spread": "8"
+        "weight": [
+            45.0,
+            45.0,
+            45.0
+        ],
+        "pierce": [
+            10.0,
+            10.0,
+            10.0
+        ],
+        "spread": [
+            8.0,
+            8.0,
+            8.0
+        ]
     },
     {
         "name": "charged armor",
-        "weight": "100", 
-        "explosive": "25"
-    },
+        "weight": [
+            100.0,
+            100.0,
+            100.0
+        ],
+        "explosive": [
+            25.0,
+            25.0,
+            25.0
+        ]
+    }
 ]

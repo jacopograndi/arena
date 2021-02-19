@@ -1,192 +1,974 @@
 [
     {
         "name": "smg",
-        "damage_type": "pierce", "weight": "10", "cooldown": "1", 
-        "damage": "10", "range": "4"
+        "damage_type": "pierce",
+        "weight": [
+            10.0,
+            10.0,
+            10.0
+        ],
+        "cooldown": [
+            1.0,
+            1.0,
+            1.0
+        ],
+        "damage": [
+            10.0,
+            10.0,
+            10.0
+        ],
+        "range": [
+            4.0,
+            4.0,
+            4.0
+        ]
     },
     {
         "name": "machinegun",
-        "damage_type": "pierce", "weight": "25", "cooldown": "1", 
-        "damage": "15", "range": "5"
+        "damage_type": "pierce",
+        "weight": [
+            25.0,
+            25.0,
+            25.0
+        ],
+        "cooldown": [
+            1.0,
+            1.0,
+            1.0
+        ],
+        "damage": [
+            15.0,
+            15.0,
+            15.0
+        ],
+        "range": [
+            5.0,
+            5.0,
+            5.0
+        ]
     },
     {
         "name": "heavy machinegun",
-        "damage_type": "pierce", "weight": "40", "cooldown": "1", 
-        "damage": "20", "range": "5"
+        "damage_type": "pierce",
+        "weight": [
+            40.0,
+            40.0,
+            40.0
+        ],
+        "cooldown": [
+            1.0,
+            1.0,
+            1.0
+        ],
+        "damage": [
+            20.0,
+            20.0,
+            20.0
+        ],
+        "range": [
+            5.0,
+            5.0,
+            5.0
+        ]
     },
     {
         "name": "semi autocannon",
-        "damage_type": "pierce", "weight": "70", "cooldown": "2", 
-        "damage": "32", "range": "6"
+        "damage_type": "pierce",
+        "weight": [
+            70.0,
+            70.0,
+            70.0
+        ],
+        "cooldown": [
+            2.0,
+            2.0,
+            2.0
+        ],
+        "damage": [
+            32.0,
+            32.0,
+            32.0
+        ],
+        "range": [
+            6.0,
+            6.0,
+            6.0
+        ]
     },
     {
         "name": "autocannon",
-        "damage_type": "pierce", "weight": "100", "cooldown": "1", 
-        "damage": "40", "range": "6"
+        "damage_type": "pierce",
+        "weight": [
+            100.0,
+            100.0,
+            100.0
+        ],
+        "cooldown": [
+            1.0,
+            1.0,
+            1.0
+        ],
+        "damage": [
+            40.0,
+            40.0,
+            40.0
+        ],
+        "range": [
+            6.0,
+            6.0,
+            6.0
+        ]
     },
     {
         "name": "high velocity cannon",
-        "damage_type": "pierce", "weight": "120", "cooldown": "4", 
-        "damage": "250", "range": "7"
+        "damage_type": "pierce",
+        "weight": [
+            120.0,
+            120.0,
+            120.0
+        ],
+        "cooldown": [
+            4.0,
+            4.0,
+            4.0
+        ],
+        "damage": [
+            250.0,
+            250.0,
+            250.0
+        ],
+        "range": [
+            7.0,
+            7.0,
+            7.0
+        ]
     },
     {
         "name": "scrap gun",
-        "damage_type": "spread", "weight": "5", "cooldown": "2", 
-        "damage": "8", "range": "3"
+        "damage_type": "spread",
+        "weight": [
+            5.0,
+            5.0,
+            5.0
+        ],
+        "cooldown": [
+            2.0,
+            2.0,
+            2.0
+        ],
+        "damage": [
+            8.0,
+            8.0,
+            8.0
+        ],
+        "range": [
+            3.0,
+            3.0,
+            3.0
+        ]
     },
     {
         "name": "burst cannon",
-        "damage_type": "spread", "weight": "15", "cooldown": "2", 
-        "damage": "25", "range": "4"
+        "damage_type": "spread",
+        "weight": [
+            15.0,
+            15.0,
+            15.0
+        ],
+        "cooldown": [
+            2.0,
+            2.0,
+            2.0
+        ],
+        "damage": [
+            25.0,
+            25.0,
+            25.0
+        ],
+        "range": [
+            4.0,
+            4.0,
+            4.0
+        ]
     },
     {
         "name": "heavy burst cannon",
-        "damage_type": "spread", "weight": "30", "cooldown": "2", 
-        "damage": "40", "range": "5"
+        "damage_type": "spread",
+        "weight": [
+            30.0,
+            30.0,
+            30.0
+        ],
+        "cooldown": [
+            2.0,
+            2.0,
+            2.0
+        ],
+        "damage": [
+            40.0,
+            40.0,
+            40.0
+        ],
+        "range": [
+            5.0,
+            5.0,
+            5.0
+        ]
     },
     {
         "name": "maul",
-        "damage_type": "impact", "weight": "200", "cooldown": "3", 
-        "damage": "400", "range": "1", "knockback": "2"
+        "damage_type": "impact",
+        "weight": [
+            200.0,
+            200.0,
+            200.0
+        ],
+        "cooldown": [
+            3.0,
+            3.0,
+            3.0
+        ],
+        "damage": [
+            400.0,
+            400.0,
+            400.0
+        ],
+        "range": [
+            1.0,
+            1.0,
+            1.0
+        ],
+        "knockback": [
+            2.0,
+            2.0,
+            2.0
+        ]
     },
     {
         "name": "slam",
-        "damage_type": "impact", "weight": "0", "cooldown": "1", 
-        "damage": "6", "range": "1"
+        "damage_type": "impact",
+        "weight": [
+            0.0,
+            0.0,
+            0.0
+        ],
+        "cooldown": [
+            1.0,
+            1.0,
+            1.0
+        ],
+        "damage": [
+            6.0,
+            6.0,
+            6.0
+        ],
+        "range": [
+            1.0,
+            1.0,
+            1.0
+        ]
     },
     {
         "name": "warhammer",
-        "damage_type": "impact", "weight": "40", "cooldown": "1", 
-        "damage": "60", "range": "1", "knockback": "1"
+        "damage_type": "impact",
+        "weight": [
+            40.0,
+            40.0,
+            40.0
+        ],
+        "cooldown": [
+            1.0,
+            1.0,
+            1.0
+        ],
+        "damage": [
+            60.0,
+            60.0,
+            60.0
+        ],
+        "range": [
+            1.0,
+            1.0,
+            1.0
+        ],
+        "knockback": [
+            1.0,
+            1.0,
+            1.0
+        ]
     },
     {
         "name": "rocket",
-        "damage_type": "explosive", "weight": "60", "cooldown": "3", 
-        "damage": "100", "range": "8"
+        "damage_type": "explosive",
+        "weight": [
+            60.0,
+            60.0,
+            60.0
+        ],
+        "cooldown": [
+            3.0,
+            3.0,
+            3.0
+        ],
+        "damage": [
+            100.0,
+            100.0,
+            100.0
+        ],
+        "range": [
+            8.0,
+            8.0,
+            8.0
+        ]
     },
     {
         "name": "rocket swarm",
-        "damage_type": "explosive", "weight": "120", "cooldown": "3", 
-        "damage": "60", "range": "7", "aoe": "2"
+        "damage_type": "explosive",
+        "weight": [
+            120.0,
+            120.0,
+            120.0
+        ],
+        "cooldown": [
+            3.0,
+            3.0,
+            3.0
+        ],
+        "damage": [
+            60.0,
+            60.0,
+            60.0
+        ],
+        "range": [
+            7.0,
+            7.0,
+            7.0
+        ],
+        "aoe": [
+            2.0,
+            2.0,
+            2.0
+        ]
     },
     {
         "name": "tactical rocket",
-        "damage_type": "explosive", "weight": "160", "cooldown": "1", 
-        "damage": "100", "range": "8", "aoe": "1"
+        "damage_type": "explosive",
+        "weight": [
+            160.0,
+            160.0,
+            160.0
+        ],
+        "cooldown": [
+            1.0,
+            1.0,
+            1.0
+        ],
+        "damage": [
+            100.0,
+            100.0,
+            100.0
+        ],
+        "range": [
+            8.0,
+            8.0,
+            8.0
+        ],
+        "aoe": [
+            1.0,
+            1.0,
+            1.0
+        ]
     },
     {
         "name": "nuclear rocket",
-        "damage_type": "explosive", "weight": "200", "cooldown": "6", 
-        "damage": "300", "range": "9", "aoe": "3"
+        "damage_type": "explosive",
+        "weight": [
+            200.0,
+            200.0,
+            200.0
+        ],
+        "cooldown": [
+            6.0,
+            6.0,
+            6.0
+        ],
+        "damage": [
+            300.0,
+            300.0,
+            300.0
+        ],
+        "range": [
+            9.0,
+            9.0,
+            9.0
+        ],
+        "aoe": [
+            3.0,
+            3.0,
+            3.0
+        ]
     },
     {
         "name": "light laser",
-        "damage_type": "laser", "weight": "20", "cooldown": "1", 
-        "damage": "8", "range": "5"
+        "damage_type": "laser",
+        "weight": [
+            20.0,
+            20.0,
+            20.0
+        ],
+        "cooldown": [
+            1.0,
+            1.0,
+            1.0
+        ],
+        "damage": [
+            8.0,
+            8.0,
+            8.0
+        ],
+        "range": [
+            5.0,
+            5.0,
+            5.0
+        ]
     },
     {
         "name": "combined light laser",
-        "damage_type": "laser", "weight": "50", "cooldown": "1", 
-        "damage": "20", "range": "6"
+        "damage_type": "laser",
+        "weight": [
+            50.0,
+            50.0,
+            50.0
+        ],
+        "cooldown": [
+            1.0,
+            1.0,
+            1.0
+        ],
+        "damage": [
+            20.0,
+            20.0,
+            20.0
+        ],
+        "range": [
+            6.0,
+            6.0,
+            6.0
+        ]
     },
     {
         "name": "heavy laser",
-        "damage_type": "laser", "weight": "130", "cooldown": "1", 
-        "damage": "45", "range": "6"
+        "damage_type": "laser",
+        "weight": [
+            130.0,
+            130.0,
+            130.0
+        ],
+        "cooldown": [
+            1.0,
+            1.0,
+            1.0
+        ],
+        "damage": [
+            45.0,
+            45.0,
+            45.0
+        ],
+        "range": [
+            6.0,
+            6.0,
+            6.0
+        ]
     },
     {
         "name": "combined heavy laser",
-        "damage_type": "laser", "weight": "300", "cooldown": "1", 
-        "damage": "150", "range": "7"
+        "damage_type": "laser",
+        "weight": [
+            300.0,
+            300.0,
+            300.0
+        ],
+        "cooldown": [
+            1.0,
+            1.0,
+            1.0
+        ],
+        "damage": [
+            150.0,
+            150.0,
+            150.0
+        ],
+        "range": [
+            7.0,
+            7.0,
+            7.0
+        ]
     },
     {
         "name": "plasma cannon",
-        "damage_type": "fusion", "weight": "80", "cooldown": "2", 
-        "damage": "125", "range": "5"
+        "damage_type": "fusion",
+        "weight": [
+            80.0,
+            80.0,
+            80.0
+        ],
+        "cooldown": [
+            2.0,
+            2.0,
+            2.0
+        ],
+        "damage": [
+            125.0,
+            125.0,
+            125.0
+        ],
+        "range": [
+            5.0,
+            5.0,
+            5.0
+        ]
     },
     {
         "name": "plasma autocannon",
-        "damage_type": "fusion", "weight": "170", "cooldown": "1", 
-        "damage": "110", "range": "5"
+        "damage_type": "fusion",
+        "weight": [
+            170.0,
+            170.0,
+            170.0
+        ],
+        "cooldown": [
+            1.0,
+            1.0,
+            1.0
+        ],
+        "damage": [
+            110.0,
+            110.0,
+            110.0
+        ],
+        "range": [
+            5.0,
+            5.0,
+            5.0
+        ]
     },
     {
         "name": "plasma artillery",
-        "damage_type": "fusion", "weight": "200", "cooldown": "3", 
-        "damage": "100", "range": "7", "aoe": "2"
+        "damage_type": "fusion",
+        "weight": [
+            200.0,
+            200.0,
+            200.0
+        ],
+        "cooldown": [
+            3.0,
+            3.0,
+            3.0
+        ],
+        "damage": [
+            100.0,
+            100.0,
+            100.0
+        ],
+        "range": [
+            7.0,
+            7.0,
+            7.0
+        ],
+        "aoe": [
+            2.0,
+            2.0,
+            2.0
+        ]
     },
     {
         "name": "fusion blade",
-        "damage_type": "fusion", "weight": "15", "cooldown": "1", 
-        "damage": "15", "range": "1"
+        "damage_type": "fusion",
+        "weight": [
+            15.0,
+            15.0,
+            15.0
+        ],
+        "cooldown": [
+            1.0,
+            1.0,
+            1.0
+        ],
+        "damage": [
+            15.0,
+            15.0,
+            15.0
+        ],
+        "range": [
+            1.0,
+            1.0,
+            1.0
+        ]
     },
     {
         "name": "fusion lance",
-        "damage_type": "fusion", "weight": "50", "cooldown": "1", 
-        "damage": "45", "range": "2"
+        "damage_type": "fusion",
+        "weight": [
+            50.0,
+            50.0,
+            50.0
+        ],
+        "cooldown": [
+            1.0,
+            1.0,
+            1.0
+        ],
+        "damage": [
+            45.0,
+            45.0,
+            45.0
+        ],
+        "range": [
+            2.0,
+            2.0,
+            2.0
+        ]
     },
     {
         "name": "light railgun",
-        "damage_type": "impact", "weight": "50", "cooldown": "2", 
-        "damage": "90", "range": "6"
+        "damage_type": "impact",
+        "weight": [
+            50.0,
+            50.0,
+            50.0
+        ],
+        "cooldown": [
+            2.0,
+            2.0,
+            2.0
+        ],
+        "damage": [
+            90.0,
+            90.0,
+            90.0
+        ],
+        "range": [
+            6.0,
+            6.0,
+            6.0
+        ]
     },
     {
         "name": "heavy railgun",
-        "damage_type": "impact", "weight": "190", "cooldown": "3", 
-        "damage": "450", "range": "7"
+        "damage_type": "impact",
+        "weight": [
+            190.0,
+            190.0,
+            190.0
+        ],
+        "cooldown": [
+            3.0,
+            3.0,
+            3.0
+        ],
+        "damage": [
+            450.0,
+            450.0,
+            450.0
+        ],
+        "range": [
+            7.0,
+            7.0,
+            7.0
+        ]
     },
     {
         "name": "supercharged railgun",
-        "damage_type": "impact", "weight": "240", "cooldown": "4", 
-        "damage": "1000", "range": "8"
+        "damage_type": "impact",
+        "weight": [
+            240.0,
+            240.0,
+            240.0
+        ],
+        "cooldown": [
+            4.0,
+            4.0,
+            4.0
+        ],
+        "damage": [
+            1000.0,
+            1000.0,
+            1000.0
+        ],
+        "range": [
+            8.0,
+            8.0,
+            8.0
+        ]
     },
     {
         "name": "discharge beam",
-        "damage_type": "emp", "weight": "40", "cooldown": "2", 
-        "damage_battery": "3", "range": "4"
+        "damage_type": "emp",
+        "weight": [
+            40.0,
+            40.0,
+            40.0
+        ],
+        "cooldown": [
+            2.0,
+            2.0,
+            2.0
+        ],
+        "damage_battery": [
+            3.0,
+            3.0,
+            3.0
+        ],
+        "range": [
+            4.0,
+            4.0,
+            4.0
+        ]
     },
     {
         "name": "haywire beam",
-        "damage_type": "emp", "weight": "50", "cooldown": "5", 
-        "damage": "80", "damage_battery": "5", "range": "6"
+        "damage_type": "emp",
+        "weight": [
+            50.0,
+            50.0,
+            50.0
+        ],
+        "cooldown": [
+            5.0,
+            5.0,
+            5.0
+        ],
+        "damage": [
+            80.0,
+            80.0,
+            80.0
+        ],
+        "damage_battery": [
+            5.0,
+            5.0,
+            5.0
+        ],
+        "range": [
+            6.0,
+            6.0,
+            6.0
+        ]
     },
     {
         "name": "stun beam",
-        "damage_type": "emp", "weight": "80", "cooldown": "5", 
-        "stun": "1", "range": "4"
+        "damage_type": "emp",
+        "weight": [
+            80.0,
+            80.0,
+            80.0
+        ],
+        "cooldown": [
+            5.0,
+            5.0,
+            5.0
+        ],
+        "stun": [
+            1.0,
+            1.0,
+            1.0
+        ],
+        "range": [
+            4.0,
+            4.0,
+            4.0
+        ]
     },
     {
         "name": "amplified discharge impulse",
-        "damage_type": "emp", "weight": "150", "cooldown": "3", 
-        "damage_battery": "10", "range": "5", "aoe": "1"
+        "damage_type": "emp",
+        "weight": [
+            150.0,
+            150.0,
+            150.0
+        ],
+        "cooldown": [
+            3.0,
+            3.0,
+            3.0
+        ],
+        "damage_battery": [
+            10.0,
+            10.0,
+            10.0
+        ],
+        "range": [
+            5.0,
+            5.0,
+            5.0
+        ],
+        "aoe": [
+            1.0,
+            1.0,
+            1.0
+        ]
     },
     {
         "name": "amplified haywire beam",
-        "damage_type": "emp", "weight": "120", "cooldown": "5", 
-        "damage": "200", "damage_battery": "12", "range": "6"
+        "damage_type": "emp",
+        "weight": [
+            120.0,
+            120.0,
+            120.0
+        ],
+        "cooldown": [
+            5.0,
+            5.0,
+            5.0
+        ],
+        "damage": [
+            200.0,
+            200.0,
+            200.0
+        ],
+        "damage_battery": [
+            12.0,
+            12.0,
+            12.0
+        ],
+        "range": [
+            6.0,
+            6.0,
+            6.0
+        ]
     },
     {
         "name": "amplified stun beam",
-        "damage_type": "emp", "weight": "200", "cooldown": "6", 
-        "stun": "1", "range": "4"
+        "damage_type": "emp",
+        "weight": [
+            200.0,
+            200.0,
+            200.0
+        ],
+        "cooldown": [
+            6.0,
+            6.0,
+            6.0
+        ],
+        "stun": [
+            1.0,
+            1.0,
+            1.0
+        ],
+        "range": [
+            4.0,
+            4.0,
+            4.0
+        ]
     },
     {
         "name": "ion cannon",
-        "damage_type": "emp", "weight": "75", "cooldown": "2", 
-        "reduce_fusion": "1", "reduce_laser": "1", "range": "5"
+        "damage_type": "emp",
+        "weight": [
+            75.0,
+            75.0,
+            75.0
+        ],
+        "cooldown": [
+            2.0,
+            2.0,
+            2.0
+        ],
+        "reduce_fusion": [
+            1.0,
+            1.0,
+            1.0
+        ],
+        "reduce_laser": [
+            1.0,
+            1.0,
+            1.0
+        ],
+        "range": [
+            5.0,
+            5.0,
+            5.0
+        ]
     },
     {
         "name": "heavy ion cannon",
-        "damage_type": "emp", "weight": "150", "cooldown": "1", 
-        "reduce_fusion": "1", "reduce_laser": "1", "range": "6"
+        "damage_type": "emp",
+        "weight": [
+            150.0,
+            150.0,
+            150.0
+        ],
+        "cooldown": [
+            1.0,
+            1.0,
+            1.0
+        ],
+        "reduce_fusion": [
+            1.0,
+            1.0,
+            1.0
+        ],
+        "reduce_laser": [
+            1.0,
+            1.0,
+            1.0
+        ],
+        "range": [
+            6.0,
+            6.0,
+            6.0
+        ]
     },
     {
         "name": "explosive charges",
-        "damage_type": "explosive", "weight": "5", "cooldown": "10", 
-        "damage": "100", "range": "0", "aoe": "2"
+        "damage_type": "explosive",
+        "weight": [
+            5.0,
+            5.0,
+            5.0
+        ],
+        "cooldown": [
+            10.0,
+            10.0,
+            10.0
+        ],
+        "damage": [
+            100.0,
+            100.0,
+            100.0
+        ],
+        "range": [
+            0.0,
+            0.0,
+            0.0
+        ],
+        "aoe": [
+            2.0,
+            2.0,
+            2.0
+        ]
     },
     {
         "name": "javelin",
-        "damage_type": "explosive", "weight": "60", "cooldown": "2", 
-        "damage": "40", "range": "7"
+        "damage_type": "explosive",
+        "weight": [
+            60.0,
+            60.0,
+            60.0
+        ],
+        "cooldown": [
+            2.0,
+            2.0,
+            2.0
+        ],
+        "damage": [
+            40.0,
+            40.0,
+            40.0
+        ],
+        "range": [
+            7.0,
+            7.0,
+            7.0
+        ]
     }
 ]

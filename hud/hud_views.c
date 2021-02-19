@@ -15,7 +15,8 @@ void render_view_stats (SDL_Renderer* rend, txtd *t, int px, int py,
     h += 35;
     
     float calcweight = info_unit_get_weight(info, tm);
-    float maxweight = info->chassis[tm->chassis].weight_max;
+    float maxweight = info->chassis[tm->chassis].weight_max[
+        tm->levels[LEVEL_CHASSIS]];
     float pw[2] = { px+10, py+h };
     char sw[64]; sprintf(sw, "WEIGHT: %.0f/%.0f", 
         calcweight, maxweight);
@@ -55,7 +56,7 @@ void render_view_stats (SDL_Renderer* rend, txtd *t, int px, int py,
 }
 
 void render_view_chassis (SDL_Renderer* rend, txtd *t, int px, int py, 
-    infos *info, int chassis, SDL_Texture *sprites) 
+    infos *info, int chassis, int lvl, SDL_Texture *sprites) 
 {
     if (chassis != -1) {
         float pname[2] = { px+10, py+10 };
@@ -85,7 +86,7 @@ void render_view_chassis (SDL_Renderer* rend, txtd *t, int px, int py,
 }
 
 void render_view_battery (SDL_Renderer* rend, txtd *t, int px, int py, 
-    infos *info, int batt) 
+    infos *info, int batt, int lvl) 
 {
     if (batt != -1) {
         float pname[2] = { px+10, py+10 };
@@ -116,7 +117,7 @@ void render_view_battery (SDL_Renderer* rend, txtd *t, int px, int py,
 
 
 void render_view_armor (SDL_Renderer* rend, txtd *t, int px, int py, 
-    infos *info, int armor) 
+    infos *info, int armor, int lvl) 
 {
     if (armor != -1) {
         float pname[2] = { px+10, py+10 };
@@ -128,9 +129,9 @@ void render_view_armor (SDL_Renderer* rend, txtd *t, int px, int py,
         j += strlen(temp);
         for (int i=0; i<7; i++) {
             if (i<7-1) {
-                sprintf(temp, "%.0f, ", info->armors[armor].armor[i]);
+                sprintf(temp, "%.0f, ", info->armors[armor].armor[i][lvl]);
             } else {
-                sprintf(temp, "%.0f", info->armors[armor].armor[i]);
+                sprintf(temp, "%.0f", info->armors[armor].armor[i][lvl]);
             }
             strcpy(sa+j, temp);
             j += strlen(temp);
@@ -145,7 +146,7 @@ void render_view_armor (SDL_Renderer* rend, txtd *t, int px, int py,
 }
 
 void render_view_armor_detail (SDL_Renderer* rend, txtd *t, int px, int py, 
-    infos *info, int armor) 
+    infos *info, int armor, int lvl) 
 {
     if (armor != -1) {
         float pname[2] = { px+10, py+10 };
@@ -153,7 +154,7 @@ void render_view_armor_detail (SDL_Renderer* rend, txtd *t, int px, int py,
         render_text_scaled(rend, sname, pname, t, 1);
         float pweight[2] = { px+10, py+40 };
         char sweight[64]; sprintf(sweight, "WEIGHT: %0.0f", 
-            info->armors[armor].weight);
+            info->armors[armor].weight[lvl]);
         render_text_scaled(rend, sweight, pweight, t, 1);
         
         float pred[2] = { px+10, py+60 };
@@ -161,21 +162,21 @@ void render_view_armor_detail (SDL_Renderer* rend, txtd *t, int px, int py,
         
         int h=0;
         for (int i=0; i<7; i++) {
-            if (info->armors[armor].armor[i] < 0.001) continue;
+            if (info->armors[armor].armor[i][lvl] < 0.001) continue;
             float pa[2] = { px+10, py+75+h*15 };
             char sa[64]; sprintf(sa, "%s: %.1f%", 
-                info->damage_types[i], info->armors[armor].armor[i]);
+                info->damage_types[i], info->armors[armor].armor[i][lvl]);
             render_text_scaled(rend, sa, pa, t, 1);
             h++;
         }
     } else {
-        render_view_weapon(rend, t, px, py, info, armor);
+        render_view_weapon(rend, t, px, py, info, armor, lvl);
     }
 }
 
 
 void render_view_weapon (SDL_Renderer* rend, txtd *t, int px, int py, 
-    infos *info, int weapon) 
+    infos *info, int weapon, int lvl) 
 {
     if (weapon != -1) {
         float pname[2] = { px+10, py+10 };
@@ -184,7 +185,7 @@ void render_view_weapon (SDL_Renderer* rend, txtd *t, int px, int py,
         render_text_scaled(rend, sname, pname, t, 1);
         float pweight[2] = { px+10, py+30 };
         char sweight[64]; sprintf(sweight, "WEIGHT: %.0f", 
-            info->weapons[weapon].weight);
+            info->weapons[weapon].weight[lvl]);
         render_text_scaled(rend, sweight, pweight, t, 1);
         float ptype[2] = { px+10, py+45 };
         char stype[64]; sprintf(stype, "DAMAGE TYPE: %s", 
@@ -192,15 +193,15 @@ void render_view_weapon (SDL_Renderer* rend, txtd *t, int px, int py,
         render_text_scaled(rend, stype, ptype, t, 1);
         float pdamage[2] = { px+10, py+60 };
         char sdamage[64]; sprintf(sdamage, "DAMAGE: %.0f", 
-            info->weapons[weapon].damage);
+            info->weapons[weapon].damage[lvl]);
         render_text_scaled(rend, sdamage, pdamage, t, 1);
         float prange[2] = { px+10, py+75 };
         char srange[64]; sprintf(srange, "RANGE: %.0f", 
-            info->weapons[weapon].range);
+            info->weapons[weapon].range[lvl]);
         render_text_scaled(rend, srange, prange, t, 1);
         float pcool[2] = { px+10, py+90 };
         char scool[64]; sprintf(scool, "COOLDOWN: %.0f", 
-            info->weapons[weapon].cooldown);
+            info->weapons[weapon].cooldown[lvl]);
         render_text_scaled(rend, scool, pcool, t, 1);
     } else {
         float pname[2] = { px+10, py+10 };
@@ -209,7 +210,7 @@ void render_view_weapon (SDL_Renderer* rend, txtd *t, int px, int py,
 }
 
 void render_view_weapon_detail (SDL_Renderer* rend, txtd *t, 
-    int px, int py, infos *info, int weapon)
+    int px, int py, infos *info, int weapon, int lvl)
 {
     if (weapon != -1) {
         float pname[2] = { px+10, py+10 };
@@ -218,7 +219,7 @@ void render_view_weapon_detail (SDL_Renderer* rend, txtd *t,
         render_text_scaled(rend, sname, pname, t, 1);
         float pweight[2] = { px+10, py+30 };
         char sweight[64]; sprintf(sweight, "WEIGHT: %.0f", 
-            info->weapons[weapon].weight);
+            info->weapons[weapon].weight[lvl]);
         render_text_scaled(rend, sweight, pweight, t, 1);
         float ptype[2] = { px+10, py+45 };
         char stype[64]; sprintf(stype, "DAMAGE TYPE: %s", 
@@ -226,24 +227,24 @@ void render_view_weapon_detail (SDL_Renderer* rend, txtd *t,
         render_text_scaled(rend, stype, ptype, t, 1);
         float pdamage[2] = { px+10, py+60 };
         char sdamage[64]; sprintf(sdamage, "DAMAGE: %.0f", 
-            info->weapons[weapon].damage);
+            info->weapons[weapon].damage[lvl]);
         render_text_scaled(rend, sdamage, pdamage, t, 1);
         float prange[2] = { px+10, py+75 };
         char srange[64]; sprintf(srange, "RANGE: %.0f", 
-            info->weapons[weapon].range);
+            info->weapons[weapon].range[lvl]);
         render_text_scaled(rend, srange, prange, t, 1);
         float pcool[2] = { px+10, py+90 };
         char scool[64]; sprintf(scool, "COOLDOWN: %.0f", 
-            info->weapons[weapon].cooldown);
+            info->weapons[weapon].cooldown[lvl]);
         render_text_scaled(rend, scool, pcool, t, 1);
     } else {
-        render_view_weapon(rend, t, px, py, info, weapon);
+        render_view_weapon(rend, t, px, py, info, weapon, lvl);
     }
 }
 
 
 void render_view_aug (SDL_Renderer* rend, txtd *t, int px, int py, 
-    infos *info, int aug) 
+    infos *info, int aug, int lvl) 
 {
     if (aug != -1) {
         float pname[2] = { px+10, py+10 };
@@ -252,7 +253,7 @@ void render_view_aug (SDL_Renderer* rend, txtd *t, int px, int py,
         render_text_scaled(rend, sname, pname, t, 1);
         float pweight[2] = { px+10, py+30 };
         char sweight[64]; sprintf(sweight, "WEIGHT: %.0f", 
-            info->augs[aug].weight);
+            info->augs[aug].weight[lvl]);
         render_text_scaled(rend, sweight, pweight, t, 1);
     } else {
         float pname[2] = { px+10, py+10 };
@@ -261,7 +262,7 @@ void render_view_aug (SDL_Renderer* rend, txtd *t, int px, int py,
 }
 
 void render_view_aug_detail (SDL_Renderer* rend, txtd *t, int px, int py, 
-    infos *info, int aug) 
+    infos *info, int aug, int lvl) 
 {
     if (aug != -1) {
         float h = 10;
@@ -273,11 +274,11 @@ void render_view_aug_detail (SDL_Renderer* rend, txtd *t, int px, int py,
         
         float pweight[2] = { px+10, py+h };
         char sweight[64]; sprintf(sweight, "WEIGHT: %.0f", 
-            info->augs[aug].weight);
+            info->augs[aug].weight[lvl]);
         render_text_scaled(rend, sweight, pweight, t, 1);
         h += 15;
         
-        float range = info->augs[aug].add_range;
+        float range = info->augs[aug].add_range[lvl];
         if (range != 0) {
             float p[2] = { px+10, py+h };
             char s[64]; sprintf(s, "RANGE: %.1f", range);
@@ -285,7 +286,7 @@ void render_view_aug_detail (SDL_Renderer* rend, txtd *t, int px, int py,
             h += 15;
         }
         
-        float cooldown = info->augs[aug].add_cooldown;
+        float cooldown = info->augs[aug].add_cooldown[lvl];
         if (cooldown != 0) {
             float p[2] = { px+10, py+h };
             char s[64]; sprintf(s, "COOLDOWN: %.2f", cooldown);
@@ -293,7 +294,7 @@ void render_view_aug_detail (SDL_Renderer* rend, txtd *t, int px, int py,
             h += 15;
         }
         
-        float speed = info->augs[aug].add_speed;
+        float speed = info->augs[aug].add_speed[lvl];
         if (speed != 0) {
             float p[2] = { px+10, py+h };
             char s[64]; sprintf(s, "SPEED: %.2f", speed);
@@ -301,7 +302,7 @@ void render_view_aug_detail (SDL_Renderer* rend, txtd *t, int px, int py,
             h += 15;
         }
         
-        float hp = info->augs[aug].add_hp;
+        float hp = info->augs[aug].add_hp[lvl];
         if (hp != 0) {
             float p[2] = { px+10, py+h };
             char s[64]; sprintf(s, "HP: %.1f", hp);
@@ -312,44 +313,44 @@ void render_view_aug_detail (SDL_Renderer* rend, txtd *t, int px, int py,
         h += 5;
         
         float sum = 0;
-        for (int i=0; i<7; i++) sum += fabs(info->augs[aug].add_armor[i]);
+        for (int i=0; i<7; i++) sum += fabs(info->augs[aug].add_armor[i][lvl]);
         if (sum != 0) {
             float p[2] = { px+10, py+h };
             render_text_scaled(rend, "ARMOR: ", p, t, 1);
             h += 15;
             for (int i=0; i<7; i++) {
-                if (info->augs[aug].add_armor[i] == 0) continue;
+                if (info->augs[aug].add_armor[i][lvl] == 0) continue;
                 float pa[2] = { px+10, py+h };
                 char sa[64]; sprintf(sa, "%s: %.1f%", 
-                    info->damage_types[i], info->augs[aug].add_armor[i]);
+                    info->damage_types[i], info->augs[aug].add_armor[i][lvl]);
                 render_text_scaled(rend, sa, pa, t, 1);
                 h += 15;
             }
         }
         
         sum = 0;
-        for (int i=0; i<7; i++) sum += fabs(info->augs[aug].add_damage[i]);
+        for (int i=0; i<7; i++) sum += fabs(info->augs[aug].add_damage[i][lvl]);
         if (sum != 0) {
             float p[2] = { px+10, py+h };
             render_text_scaled(rend, "DAMAGE: ", p, t, 1);
             h += 15;
             for (int i=0; i<7; i++) {
-                if (info->augs[aug].add_damage[i] == 0) continue;
+                if (info->augs[aug].add_damage[i][lvl] == 0) continue;
                 float pa[2] = { px+10, py+h };
                 char sa[64]; sprintf(sa, "%s: %.1f%", 
-                    info->damage_types[i], info->augs[aug].add_damage[i]);
+                    info->damage_types[i], info->augs[aug].add_damage[i][lvl]);
                 render_text_scaled(rend, sa, pa, t, 1);
                 h += 15;
             }
         }
     } else {
-        render_view_aug(rend, t, px, py, info, aug);
+        render_view_aug(rend, t, px, py, info, aug, lvl);
     }
 }
 
 
 void render_view_brain (SDL_Renderer* rend, txtd *t, int px, int py, 
-    infos *info, int brain) 
+    infos *info, int brain, int lvl) 
 {
     if (brain != -1) {
         float pname[2] = { px+10, py+10 };
@@ -364,7 +365,7 @@ void render_view_brain (SDL_Renderer* rend, txtd *t, int px, int py,
 
 
 void render_view_template (SDL_Renderer* rend, txtd *t, int px, int py, 
-    infos *info, int temp) 
+    infos *info, int temp, int lvl) 
 {
     button b = { "edit", 4, { px, py } };
     render_button(rend, t, &b);

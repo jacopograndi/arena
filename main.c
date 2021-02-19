@@ -50,6 +50,11 @@ int main( int argc, char* args[] ) {
     txtd textd; char_width_init(textd.cw);
     SDL_Surface* image = SDL_LoadBMP("content/gf.bmp");
     textd.tex = SDL_CreateTextureFromSurface(rend, image);
+    SDL_SetTextureColorMod(textd.tex, 0, 0, 0);
+    
+    SDL_Surface* imagesmall = SDL_LoadBMP("content/gfsmall.bmp");
+    SDL_Texture* txsmall = SDL_CreateTextureFromSurface(rend, imagesmall);
+    SDL_SetTextureColorMod(txsmall, 0, 0, 0);
     
     SDL_Surface* sprites = SDL_LoadBMP("content/sprites.bmp");
     SDL_Texture* txsprites = SDL_CreateTextureFromSurface(rend, sprites);
@@ -200,14 +205,21 @@ int main( int argc, char* args[] ) {
                     / info_unit_get_health(&info, &ar->us[i].info);
                 SDL_Rect hprect = { 
                     (int)x-posx, (int)y-posy+ts-5, 
-                    ts*amt, 5 };
+                    ts*amt, 6 };
                 int sw = 1 ? ar->us[i].owner : 0;
                 SDL_SetRenderDrawColor(rend, 255*sw, 255*(1-sw), 0, 255);
                 SDL_RenderFillRect(rend, &hprect);
                 
+                SDL_SetTextureColorMod(txsmall, 0, 100, 0);
                 char shp[32]; sprintf(shp, "%.0f", ar->us[i].hp);
                 float php[2] = { (int)x-posx, (int)y-posy+ts-5 };
-                render_text_scaled(rend, shp, php, &textd, 1);
+                render_text_small(rend, shp, php, txsmall);
+                
+                SDL_SetTextureColorMod(txsmall, 255, 160, 0);
+                char sch[32]; sprintf(sch, "%.0f", ar->us[i].charge);
+                float pch[2] = { (int)x-posx, (int)y-posy+ts+1 };
+                render_text_small(rend, sch, pch, txsmall);
+                SDL_SetTextureColorMod(txsmall, 0, 0, 0);
             }
             
             hud_render(&_hud, rend, &textd, &mkb, &info, txsprites);

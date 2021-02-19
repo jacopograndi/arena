@@ -34,7 +34,7 @@ void render_text (SDL_Renderer* gRenderer, char str[], float off[], txtd *t)
     }
 }
 
-void render_text_scaled (SDL_Renderer* gRenderer, char str[], 
+void render_text_scaled (SDL_Renderer* rend, char str[], 
     float off[], txtd *t, float scale) 
 {
     int width = 0;
@@ -42,7 +42,20 @@ void render_text_scaled (SDL_Renderer* gRenderer, char str[],
         int char_i = str[i];
         SDL_Rect srcRect = { (char_i%32)*6+1, (char_i/32)*12+1, 5, 11 };
         SDL_Rect dstRect = { off[0]+width, off[1], 5*scale, 11*scale };
-        SDL_RenderCopy(gRenderer, t->tex, &srcRect, &dstRect);
+        SDL_RenderCopy(rend, t->tex, &srcRect, &dstRect);
         width += t->cw[char_i]*scale+1*scale;
+    }
+}
+
+void render_text_small (SDL_Renderer* rend, char str[], float off[], 
+    SDL_Texture *texsmall) 
+{
+    int width = 0;
+    for (int i=0; str[i]!='\0'; i++) {
+        int char_i = str[i];
+        SDL_Rect srcRect = { (char_i%32)*5+1, (char_i/32)*7+1, 4, 6 };
+        SDL_Rect dstRect = { off[0]+width, off[1], 4, 6 };
+        SDL_RenderCopy(rend, texsmall, &srcRect, &dstRect);
+        width += 5;
     }
 }

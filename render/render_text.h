@@ -15,4 +15,7 @@ void render_text (SDL_Renderer* gRenderer, char str[], float off[], txtd *t);
 void render_text_scaled (SDL_Renderer* gRenderer, char str[], 
     float off[], txtd *t, float scale);
     
+void render_text_small (SDL_Renderer* rend, char str[], float off[], 
+    SDL_Texture *texsmall);
+    
 #endif

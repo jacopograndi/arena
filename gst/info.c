@@ -42,72 +42,125 @@ void info_unit_init (info_unit *u) {
     for(int i=0; i<34; u->levels[i] = 0, i++);
 }
 
+float info_unit_get_capacity(infos *info, info_unit *u) {
+    float sum = 0;
+    int lc = u->levels[LEVEL_CHASSIS];
+    for(int i=0; i<16; i++) {
+        if (u->augs[i] != -1 && info->chassis[u->chassis].slot_aug[lc]) {
+            int lvl = u->levels[LEVEL_AUGS+i];
+            sum += info->augs[u->augs[i]].add_capacity[lvl];
+        }
+    }
+    int lvl = u->levels[LEVEL_BATTERY];
+    sum += info->batteries[u->battery].capacity[lvl];
+    return sum;
+}
+
+float info_unit_get_upkeep(infos *info, info_unit *u) {
+    float sum = 0;
+    int lc = u->levels[LEVEL_CHASSIS];
+    int lbr = u->levels[LEVEL_BRAIN];
+    for(int i=0; i<8; i++) {
+        if (u->weapons[i] != -1 && info->chassis[u->chassis].slot_weapon[lc]) {
+            int lvl = u->levels[LEVEL_WEAPONS+i];
+            sum += info->weapons[u->weapons[i]].upkeep[lvl];
+        }
+        if (u->armor[i] != -1 && info->chassis[u->chassis].slot_armor[lc]) {
+            int lvl = u->levels[LEVEL_ARMOR+i];
+            sum += info->armors[u->armor[i]].upkeep[lvl];
+        }
+    }
+    for(int i=0; i<16; i++) {
+        if (u->augs[i] != -1 && info->chassis[u->chassis].slot_aug[lc]) {
+            int lvl = u->levels[LEVEL_AUGS+i];
+            sum += info->augs[u->augs[i]].upkeep[lvl];
+        }
+    }
+    sum += info->chassis[u->chassis].upkeep[lc];
+    sum += info->brains[u->brain].upkeep[lbr];
+    return sum;
+}
+
 float info_unit_get_weight (infos *info, info_unit *u) {
     float sum = 0;
+    int lc = u->levels[LEVEL_CHASSIS];
     if (u->battery != -1) {
-        sum += info->batteries[u->battery].weight;
+        int lb = u->levels[LEVEL_BATTERY];
+        sum += info->batteries[u->battery].weight[lb];
     }
     for(int i=0; i<8; i++) {
-        if (u->weapons[i] != -1 && i<info->chassis[u->chassis].slot_weapon) {
-            sum += info->weapons[u->weapons[i]].weight;
+        if (u->weapons[i] != -1 && i<info->chassis[u->chassis].slot_weapon[lc]) {
+            int lvl = u->levels[LEVEL_WEAPONS+i];
+            sum += info->weapons[u->weapons[i]].weight[lvl];
         }
-        if (u->armor[i] != -1 && i<info->chassis[u->chassis].slot_armor) {
-            sum += info->armors[u->armor[i]].weight;
+        if (u->armor[i] != -1 && i<info->chassis[u->chassis].slot_armor[lc]) {
+            int lvl = u->levels[LEVEL_ARMOR+i];
+            sum += info->armors[u->armor[i]].weight[lvl];
         }
     }
     for(int i=0; i<16; i++) {
         if (u->augs[i] != -1 && info->chassis[u->chassis].slot_aug) {
-            sum += info->augs[u->augs[i]].weight;
+            int lvl = u->levels[LEVEL_AUGS+i];
+            sum += info->augs[u->augs[i]].weight[lvl];
         }
     }
     return sum;
 }
 
 float info_unit_get_dps (infos *info, info_unit *u) {
+    int lc = u->levels[LEVEL_CHASSIS];
     float sum = 0;
     for(int i=0; i<8; i++) {
-        if (u->weapons[i] != -1 && i<info->chassis[u->chassis].slot_weapon) {
+        if (u->weapons[i] != -1 && i<info->chassis[u->chassis].slot_weapon[lc]) {
             info_weapon *w = info->weapons+u->weapons[i];
+            int lw = u->levels[LEVEL_WEAPONS+i];
             float damage = info_unit_get_damage(info, u, i);
-            sum += damage/w->cooldown;
+            sum += damage/w->cooldown[lw];
         }
     }
     return sum;
 }
 
 float info_unit_get_health(infos *info, info_unit *u) {
+    int lc = u->levels[LEVEL_CHASSIS];
     float sum = 0;
     for(int i=0; i<16; i++) {
-        if (u->augs[i] != -1 && info->chassis[u->chassis].slot_aug) {
-            sum += info->augs[u->augs[i]].add_hp;
+        if (u->augs[i] != -1 && info->chassis[u->chassis].slot_aug[lc]) {
+            int lvl = u->levels[LEVEL_AUGS+i];
+            sum += info->augs[u->augs[i]].add_hp[lvl];
         }
     }
-    sum += info->chassis[u->chassis].hp;
+    sum += info->chassis[u->chassis].hp[lc];
     return sum;
 }
 
 float info_unit_get_speed(infos *info, info_unit *u) {
+    int lc = u->levels[LEVEL_CHASSIS];
     float sum = 0;
     for(int i=0; i<16; i++) {
-        if (u->augs[i] != -1 && info->chassis[u->chassis].slot_aug) {
-            sum += info->augs[u->augs[i]].add_speed;
+        if (u->augs[i] != -1 && info->chassis[u->chassis].slot_aug[lc]) {
+            int lvl = u->levels[LEVEL_AUGS+i];
+            sum += info->augs[u->augs[i]].add_speed[lvl];
         }
     }
-    sum += info->chassis[u->chassis].speed;
+    sum += info->chassis[u->chassis].speed[lc];
     return sum;
 }
 
 float info_unit_get_damage (infos *info, info_unit *u, int w) {
+    int lc = u->levels[LEVEL_CHASSIS];
     int damage_type = info->weapons[u->weapons[w]].damage_type;
     float sum = 0;
     for(int i=0; i<16; i++) {
-        if (u->augs[i] != -1 && info->chassis[u->chassis].slot_aug) {
-            sum += info->augs[u->augs[i]].add_damage[damage_type];
+        if (u->augs[i] != -1 && info->chassis[u->chassis].slot_aug[lc]) {
+            int lvl = u->levels[LEVEL_AUGS+i];
+            sum += info->augs[u->augs[i]].add_damage[damage_type][lvl];
         }
     }
     float mult = (1 + sum/100.0f);
     if (mult < 0) mult = 0;
-    float dam = info->weapons[u->weapons[w]].damage * mult;
+    int lw = u->levels[LEVEL_WEAPONS+w];
+    float dam = info->weapons[u->weapons[w]].damage[lw] * mult;
     return dam;
 }
 
@@ -123,37 +176,53 @@ float info_unit_get_damage_target (infos *info, info_unit *u, int w,
 }
 
 float info_unit_get_cooldown(infos *info, info_unit *u, int w) {
+    int lc = u->levels[LEVEL_CHASSIS];
     float sum = 0;
     for(int i=0; i<16; i++) {
-        if (u->augs[i] != -1 && info->chassis[u->chassis].slot_aug) {
-            sum += info->augs[u->augs[i]].add_cooldown;
+        if (u->augs[i] != -1 && info->chassis[u->chassis].slot_aug[lc]) {
+            int lvl = u->levels[LEVEL_AUGS+i];
+            sum += info->augs[u->augs[i]].add_cooldown[lvl];
         }
     }
-    sum += info->weapons[u->weapons[w]].cooldown;
+    int lw = u->levels[LEVEL_WEAPONS+w];
+    sum += info->weapons[u->weapons[w]].cooldown[lw];
     return sum;
 }
 
 float info_unit_get_range(infos *info, info_unit *u, int w) {
+    int lc = u->levels[LEVEL_CHASSIS];
     float sum = 0;
     for(int i=0; i<16; i++) {
-        if (u->augs[i] != -1 && info->chassis[u->chassis].slot_aug) {
-            sum += info->augs[u->augs[i]].add_range;
+        if (u->augs[i] != -1 && info->chassis[u->chassis].slot_aug[lc]) {
+            int lvl = u->levels[LEVEL_AUGS+i];
+            sum += info->augs[u->augs[i]].add_range[lvl];
         }
     }
-    sum += info->weapons[u->weapons[w]].range;
+    int lw = u->levels[LEVEL_WEAPONS+w];
+    sum += info->weapons[u->weapons[w]].range[lw];
+    return sum;
+}
+
+float info_unit_get_charge_per_shot (infos *info, info_unit *u, int w) {
+    float sum = 0;
+    int lw = u->levels[LEVEL_WEAPONS+w];
+    sum += info->weapons[u->weapons[w]].charge_per_shot[lw];
     return sum;
 }
 
 float info_unit_get_armor(infos *info, info_unit *u, int d) {
+    int lc = u->levels[LEVEL_CHASSIS];
     float sum = 0;
     for(int i=0; i<8; i++) {
-        if (u->armor[i] != -1 && i<info->chassis[u->chassis].slot_armor) {
-            sum += info->armors[u->armor[i]].armor[d];
+        if (u->armor[i] != -1 && i<info->chassis[u->chassis].slot_armor[lc]) {
+            int lvl = u->levels[LEVEL_ARMOR+i];
+            sum += info->armors[u->armor[i]].armor[d][lvl];
         }
     }
     for(int i=0; i<16; i++) {
-        if (u->augs[i] != -1 && info->chassis[u->chassis].slot_aug) {
-            sum += info->augs[u->augs[i]].add_armor[d];
+        if (u->augs[i] != -1 && info->chassis[u->chassis].slot_aug[lc]) {
+            int lvl = u->levels[LEVEL_AUGS+i];
+            sum += info->augs[u->augs[i]].add_armor[d][lvl];
         }
     }
     return sum;
@@ -162,47 +231,77 @@ float info_unit_get_armor(infos *info, info_unit *u, int d) {
 
 void weapon_init (info_weapon *w) {
     strcpy(w->name, "nameless");
-    w->damage_type = 0;
-    w->weight = 0; w->cooldown = 1;
-    w->damage = 0; w->range = 0; w->aoe = 0;
-    w->knockback = 0; w->stun = 0;
-    for (int i=0; i<7; i++) { w->reduce_armor[i]=0; }
+    for (int l=0; l<MAXLEVEL; l++) { 
+        w->damage_type = 0;
+        w->weight[l] = 0; 
+        w->cooldown[l] = 1;
+        w->damage[l] = 0;
+        w->range[l] = 0; 
+        w->aoe[l] = 0;
+        w->knockback[l] = 0;
+        w->stun[l] = 0;
+        for (int i=0; i<7; i++) { w->reduce_armor[i][l]=0; }
+        w->upkeep[l] = 0;
+        w->charge_per_shot[l] = 0;
+    }
 }
 
 void chassis_init (info_chassis *c) {
     strcpy(c->name, "nameless");
-    c->slot_weapon = 0; c->slot_armor = 0; c->slot_aug = 0;
-    c->weight_max = 0; c->hp = 0;
+    for (int l=0; l<MAXLEVEL; l++) { 
+        c->slot_weapon[l] = 0; 
+        c->slot_armor[l] = 0;
+        c->slot_aug[l] = 0;
+        c->weight_max[l] = 0; 
+        c->hp[l] = 0;
+        c->upkeep[l] = 0;
+    }
 }
 
 void battery_init (info_battery *b) {
     strcpy(b->name, "nameless");
-    b->weight = 0; b->capacity = 0; b->recharge = 0;
+    for (int l=0; l<MAXLEVEL; l++) { 
+        b->weight[l] = 0; 
+        b->capacity[l] = 0;
+        b->recharge[l] = 0;
+    }
 }
 
 void armor_init (info_armor *a) {
     strcpy(a->name, "nameless");
-    a->weight = 0;
-    for (int i=0; i<7; i++) { a->armor[i]=0; }
+    for (int l=0; l<MAXLEVEL; l++) { 
+        a->weight[l] = 0;
+        for (int i=0; i<7; i++) { a->armor[i][l]=0; }
+        a->upkeep[l] = 0;
+    }
 }
 
 void aug_init (info_aug *a) {
     strcpy(a->name, "nameless");
-    a->weight = 0;
-    for (int i=0; i<7; i++) { a->add_damage[i]=0; }
-    for (int i=0; i<7; i++) { a->add_armor[i]=0; }
-    a->add_range = 0;
-    a->add_cooldown = 0;
-    a->add_speed = 0;
-    a->add_hp = 0;
+        for (int l=0; l<MAXLEVEL; l++) { 
+        a->weight[l] = 0;
+        for (int i=0; i<7; i++) { a->add_damage[i][l]=0; }
+        for (int i=0; i<7; i++) { a->add_armor[i][l]=0; }
+        a->add_range[l] = 0;
+        a->add_cooldown [l]= 0;
+        a->add_speed[l] = 0;
+        a->add_hp[l] = 0;
+        a->add_capacity[l] = 0;
+        a->upkeep[l] = 0;
+    }
 }
 
 void brain_init (info_brain *a) {
     strcpy(a->name, "nameless");
+    for (int l=0; l<MAXLEVEL; l++) { 
+        a->upkeep[l] = 0;
+    }
 }
 
 
-void info_unit_parse (char *json, info_unit *u, jsmntok_t *t, int r) { 
+void info_unit_parse (char *json, info_unit *u, jsmntok_t *t, int r, 
+    infos *info) 
+{ 
     info_unit_init(u);
     int obj_i = 0, dict_i = -1; 
     for (int i=0; i<r; i+=2) { 
@@ -243,7 +342,9 @@ void info_unit_parse (char *json, info_unit *u, jsmntok_t *t, int r) {
     }
 }
 
-void info_weapon_parse (char *json, info_weapon *w, jsmntok_t *t, int r) { 
+void info_weapon_parse (char *json, info_weapon *w, jsmntok_t *t, int r, 
+    infos *info) 
+{ 
     weapon_init(w);
     int obj_i = 0, dict_i = -1; 
     for (int i=0; i<r; i+=2) { 
@@ -257,70 +358,57 @@ void info_weapon_parse (char *json, info_weapon *w, jsmntok_t *t, int r) {
                 w->damage_type = damage_type_map(val);
             }
             if (strcmp(key, "weight") == 0) {
-                char val[32]; substr_token(json, val, t+i+1); 
-                w->weight = atof(val); 
+                int rt = json_parse_subtokens(json, t, r, i+1);
+                json_parse_array(json, w->weight, t+i+2, rt-1, 'f');
             }
             if (strcmp(key, "cooldown") == 0) {
-                char val[32]; substr_token(json, val, t+i+1); 
-                w->cooldown = atof(val); 
+                int rt = json_parse_subtokens(json, t, r, i+1);
+                json_parse_array(json, w->cooldown, t+i+2, rt-1, 'f');
             }
             if (strcmp(key, "damage") == 0) {
-                char val[32]; substr_token(json, val, t+i+1); 
-                w->damage = atof(val); 
+                int rt = json_parse_subtokens(json, t, r, i+1);
+                json_parse_array(json, w->damage, t+i+2, rt-1, 'f');
             }
             if (strcmp(key, "range") == 0) {
-                char val[32]; substr_token(json, val, t+i+1); 
-                w->range = atof(val); 
+                int rt = json_parse_subtokens(json, t, r, i+1);
+                json_parse_array(json, w->range, t+i+2, rt-1, 'f');
             }
             if (strcmp(key, "aoe") == 0) {
-                char val[32]; substr_token(json, val, t+i+1); 
-                w->aoe = atof(val); 
+                int rt = json_parse_subtokens(json, t, r, i+1);
+                json_parse_array(json, w->aoe, t+i+2, rt-1, 'f');
             }
             if (strcmp(key, "knockback") == 0) {
-                char val[32]; substr_token(json, val, t+i+1); 
-                w->knockback = atoi(val); 
+                int rt = json_parse_subtokens(json, t, r, i+1);
+                json_parse_array(json, w->knockback, t+i+2, rt-1, 'i');
             }
             if (strcmp(key, "damage_battery") == 0) {
-                char val[32]; substr_token(json, val, t+i+1); 
-                w->damage_battery = atof(val); 
+                int rt = json_parse_subtokens(json, t, r, i+1);
+                json_parse_array(json, w->damage_battery, t+i+2, rt-1, 'f'); 
             }
             if (strcmp(key, "stun") == 0) {
-                char val[32]; substr_token(json, val, t+i+1); 
-                w->stun = atoi(val); 
+                int rt = json_parse_subtokens(json, t, r, i+1);
+                json_parse_array(json, w->stun, t+i+2, rt-1, 'i');
             }
-            if (strcmp(key, "reduce_pierce") == 0) {
-                char val[32]; substr_token(json, val, t+i+1); 
-                w->reduce_armor[0] = atof(val); 
+            for (int h=0; h<7; h++) {
+                char strkey[32]; sprintf(strkey, "reduce_%s", 
+                    info->damage_types[h]);
+                if (strcmp(key, strkey) == 0) {
+                    int rt = json_parse_subtokens(json, t, r, i+1);
+                    json_parse_array(json, w->reduce_armor[h], t+i+2, rt-1, 'f');
+                    break;
+                }
             }
-            if (strcmp(key, "reduce_laser") == 0) {
-                char val[32]; substr_token(json, val, t+i+1); 
-                w->reduce_armor[1] = atof(val); 
-            }
-            if (strcmp(key, "reduce_impact") == 0) {
-                char val[32]; substr_token(json, val, t+i+1); 
-                w->reduce_armor[2] = atof(val); 
-            }
-            if (strcmp(key, "reduce_fusion") == 0) {
-                char val[32]; substr_token(json, val, t+i+1); 
-                w->reduce_armor[3] = atof(val); 
-            }
-            if (strcmp(key, "reduce_explosive") == 0) {
-                char val[32]; substr_token(json, val, t+i+1); 
-                w->reduce_armor[4] = atof(val); 
-            }
-            if (strcmp(key, "reduce_emp") == 0) {
-                char val[32]; substr_token(json, val, t+i+1); 
-                w->reduce_armor[5] = atof(val); 
-            }
-            if (strcmp(key, "reduce_spread") == 0) {
-                char val[32]; substr_token(json, val, t+i+1); 
-                w->reduce_armor[6] = atof(val); 
+            if (strcmp(key, "upkeep") == 0) {
+                int rt = json_parse_subtokens(json, t, r, i+1);
+                json_parse_array(json, w->upkeep, t+i+2, rt-1, 'f');
             }
         } 
     } 
 }
 
-void info_chassis_parse (char *json, info_chassis *c, jsmntok_t *t, int r) { 
+void info_chassis_parse (char *json, info_chassis *c, jsmntok_t *t, int r, 
+    infos *info) 
+{ 
     chassis_init(c);
     int obj_i = 0, dict_i = -1; 
     for (int i=0; i<r; i+=2) { 
@@ -330,34 +418,40 @@ void info_chassis_parse (char *json, info_chassis *c, jsmntok_t *t, int r) {
                 substr_token(json, c->name, t+i+1); 
             }
             if (strcmp(key, "slot_weapon") == 0) {
-                char val[32]; substr_token(json, val, t+i+1); 
-                c->slot_weapon = atoi(val); 
+                int rt = json_parse_subtokens(json, t, r, i+1);
+                json_parse_array(json, c->slot_weapon, t+i+2, rt-1, 'i');
             }
             if (strcmp(key, "slot_armor") == 0) {
-                char val[32]; substr_token(json, val, t+i+1); 
-                c->slot_armor = atoi(val); 
+                int rt = json_parse_subtokens(json, t, r, i+1);
+                json_parse_array(json, c->slot_armor, t+i+2, rt-1, 'i');
             }
             if (strcmp(key, "slot_aug") == 0) {
-                char val[32]; substr_token(json, val, t+i+1); 
-                c->slot_aug = atoi(val); 
+                int rt = json_parse_subtokens(json, t, r, i+1);
+                json_parse_array(json, c->slot_aug, t+i+2, rt-1, 'i');
             }
             if (strcmp(key, "weight_max") == 0) {
-                char val[32]; substr_token(json, val, t+i+1); 
-                c->weight_max = atof(val); 
+                int rt = json_parse_subtokens(json, t, r, i+1);
+                json_parse_array(json, c->weight_max, t+i+2, rt-1, 'f');
             }
             if (strcmp(key, "hp") == 0) {
-                char val[32]; substr_token(json, val, t+i+1); 
-                c->hp = atof(val); 
+                int rt = json_parse_subtokens(json, t, r, i+1);
+                json_parse_array(json, c->hp, t+i+2, rt-1, 'f');
             }
             if (strcmp(key, "speed") == 0) {
-                char val[32]; substr_token(json, val, t+i+1); 
-                c->speed = atof(val); 
+                int rt = json_parse_subtokens(json, t, r, i+1);
+                json_parse_array(json, c->speed, t+i+2, rt-1, 'f');
+            }
+            if (strcmp(key, "upkeep") == 0) {
+                int rt = json_parse_subtokens(json, t, r, i+1);
+                json_parse_array(json, c->upkeep, t+i+2, rt-1, 'f');
             }
         } 
     } 
 }
 
-void info_battery_parse (char *json, info_battery *b, jsmntok_t *t, int r) { 
+void info_battery_parse (char *json, info_battery *b, jsmntok_t *t, int r, 
+    infos *info) 
+{ 
     battery_init(b);
     int obj_i = 0, dict_i = -1; 
     for (int i=0; i<r; i+=2) { 
@@ -367,22 +461,24 @@ void info_battery_parse (char *json, info_battery *b, jsmntok_t *t, int r) {
                 substr_token(json, b->name, t+i+1); 
             }
             if (strcmp(key, "weight") == 0) {
-                char val[32]; substr_token(json, val, t+i+1); 
-                b->weight = atof(val); 
+                int rt = json_parse_subtokens(json, t, r, i+1);
+                json_parse_array(json, b->weight, t+i+2, rt-1, 'f');
             }
             if (strcmp(key, "capacity") == 0) {
-                char val[32]; substr_token(json, val, t+i+1); 
-                b->capacity = atof(val); 
+                int rt = json_parse_subtokens(json, t, r, i+1);
+                json_parse_array(json, b->capacity, t+i+2, rt-1, 'f');
             }
             if (strcmp(key, "recharge") == 0) {
-                char val[32]; substr_token(json, val, t+i+1); 
-                b->recharge = atoi(val); 
+                int rt = json_parse_subtokens(json, t, r, i+1);
+                json_parse_array(json, b->recharge, t+i+2, rt-1, 'i');
             }
         } 
     } 
 }
 
-void info_armor_parse (char *json, info_armor *a, jsmntok_t *t, int r) { 
+void info_armor_parse (char *json, info_armor *a, jsmntok_t *t, int r, 
+    infos *info) 
+{ 
     armor_init(a);
     int obj_i = 0, dict_i = -1; 
     for (int i=0; i<r; i+=2) { 
@@ -392,42 +488,26 @@ void info_armor_parse (char *json, info_armor *a, jsmntok_t *t, int r) {
                 substr_token(json, a->name, t+i+1); 
             }
             if (strcmp(key, "weight") == 0) {
-                char val[32]; substr_token(json, val, t+i+1); 
-                a->weight = atof(val); 
+                int rt = json_parse_subtokens(json, t, r, i+1);
+                json_parse_array(json, a->weight, t+i+2, rt-1, 'f');
             }
-            if (strcmp(key, "pierce") == 0) {
-                char val[32]; substr_token(json, val, t+i+1); 
-                a->armor[0] = atof(val); 
+            for (int h=0; h<7; h++) {
+                if (strcmp(key, info->damage_types[h]) == 0) {
+                    int rt = json_parse_subtokens(json, t, r, i+1);
+                    json_parse_array(json, a->armor[h], t+i+2, rt-1, 'f');
+                }
             }
-            if (strcmp(key, "laser") == 0) {
-                char val[32]; substr_token(json, val, t+i+1); 
-                a->armor[1] = atof(val); 
-            }
-            if (strcmp(key, "impact") == 0) {
-                char val[32]; substr_token(json, val, t+i+1); 
-                a->armor[2] = atof(val); 
-            }
-            if (strcmp(key, "fusion") == 0) {
-                char val[32]; substr_token(json, val, t+i+1); 
-                a->armor[3] = atof(val); 
-            }
-            if (strcmp(key, "explosive") == 0) {
-                char val[32]; substr_token(json, val, t+i+1); 
-                a->armor[4] = atof(val); 
-            }
-            if (strcmp(key, "emp") == 0) {
-                char val[32]; substr_token(json, val, t+i+1); 
-                a->armor[5] = atof(val); 
-            }
-            if (strcmp(key, "spread") == 0) {
-                char val[32]; substr_token(json, val, t+i+1); 
-                a->armor[6] = atof(val); 
+            if (strcmp(key, "upkeep") == 0) {
+                int rt = json_parse_subtokens(json, t, r, i+1);
+                json_parse_array(json, a->upkeep, t+i+2, rt-1, 'f');
             }
         } 
     } 
 }
 
-void info_aug_parse (char *json, info_aug *a, jsmntok_t *t, int r) { 
+void info_aug_parse (char *json, info_aug *a, jsmntok_t *t, int r, 
+    infos *info) 
+{ 
     aug_init(a);
     int obj_i = 0, dict_i = -1; 
     for (int i=0; i<r; i+=2) { 
@@ -437,82 +517,54 @@ void info_aug_parse (char *json, info_aug *a, jsmntok_t *t, int r) {
                 substr_token(json, a->name, t+i+1); 
             }
             if (strcmp(key, "weight") == 0) {
-                char val[32]; substr_token(json, val, t+i+1); 
-                a->weight = atof(val); 
+                int rt = json_parse_subtokens(json, t, r, i+1);
+                json_parse_array(json, a->weight, t+i+2, rt-1, 'f');
             }
-            if (strcmp(key, "damage_pierce") == 0) {
-                char val[32]; substr_token(json, val, t+i+1); 
-                a->add_damage[0] = atof(val); 
+            for (int h=0; h<7; h++) {
+                char strkey[32]; sprintf(strkey, "damage_%s", 
+                    info->damage_types[h]);
+                if (strcmp(key, strkey) == 0) {
+                    int rt = json_parse_subtokens(json, t, r, i+1);
+                    json_parse_array(json, a->add_damage[h], t+i+2, rt-1, 'f');
+                    break;
+                }
             }
-            if (strcmp(key, "damage_laser") == 0) {
-                char val[32]; substr_token(json, val, t+i+1); 
-                a->add_damage[1] = atof(val); 
-            }
-            if (strcmp(key, "damage_impact") == 0) {
-                char val[32]; substr_token(json, val, t+i+1); 
-                a->add_damage[2] = atof(val); 
-            }
-            if (strcmp(key, "damage_fusion") == 0) {
-                char val[32]; substr_token(json, val, t+i+1); 
-                a->add_damage[3] = atof(val); 
-            }
-            if (strcmp(key, "damage_explosive") == 0) {
-                char val[32]; substr_token(json, val, t+i+1); 
-                a->add_damage[4] = atof(val); 
-            }
-            if (strcmp(key, "damage_emp") == 0) {
-                char val[32]; substr_token(json, val, t+i+1); 
-                a->add_damage[5] = atof(val); 
-            }
-            if (strcmp(key, "add_spread") == 0) {
-                char val[32]; substr_token(json, val, t+i+1); 
-                a->add_damage[6] = atof(val); 
-            }
-            if (strcmp(key, "armor_pierce") == 0) {
-                char val[32]; substr_token(json, val, t+i+1); 
-                a->add_armor[0] = atof(val); 
-            }
-            if (strcmp(key, "armor_laser") == 0) {
-                char val[32]; substr_token(json, val, t+i+1); 
-                a->add_armor[1] = atof(val); 
-            }
-            if (strcmp(key, "armor_impact") == 0) {
-                char val[32]; substr_token(json, val, t+i+1); 
-                a->add_armor[2] = atof(val); 
-            }
-            if (strcmp(key, "armor_fusion") == 0) {
-                char val[32]; substr_token(json, val, t+i+1); 
-                a->add_armor[3] = atof(val); 
-            }
-            if (strcmp(key, "armor_explosive") == 0) {
-                char val[32]; substr_token(json, val, t+i+1); 
-                a->add_armor[4] = atof(val); 
-            }
-            if (strcmp(key, "armor_emp") == 0) {
-                char val[32]; substr_token(json, val, t+i+1); 
-                a->add_armor[5] = atof(val); 
-            }
-            if (strcmp(key, "armor_spread") == 0) {
-                char val[32]; substr_token(json, val, t+i+1); 
-                a->add_armor[6] = atof(val); 
+            for (int h=0; h<7; h++) {
+                char strkey[32]; sprintf(strkey, "armor_%s", 
+                    info->damage_types[h]);
+                if (strcmp(key, strkey) == 0) {
+                    int rt = json_parse_subtokens(json, t, r, i+1);
+                    json_parse_array(json, a->add_armor[h], t+i+2, rt-1, 'f');
+                    break;
+                }
             }
             if (strcmp(key, "add_range") == 0) {
-                char val[32]; substr_token(json, val, t+i+1); 
-                a->add_range = atof(val); 
+                int rt = json_parse_subtokens(json, t, r, i+1);
+                json_parse_array(json, a->add_range, t+i+2, rt-1, 'f');
             }
             if (strcmp(key, "add_cooldown") == 0) {
-                char val[32]; substr_token(json, val, t+i+1); 
-                a->add_cooldown = atof(val); 
+                int rt = json_parse_subtokens(json, t, r, i+1);
+                json_parse_array(json, a->add_cooldown, t+i+2, rt-1, 'f');
             }
             if (strcmp(key, "add_hp") == 0) {
-                char val[32]; substr_token(json, val, t+i+1); 
-                a->add_hp = atof(val); 
+                int rt = json_parse_subtokens(json, t, r, i+1);
+                json_parse_array(json, a->add_hp, t+i+2, rt-1, 'f');
+            }
+            if (strcmp(key, "add_capacity") == 0) {
+                int rt = json_parse_subtokens(json, t, r, i+1);
+                json_parse_array(json, a->add_capacity, t+i+2, rt-1, 'f');
+            }
+            if (strcmp(key, "upkeep") == 0) {
+                int rt = json_parse_subtokens(json, t, r, i+1);
+                json_parse_array(json, a->upkeep, t+i+2, rt-1, 'f');
             }
         } 
     } 
 }
 
-void info_brain_parse (char *json, info_brain *a, jsmntok_t *t, int r) { 
+void info_brain_parse (char *json, info_brain *a, jsmntok_t *t, int r, 
+    infos *info) 
+{ 
     brain_init(a);
     int obj_i = 0, dict_i = -1; 
     for (int i=0; i<r; i+=2) { 
@@ -520,6 +572,10 @@ void info_brain_parse (char *json, info_brain *a, jsmntok_t *t, int r) {
             char key[32]; substr_token(json, key, t+i); 
             if (strcmp(key, "name") == 0) {
                 substr_token(json, a->name, t+i+1); 
+            }
+            if (strcmp(key, "upkeep") == 0) {
+                int rt = json_parse_subtokens(json, t, r, i+1);
+                json_parse_array(json, a->upkeep, t+i+2, rt-1, 'f');
             }
         } 
     } 
@@ -534,31 +590,38 @@ void info_parse_json (infos *info, char *json, char *obj) {
         if (t[i].type == JSMN_OBJECT) {
             int rt = json_parse_subtokens(json, t, r, i);
             if (strcmp(obj, "template") == 0) {
-                info_unit_parse(json, info->templates+index, t+i+1, rt);
+                info_unit_parse(json, 
+                    info->templates+index, t+i+1, rt, info);
                 info->templateslen = index+1;
             }
             if (strcmp(obj, "weapon") == 0) {
-                info_weapon_parse(json, info->weapons+index, t+i+1, rt);
+                info_weapon_parse(json, 
+                    info->weapons+index, t+i+1, rt, info);
                 info->weaponslen = index+1;
             }
             if (strcmp(obj, "chassis") == 0) {
-                info_chassis_parse(json, info->chassis+index, t+i+1, rt);
+                info_chassis_parse(json, 
+                    info->chassis+index, t+i+1, rt, info);
                 info->chassislen = index+1;
             }
             if (strcmp(obj, "battery") == 0) {
-                info_battery_parse(json, info->batteries+index, t+i+1, rt);
+                info_battery_parse(json, 
+                    info->batteries+index, t+i+1, rt, info);
                 info->batterieslen = index+1;
             }
             if (strcmp(obj, "armor") == 0) {
-                info_armor_parse(json, info->armors+index, t+i+1, rt);
+                info_armor_parse(json, 
+                    info->armors+index, t+i+1, rt, info);
                 info->armorslen = index+1;
             }
             if (strcmp(obj, "aug") == 0) {
-                info_aug_parse(json, info->augs+index, t+i+1, rt);
+                info_aug_parse(json, 
+                    info->augs+index, t+i+1, rt, info);
                 info->augslen = index+1;
             }
             if (strcmp(obj, "brain") == 0) {
-                info_brain_parse(json, info->brains+index, t+i+1, rt);
+                info_brain_parse(json, 
+                    info->brains+index, t+i+1, rt, info);
                 info->brainslen = index+1;
             }
             index ++;

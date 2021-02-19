@@ -1,20 +1,50 @@
 [
     {
-        "name": "search and destroy"
-    },
-    { 
-        "name": "follower"
-    },
-    { 
-        "name": "defensive"
-    },
-    { 
-        "name": "kamikaze"
-    },
-    { 
-        "name": "run and gun"
+        "name": "search and destroy",
+        "upkeep": [
+            1.0,
+            1.0,
+            1.0
+        ]
     },
     {
-        "name": "flank"
+        "name": "follower",
+        "upkeep": [
+            1.0,
+            1.0,
+            1.0
+        ]
+    },
+    {
+        "name": "defensive",
+        "upkeep": [
+            1.0,
+            1.0,
+            1.0
+        ]
+    },
+    {
+        "name": "kamikaze",
+        "upkeep": [
+            1.0,
+            1.0,
+            1.0
+        ]
+    },
+    {
+        "name": "run and gun",
+        "upkeep": [
+            1.0,
+            1.0,
+            1.0
+        ]
+    },
+    {
+        "name": "flank",
+        "upkeep": [
+            1.0,
+            1.0,
+            1.0
+        ]
     }
 ]
