@@ -210,7 +210,7 @@ int main( int argc, char* args[] ) {
                 SDL_SetRenderDrawColor(rend, 255*sw, 255*(1-sw), 0, 255);
                 SDL_RenderFillRect(rend, &hprect);
                 
-                SDL_SetTextureColorMod(txsmall, 0, 100, 0);
+                SDL_SetTextureColorMod(txsmall, sw*100, 100*(1-sw), 0);
                 char shp[32]; sprintf(shp, "%.0f", ar->us[i].hp);
                 float php[2] = { (int)x-posx, (int)y-posy+ts-5 };
                 render_text_small(rend, shp, php, txsmall);

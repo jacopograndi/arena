@@ -65,15 +65,15 @@ void render_view_chassis (SDL_Renderer* rend, txtd *t, int px, int py,
         render_text_scaled(rend, sname, pname, t, 2);
         float pweight[2] = { px+10, py+40 };
         char sweight[64]; sprintf(sweight, "MAX WEIGHT: %0.0f", 
-            info->chassis[chassis].weight_max);
+            info->chassis[chassis].weight_max[lvl]);
         render_text_scaled(rend, sweight, pweight, t, 1);
         float php[2] = { px+10, py+55 };
         char shp[64]; sprintf(shp, "HP: %0.1f", 
-            info->chassis[chassis].hp);
+            info->chassis[chassis].hp[lvl]);
         render_text_scaled(rend, shp, php, t, 1);
         float pspeed[2] = { px+10, py+70 };
         char sspeed[64]; sprintf(sspeed, "SPEED: %0.2f tiles/turn", 
-            info->chassis[chassis].speed);
+            info->chassis[chassis].speed[lvl]);
         render_text_scaled(rend, sspeed, pspeed, t, 1);
         
         SDL_Rect srcRect = { chassis*32, 32, 32, 32 };
@@ -95,15 +95,15 @@ void render_view_battery (SDL_Renderer* rend, txtd *t, int px, int py,
         render_text_scaled(rend, sname, pname, t, 1);
         float pweight[2] = { px+10, py+40 };
         char sweight[64]; sprintf(sweight, "WEIGHT: %0.0f", 
-            info->batteries[batt].weight);
+            info->batteries[batt].weight[lvl]);
         render_text_scaled(rend, sweight, pweight, t, 1);
         float pcapacity[2] = { px+10, py+55 };
         char scapacity[64]; sprintf(scapacity, "CAPACITY: %0.1f", 
-            info->batteries[batt].capacity);
+            info->batteries[batt].capacity[lvl]);
         render_text_scaled(rend, scapacity, pcapacity, t, 1);
         float prech[2] = { px+10, py+70 };
         char srech[64]; 
-        if (info->batteries[batt].recharge == 0) {
+        if (info->batteries[batt].recharge[lvl] == 0) {
             strcpy(srech, "NOT RECHARGEABLE");
         } else {
             strcpy(srech, "RECHARGEABLE");
@@ -376,6 +376,6 @@ void render_view_template (SDL_Renderer* rend, txtd *t, int px, int py,
     float wplace = get_text_width("place", t);
     
     float pname[2] = { wplace+wedit+4*4+10+px, py+4 };
-    char *sname = info->chassis[info->templates[temp].chassis].name;
+    char *sname = info->templates[temp].name;
     render_text_scaled(rend, sname, pname, t, 1);
 }

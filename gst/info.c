@@ -304,11 +304,12 @@ void info_unit_parse (char *json, info_unit *u, jsmntok_t *t, int r,
 { 
     info_unit_init(u);
     int obj_i = 0, dict_i = -1; 
-    for (int i=0; i<r; i+=2) { 
+    for (int i=0; i<r; i+=1) { 
         if (t[i].type == JSMN_STRING) { 
             char key[32]; substr_token(json, key, t+i); 
             if (strcmp(key, "name") == 0) {
                 substr_token(json, u->name, t+i+1); 
+                i++;
             }
             if (strcmp(key, "chassis") == 0) {
                 char val[32]; substr_token(json, val, t+i+1); 
@@ -325,18 +326,22 @@ void info_unit_parse (char *json, info_unit *u, jsmntok_t *t, int r,
             if (strcmp(key, "weapons") == 0) {
                 int rt = json_parse_subtokens(json, t, r, i+1);
                 json_parse_array(json, u->weapons, t+i+2, rt-1, 'c');
+                i++;
             }
             if (strcmp(key, "armor") == 0) {
                 int rt = json_parse_subtokens(json, t, r, i+1);
                 json_parse_array(json, u->armor, t+i+2, rt-1, 'c');
+                i++;
             }
             if (strcmp(key, "augs") == 0) {
                 int rt = json_parse_subtokens(json, t, r, i+1);
                 json_parse_array(json, u->augs, t+i+2, rt-1, 'c');
+                i++;
             }
             if (strcmp(key, "levels") == 0) {
                 int rt = json_parse_subtokens(json, t, r, i+1);
                 json_parse_array(json, u->levels, t+i+2, rt-1, 'c');
+                i++;
             }
         } 
     }
@@ -347,47 +352,57 @@ void info_weapon_parse (char *json, info_weapon *w, jsmntok_t *t, int r,
 { 
     weapon_init(w);
     int obj_i = 0, dict_i = -1; 
-    for (int i=0; i<r; i+=2) { 
+    for (int i=0; i<r; i+=1) { 
         if (t[i].type == JSMN_STRING) { 
             char key[32]; substr_token(json, key, t+i); 
             if (strcmp(key, "name") == 0) {
                 substr_token(json, w->name, t+i+1); 
+                i++;
             }
             if (strcmp(key, "damage_type") == 0) {
                 char val[32]; substr_token(json, val, t+i+1); 
                 w->damage_type = damage_type_map(val);
+                i++;
             }
             if (strcmp(key, "weight") == 0) {
                 int rt = json_parse_subtokens(json, t, r, i+1);
                 json_parse_array(json, w->weight, t+i+2, rt-1, 'f');
+                i += rt;
             }
             if (strcmp(key, "cooldown") == 0) {
                 int rt = json_parse_subtokens(json, t, r, i+1);
                 json_parse_array(json, w->cooldown, t+i+2, rt-1, 'f');
+                i += rt;
             }
             if (strcmp(key, "damage") == 0) {
                 int rt = json_parse_subtokens(json, t, r, i+1);
                 json_parse_array(json, w->damage, t+i+2, rt-1, 'f');
+                i += rt;
             }
             if (strcmp(key, "range") == 0) {
                 int rt = json_parse_subtokens(json, t, r, i+1);
                 json_parse_array(json, w->range, t+i+2, rt-1, 'f');
+                i += rt;
             }
             if (strcmp(key, "aoe") == 0) {
                 int rt = json_parse_subtokens(json, t, r, i+1);
                 json_parse_array(json, w->aoe, t+i+2, rt-1, 'f');
+                i += rt;
             }
             if (strcmp(key, "knockback") == 0) {
                 int rt = json_parse_subtokens(json, t, r, i+1);
                 json_parse_array(json, w->knockback, t+i+2, rt-1, 'i');
+                i += rt;
             }
             if (strcmp(key, "damage_battery") == 0) {
                 int rt = json_parse_subtokens(json, t, r, i+1);
                 json_parse_array(json, w->damage_battery, t+i+2, rt-1, 'f'); 
+                i += rt;
             }
             if (strcmp(key, "stun") == 0) {
                 int rt = json_parse_subtokens(json, t, r, i+1);
                 json_parse_array(json, w->stun, t+i+2, rt-1, 'i');
+                i += rt;
             }
             for (int h=0; h<7; h++) {
                 char strkey[32]; sprintf(strkey, "reduce_%s", 
@@ -395,12 +410,14 @@ void info_weapon_parse (char *json, info_weapon *w, jsmntok_t *t, int r,
                 if (strcmp(key, strkey) == 0) {
                     int rt = json_parse_subtokens(json, t, r, i+1);
                     json_parse_array(json, w->reduce_armor[h], t+i+2, rt-1, 'f');
+                    i += rt;
                     break;
                 }
             }
             if (strcmp(key, "upkeep") == 0) {
                 int rt = json_parse_subtokens(json, t, r, i+1);
                 json_parse_array(json, w->upkeep, t+i+2, rt-1, 'f');
+                i += rt;
             }
         } 
     } 
@@ -411,39 +428,47 @@ void info_chassis_parse (char *json, info_chassis *c, jsmntok_t *t, int r,
 { 
     chassis_init(c);
     int obj_i = 0, dict_i = -1; 
-    for (int i=0; i<r; i+=2) { 
+    for (int i=0; i<r; i+=1) { 
         if (t[i].type == JSMN_STRING) { 
             char key[32]; substr_token(json, key, t+i); 
             if (strcmp(key, "name") == 0) {
                 substr_token(json, c->name, t+i+1); 
+                i++;
             }
             if (strcmp(key, "slot_weapon") == 0) {
                 int rt = json_parse_subtokens(json, t, r, i+1);
                 json_parse_array(json, c->slot_weapon, t+i+2, rt-1, 'i');
+                i += rt;
             }
             if (strcmp(key, "slot_armor") == 0) {
                 int rt = json_parse_subtokens(json, t, r, i+1);
                 json_parse_array(json, c->slot_armor, t+i+2, rt-1, 'i');
+                i += rt;
             }
             if (strcmp(key, "slot_aug") == 0) {
                 int rt = json_parse_subtokens(json, t, r, i+1);
                 json_parse_array(json, c->slot_aug, t+i+2, rt-1, 'i');
+                i += rt;
             }
             if (strcmp(key, "weight_max") == 0) {
                 int rt = json_parse_subtokens(json, t, r, i+1);
                 json_parse_array(json, c->weight_max, t+i+2, rt-1, 'f');
+                i += rt;
             }
             if (strcmp(key, "hp") == 0) {
                 int rt = json_parse_subtokens(json, t, r, i+1);
                 json_parse_array(json, c->hp, t+i+2, rt-1, 'f');
+                i += rt;
             }
             if (strcmp(key, "speed") == 0) {
                 int rt = json_parse_subtokens(json, t, r, i+1);
                 json_parse_array(json, c->speed, t+i+2, rt-1, 'f');
+                i += rt;
             }
             if (strcmp(key, "upkeep") == 0) {
                 int rt = json_parse_subtokens(json, t, r, i+1);
                 json_parse_array(json, c->upkeep, t+i+2, rt-1, 'f');
+                i += rt;
             }
         } 
     } 
@@ -454,23 +479,27 @@ void info_battery_parse (char *json, info_battery *b, jsmntok_t *t, int r,
 { 
     battery_init(b);
     int obj_i = 0, dict_i = -1; 
-    for (int i=0; i<r; i+=2) { 
+    for (int i=0; i<r; i+=1) { 
         if (t[i].type == JSMN_STRING) { 
             char key[32]; substr_token(json, key, t+i); 
             if (strcmp(key, "name") == 0) {
                 substr_token(json, b->name, t+i+1); 
+                i++;
             }
             if (strcmp(key, "weight") == 0) {
                 int rt = json_parse_subtokens(json, t, r, i+1);
                 json_parse_array(json, b->weight, t+i+2, rt-1, 'f');
+                i += rt;
             }
             if (strcmp(key, "capacity") == 0) {
                 int rt = json_parse_subtokens(json, t, r, i+1);
                 json_parse_array(json, b->capacity, t+i+2, rt-1, 'f');
+                i += rt;
             }
             if (strcmp(key, "recharge") == 0) {
                 int rt = json_parse_subtokens(json, t, r, i+1);
                 json_parse_array(json, b->recharge, t+i+2, rt-1, 'i');
+                i += rt;
             }
         } 
     } 
@@ -481,25 +510,29 @@ void info_armor_parse (char *json, info_armor *a, jsmntok_t *t, int r,
 { 
     armor_init(a);
     int obj_i = 0, dict_i = -1; 
-    for (int i=0; i<r; i+=2) { 
+    for (int i=0; i<r; i+=1) { 
         if (t[i].type == JSMN_STRING) { 
             char key[32]; substr_token(json, key, t+i); 
             if (strcmp(key, "name") == 0) {
                 substr_token(json, a->name, t+i+1); 
+                i++;
             }
             if (strcmp(key, "weight") == 0) {
                 int rt = json_parse_subtokens(json, t, r, i+1);
                 json_parse_array(json, a->weight, t+i+2, rt-1, 'f');
+                i += rt;
             }
             for (int h=0; h<7; h++) {
                 if (strcmp(key, info->damage_types[h]) == 0) {
                     int rt = json_parse_subtokens(json, t, r, i+1);
                     json_parse_array(json, a->armor[h], t+i+2, rt-1, 'f');
+                    i += rt;
                 }
             }
             if (strcmp(key, "upkeep") == 0) {
                 int rt = json_parse_subtokens(json, t, r, i+1);
                 json_parse_array(json, a->upkeep, t+i+2, rt-1, 'f');
+                i += rt;
             }
         } 
     } 
@@ -510,15 +543,17 @@ void info_aug_parse (char *json, info_aug *a, jsmntok_t *t, int r,
 { 
     aug_init(a);
     int obj_i = 0, dict_i = -1; 
-    for (int i=0; i<r; i+=2) { 
+    for (int i=0; i<r; i+=1) { 
         if (t[i].type == JSMN_STRING) { 
             char key[32]; substr_token(json, key, t+i); 
             if (strcmp(key, "name") == 0) {
                 substr_token(json, a->name, t+i+1); 
+                i++;
             }
             if (strcmp(key, "weight") == 0) {
                 int rt = json_parse_subtokens(json, t, r, i+1);
                 json_parse_array(json, a->weight, t+i+2, rt-1, 'f');
+                i += rt;
             }
             for (int h=0; h<7; h++) {
                 char strkey[32]; sprintf(strkey, "damage_%s", 
@@ -526,6 +561,7 @@ void info_aug_parse (char *json, info_aug *a, jsmntok_t *t, int r,
                 if (strcmp(key, strkey) == 0) {
                     int rt = json_parse_subtokens(json, t, r, i+1);
                     json_parse_array(json, a->add_damage[h], t+i+2, rt-1, 'f');
+                    i += rt;
                     break;
                 }
             }
@@ -535,28 +571,34 @@ void info_aug_parse (char *json, info_aug *a, jsmntok_t *t, int r,
                 if (strcmp(key, strkey) == 0) {
                     int rt = json_parse_subtokens(json, t, r, i+1);
                     json_parse_array(json, a->add_armor[h], t+i+2, rt-1, 'f');
+                    i += rt;
                     break;
                 }
             }
             if (strcmp(key, "add_range") == 0) {
                 int rt = json_parse_subtokens(json, t, r, i+1);
                 json_parse_array(json, a->add_range, t+i+2, rt-1, 'f');
+                i += rt;
             }
             if (strcmp(key, "add_cooldown") == 0) {
                 int rt = json_parse_subtokens(json, t, r, i+1);
                 json_parse_array(json, a->add_cooldown, t+i+2, rt-1, 'f');
+                i += rt;
             }
             if (strcmp(key, "add_hp") == 0) {
                 int rt = json_parse_subtokens(json, t, r, i+1);
                 json_parse_array(json, a->add_hp, t+i+2, rt-1, 'f');
+                i += rt;
             }
             if (strcmp(key, "add_capacity") == 0) {
                 int rt = json_parse_subtokens(json, t, r, i+1);
                 json_parse_array(json, a->add_capacity, t+i+2, rt-1, 'f');
+                i += rt;
             }
             if (strcmp(key, "upkeep") == 0) {
                 int rt = json_parse_subtokens(json, t, r, i+1);
                 json_parse_array(json, a->upkeep, t+i+2, rt-1, 'f');
+                i += rt;
             }
         } 
     } 
@@ -567,15 +609,17 @@ void info_brain_parse (char *json, info_brain *a, jsmntok_t *t, int r,
 { 
     brain_init(a);
     int obj_i = 0, dict_i = -1; 
-    for (int i=0; i<r; i+=2) { 
+    for (int i=0; i<r; i+=1) { 
         if (t[i].type == JSMN_STRING) { 
             char key[32]; substr_token(json, key, t+i); 
             if (strcmp(key, "name") == 0) {
                 substr_token(json, a->name, t+i+1); 
+                i++;
             }
             if (strcmp(key, "upkeep") == 0) {
                 int rt = json_parse_subtokens(json, t, r, i+1);
                 json_parse_array(json, a->upkeep, t+i+2, rt-1, 'f');
+                i += rt;
             }
         } 
     } 
@@ -746,7 +790,7 @@ void info_dump_json_templates (infos *info, char *str) {
         char w2[64]; json_dump_array(w2, u->augs, 8, 'c');
         sprintf(str+len, "        \"augs\": %s,\n", w2); 
         len = strlen(str);
-        char w3[128]; json_dump_array(w3, u->levels, 34, 'c');
+        char w3[128]; json_dump_array(w3, u->levels, 35, 'c');
         sprintf(str+len, "        \"levels\": %s\n", w3); 
         len = strlen(str);
         char comma = ','; if(i==info->templateslen-1) comma = ' ';
