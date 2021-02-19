@@ -66,6 +66,24 @@ void gst_tobattle (gamestate *gst) {
     gst->starttime = FLT_MAX;
     gst->turn = 0;
     gst->coveredtime = 0;
+    gst->turn_until_finish = 5;
+    gst->over = 0;
+}
+
+void gst_toeditor(gamestate *gst) {
+    gst->playernum = 1;
+}
+
+int gst_check_victory (gamestate *gst) {
+    int counts[gst->playernum], max=-1, imax = -1;
+    for (int i=0; i<gst->ar.uslen; i++) {
+        counts[gst->ar.us[i].owner] ++;
+        if (counts[gst->ar.us[i].owner] > max) {
+            imax = gst->ar.us[i].owner;
+            max = counts[gst->ar.us[i].owner];
+        }
+    }
+    return imax;
 }
 
 void gst_process (gamestate *gst, infos *info, float t) {
@@ -76,8 +94,15 @@ void gst_process (gamestate *gst, infos *info, float t) {
         gst->turn ++;
         map *m; army *ar;
         gst_get_maparmy(gst, &m, &ar);
-        army_move(info, ar, m);
-        army_fire(info, ar, m);
+        int move = army_move(info, ar, m);
+        int fire = army_fire(info, ar, m);
         army_upkeep(info, ar, m);
+        printf("%d, %d\n", move, fire);
+        if (move == 0 && fire == 0) {
+            gst->turn_until_finish--;
+        } else { gst->turn_until_finish = 5; }
+        if (gst->turn_until_finish <= 0) {
+            gst->over = 1;
+        }
     }
 }

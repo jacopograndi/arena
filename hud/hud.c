@@ -314,6 +314,19 @@ void hud_process_form_new_unit (graphic_settings *gs, hud *h, MKb *mkb,
     }
 }
 
+void hud_process_overlay_battle (graphic_settings *gs, hud *h, MKb *mkb, 
+    infos *info, army *ar, map *m, txtd *t, gamestate *gst, 
+    Mix_Chunk *sounds[]) 
+{
+    if (gst->over == 1) {
+        h->state = 0;
+        gst->state = 0;
+        gst->cam[0] = -gs->resx/2+gst->map_editor.sx*gst->map_editor.ts/2;
+        gst->cam[1] = -gs->resy/2+gst->map_editor.sy*gst->map_editor.ts/2;
+        gst_toeditor(gst);
+    }
+}
+
 void hud_process_overlay_game (graphic_settings *gs, hud *h, MKb *mkb, 
     infos *info, army *ar, map *m, txtd *t, gamestate *gst, 
     net_client *netc, net_server *nets, Mix_Chunk *sounds[]) 
@@ -339,7 +352,7 @@ void hud_process_overlay_game (graphic_settings *gs, hud *h, MKb *mkb,
                 gst_tobattle(gst);
                 gst->cam[0] = -gs->resx/2+gst->map_battle.sx*gst->map_battle.ts/2;
                 gst->cam[1] = -gs->resy/2+gst->map_battle.sy*gst->map_battle.ts/2;
-                h->state = 4;
+                h->state = 3;
             }
         }
     }
@@ -355,7 +368,7 @@ void hud_process_overlay_game (graphic_settings *gs, hud *h, MKb *mkb,
             gst_tobattle(gst);
             gst->cam[0] = -gs->resx/2+gst->map_battle.sx*gst->map_battle.ts/2;
             gst->cam[1] = -gs->resy/2+gst->map_battle.sy*gst->map_battle.ts/2;
-            h->state = 4;
+            h->state = 3;
         }
     }
             
@@ -380,7 +393,7 @@ void hud_process_overlay_game (graphic_settings *gs, hud *h, MKb *mkb,
             gst->cam[0] = -gs->resx/2+gst->map_battle.sx*gst->map_battle.ts/2;
             gst->cam[1] = -gs->resy/2+gst->map_battle.sy*gst->map_battle.ts/2;
             h->og.battle_state = 3;
-            h->state = 4;
+            h->state = 3;
             Mix_PlayChannel( -1, sounds[SOUND_SUCCESS], 0 );
         }
         
@@ -522,9 +535,13 @@ void hud_process (graphic_settings *gs, hud *h, MKb *mkb,
             hud_process_overlay_game(gs, h, mkb, info, ar, m, t, gst, 
                 netc, nets, sounds); 
             break;
-        case 1: hud_process_form_new_unit(gs, h, mkb, info, ar, m, t, 
-            sounds); break;
-        case 2: hud_process_sel(gs, h, mkb, info, ar, m, t, sounds); break;
+        case 1: hud_process_form_new_unit(gs, h, mkb, info, ar, m, t, sounds); 
+            break;
+        case 2: hud_process_sel(gs, h, mkb, info, ar, m, t, sounds); 
+            break;
+        case 3: hud_process_overlay_battle(gs, h, mkb, info, ar, m, t, gst, 
+                sounds);
+            break;
     }
 }
 

@@ -14,6 +14,12 @@ void render_view_stats (SDL_Renderer* rend, txtd *t, int px, int py,
     render_text_scaled(rend, sname, pname, t, 2);
     h += 35;
     
+    float cost = info_unit_get_cost(info, tm);
+    float pcost[2] = { px+10, py+h };
+    char scost[64]; sprintf(scost, "COST: %.2f", cost);
+    render_text_scaled(rend, scost, pcost, t, 1);
+    h += 20;
+    
     float calcweight = info_unit_get_weight(info, tm);
     float maxweight = info->chassis[tm->chassis].weight_max[
         tm->levels[LEVEL_CHASSIS]];

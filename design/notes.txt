@@ -1,22 +1,14 @@
 tasks: (date)
 
-[x] implement rm unit (issued on 18:02:21, done on 18:02:21)
-[x] implement armor calculation (issued on 18:02:21, done on 18:02:21)
-[x] implement augment calculations (issued on 18:02:21, done on 18:02:21)
-[x] implement augment hud view (issued on 18:02:21, done on 18:02:21)
-[ ] implement sound (issued on 18:02:21)
-[ ] implement end of battle condition (issued on 19:02:21)
-[ ] implement stats hud view (issued on 18:02:21)
-[x] implement battery calculation (issued on 18:02:21, done on 19:02:21)
-[ ] implement brain behaviour (issued on 18:02:21)
-[ ] implement component levels (issued on 18:02:21)
-[ ] implement persistent settings (issued on 18:02:21)
-[ ] implement net hud and minilobby (issued on 18:02:21)
-[ ] implement army hud view (issued on 18:02:21)
 [ ] implement cost function (issued on 18:02:21)
+[ ] implement stats hud view (issued on 18:02:21)
+[ ] implement net hud and minilobby (issued on 18:02:21)
+[ ] implement brain behaviour (issued on 18:02:21)
+[ ] implement army hud view (issued on 18:02:21)
 [ ] implement lobby cost constraints (issued on 18:02:21)
 [ ] implement edit unit directly (issued on 18:02:21)
 [ ] implement naming template and army (issued on 18:02:21)
+[ ] implement persistent settings (issued on 18:02:21)
 [ ] implement move animation (issued on 18:02:21)
 [ ] implement fire animation (issued on 18:02:21)
 [ ] implement explosions (issued on 18:02:21)
@@ -24,7 +16,15 @@ tasks: (date)
 [ ] design 3d map tiles (issued on 18:02:21)
 [ ] implement 3d units (issued on 18:02:21)
 [ ] design component sprites (issued on 18:02:21)
+[ ] implement sound (issued on 18:02:21)
 
+[x] implement end of battle condition (issued on 19:02:21, done on 19:02:21)
+[x] implement battery calculation (issued on 18:02:21, done on 19:02:21)
+[x] implement component levels (issued on 18:02:21, done on 19:02:21)
+[x] implement rm unit (issued on 18:02:21, done on 18:02:21)
+[x] implement armor calculation (issued on 18:02:21, done on 18:02:21)
+[x] implement augment calculations (issued on 18:02:21, done on 18:02:21)
+[x] implement augment hud view (issued on 18:02:21, done on 18:02:21)
 
 bugs:
 
@@ -52,6 +52,77 @@ view from 18:02:21 to the end:
 
 details:
 
+implement cost function:
+    oh boy
+    cost of a component = c_c
+    cost of a unit = c_u
+    cost of an army = c_a
+    c_a = sum {i=0..ar->uslen-1} c_u[i]
+    c_u = sum {comp j} c_c[j] -> maybe unfair, does not consider synergies
+        = sum of stats -> nerfs synergies, confusing and hard to calculate
+    c_c = sum of abs attributes -> ez but trash
+        = basis function of effectiveness of attribute -> cool
+    cost of unit is tricky
+        if i consider the simple sum of c_c, the augment bonuses are left out
+        gun cost 10, better ammo 10, total cost is 20.
+        otherwise every unit is calculated ad hoc.
+        gun cost 10, better ammo 10, dps is way better so total cost is 30
+    -> i'm using the cost by unit final stats, it's better but harder
+    what is effectiveness, i have to find formulas
+    . effectiveness of a weapon
+        + total damage output
+        + range multiplies total damage
+        + aoe multiplies total damage
+        + knockback fixed cost
+        + stun fixed cost
+        - upkeep as a % of total cost
+        - charge per shot required
+        - weight as a % of total cost
+    . effectiveness of a chassis
+        + slots (different by slot type)
+        + speed
+        + hp
+        + weight_max
+        - upkeep
+    . effectiveness of a battery
+        + capacity
+        + recharge based on capacity
+        - weight as a % of total cost
+    . effectiveness of an armor component
+        + armor amount
+        - weight
+        - upkeep
+    . effectiveness of an augment
+        + all add effects, weighted accordingly
+        - weight as a % of total cost
+    . effectiveness of a controller
+        + base cost by complexity of strategy (so base cost is defined in data)
+        - upkeep
+    multiplicative constants (buy with weight):
+    . 1 total damage per turn  = 2 weight
+    . 1 armor = 2 weight
+    . 10 hp = 1 weight
+    . 100 capacity = 1 weight
+    . 1 upkeep = 1 weight
+    (they differ in the implementation)
+    basis function: (to modulate the increase in cost, double effectiveness, maybe 4*cost, or 70*cost)
+    . linear y=x
+    . log y=log(x)
+    . exp y=exp(x)
+    . other maybe?
+    cost of a unit: (info_unit_get_cost)
+    . sum of cost of components but with the final modified values
+    i can also price components based on no bonuses to provide a price gauge -> meh
+    i think it's better to focus on the cost indipendently of weight for now
+
+implement end of battle condition:
+    i was thinking i can detect the end as no damage is being dealt in 10 turns
+    and no movement takes place
+    another condition is that the enemy has no units, but it's not necessary.
+    end <==> no movement or fire
+    have to do transition from battle to editor, done ez
+-> done
+
 implement components level:
     could do it globally, every level is +5%atk and +10% cost
     could set each weapon stat as a vector, v[level] is the stat
@@ -67,6 +138,8 @@ implement components level:
     . design with a lot more variables in play
     before writing 10000 numbers i should design, or autogenerate them
     settled on 3 lvls, autogenerated with python
+    missing hud!
+-> done, also some testing
     
 implement rm unit: -> done, paper note solution
 

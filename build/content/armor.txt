@@ -2,9 +2,9 @@
     {
         "name": "metal plating",
         "weight": [
-            50.0,
-            50.0,
-            50.0
+            10.0,
+            10.0,
+            10.0
         ],
         "pierce": [
             5.0,
@@ -20,9 +20,9 @@
     {
         "name": "heavy metal plating",
         "weight": [
-            80.0,
-            80.0,
-            80.0
+            16.0,
+            16.0,
+            16.0
         ],
         "pierce": [
             7.0,
@@ -43,9 +43,9 @@
     {
         "name": "reflective plating",
         "weight": [
-            40.0,
-            40.0,
-            40.0
+            8.0,
+            8.0,
+            8.0
         ],
         "laser": [
             10.0,
@@ -56,9 +56,9 @@
     {
         "name": "heat resistent plating",
         "weight": [
-            50.0,
-            50.0,
-            50.0
+            10.0,
+            10.0,
+            10.0
         ],
         "fusion": [
             8.0,
@@ -69,9 +69,9 @@
     {
         "name": "padding",
         "weight": [
-            20.0,
-            20.0,
-            20.0
+            4.0,
+            4.0,
+            4.0
         ],
         "spread": [
             5.0,
@@ -87,9 +87,9 @@
     {
         "name": "reactive armor",
         "weight": [
-            75.0,
-            75.0,
-            75.0
+            15.0,
+            15.0,
+            15.0
         ],
         "explosive": [
             12.0,
@@ -100,9 +100,9 @@
     {
         "name": "energy shields",
         "weight": [
-            25.0,
-            25.0,
-            25.0
+            5.0,
+            5.0,
+            5.0
         ],
         "pierce": [
             3.0,
@@ -133,9 +133,9 @@
     {
         "name": "composite armor",
         "weight": [
-            30.0,
-            30.0,
-            30.0
+            6.0,
+            6.0,
+            6.0
         ],
         "pierce": [
             6.0,
@@ -156,9 +156,9 @@
     {
         "name": "plastic armor",
         "weight": [
-            10.0,
-            10.0,
-            10.0
+            2.0,
+            2.0,
+            2.0
         ],
         "pierce": [
             4.0,
@@ -169,9 +169,9 @@
     {
         "name": "sloped steel armor",
         "weight": [
-            45.0,
-            45.0,
-            45.0
+            9.0,
+            9.0,
+            9.0
         ],
         "pierce": [
             10.0,
@@ -187,9 +187,9 @@
     {
         "name": "charged armor",
         "weight": [
-            100.0,
-            100.0,
-            100.0
+            20.0,
+            20.0,
+            20.0
         ],
         "explosive": [
             25.0,

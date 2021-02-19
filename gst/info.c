@@ -130,8 +130,10 @@ float info_unit_get_health(infos *info, info_unit *u) {
             sum += info->augs[u->augs[i]].add_hp[lvl];
         }
     }
-    sum += info->chassis[u->chassis].hp[lc];
-    return sum;
+    float mult = (1 + sum/100.0f);
+    if (mult < 0) mult = 0;
+    float ret = info->chassis[u->chassis].hp[lc] * mult;
+    return ret;
 }
 
 float info_unit_get_speed(infos *info, info_unit *u) {
@@ -173,6 +175,39 @@ float info_unit_get_damage_target (infos *info, info_unit *u, int w,
     float damage = info_unit_get_damage(info, u, w);
     float mult = (1 - reduction_perc / 100.0f);
     return damage * mult;
+}
+
+float info_unit_get_aoe (infos *info, info_unit *u, int w) {
+    int lc = u->levels[LEVEL_CHASSIS];
+    float sum = 0;
+    for(int i=0; i<16; i++) {
+        if (u->augs[i] != -1 && info->chassis[u->chassis].slot_aug[lc]) {
+            int lvl = u->levels[LEVEL_AUGS+i];
+            //sum += info->augs[u->augs[i]].add_aoe[lvl];
+        }
+    }
+    int lw = u->levels[LEVEL_WEAPONS+w];
+    float dam = info->weapons[u->weapons[w]].aoe[lw] + sum;
+    return dam;
+}
+
+float info_unit_get_knockback (infos *info, info_unit *u, int w) {
+    int lc = u->levels[LEVEL_CHASSIS];
+    float sum = 0;
+    for(int i=0; i<16; i++) {
+        if (u->augs[i] != -1 && info->chassis[u->chassis].slot_aug[lc]) {
+            int lvl = u->levels[LEVEL_AUGS+i];
+            //sum += info->augs[u->augs[i]].add_knockback[lvl];
+        }
+    }
+    int lw = u->levels[LEVEL_WEAPONS+w];
+    float dam = info->weapons[u->weapons[w]].knockback[lw] + sum;
+    return dam;
+}
+
+float info_unit_get_stun (infos *info, info_unit *u, int w) {
+    // TODO
+    return 0;
 }
 
 float info_unit_get_cooldown(infos *info, info_unit *u, int w) {
@@ -225,6 +260,53 @@ float info_unit_get_armor(infos *info, info_unit *u, int d) {
             sum += info->augs[u->augs[i]].add_armor[d][lvl];
         }
     }
+    return sum;
+}
+
+float info_unit_get_cost (infos *info, info_unit *u) {
+    // see design/notes.txt:implement cost function
+    float sum = 0;
+    int lc = u->levels[LEVEL_CHASSIS];
+    info_chassis *chassis = info->chassis+u->chassis;
+    float sumchassis = 0;
+    sumchassis += powf(2, chassis->slot_weapon[lc])*20;
+    sumchassis += powf(2, chassis->slot_armor[lc])*10;
+    sumchassis += powf(2, chassis->slot_aug[lc])*5;
+    sumchassis += chassis->weight_max[lc]/5;
+    sumchassis += chassis->hp[lc]/20;
+    sumchassis += chassis->speed[lc]*32;
+    sum += sumchassis;
+    if (u->battery != -1) {
+        int lb = u->levels[LEVEL_BATTERY];
+        info_battery *battery = info->batteries+u->battery;
+        float sumbattery = 0;
+        sumbattery += battery->capacity[lb];
+        sum += sumbattery;
+    }
+    for(int i=0; i<8; i++) {
+        int lw = u->levels[LEVEL_WEAPONS+i];
+        int la = u->levels[LEVEL_ARMOR+i];
+        if (u->weapons[i] != -1 && i<chassis->slot_weapon[lc]) {
+            info_weapon *weapon = info->weapons+u->weapons[i];
+            float sumweap = 0;
+            float dam = info_unit_get_damage(info, u, i);
+            float cool = info_unit_get_cooldown(info, u, i);
+            float damtot = dam / cool;
+            float aoe = info_unit_get_aoe(info, u, i);
+            float knockback = info_unit_get_knockback(info, u, i);
+            float stun = info_unit_get_stun(info, u, i);
+            float mult = 1+aoe*5 + 10;
+            damtot = damtot*mult;
+            damtot += knockback * 20 + stun * 50;
+            sumweap = damtot;
+            sum += sumweap;
+        }
+    }
+    for(int t=0; t<7; t++) {
+        float armortot = info_unit_get_armor(info, u, t) * 3;
+        sum += armortot;
+    }
+    
     return sum;
 }
 

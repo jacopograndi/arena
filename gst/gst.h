@@ -19,12 +19,15 @@ typedef struct {
     float coveredtime;
     int turn;
     float turnspeed;
+    int turn_until_finish;
+    int over;
 } gamestate;
 
 void gst_init (gamestate *gst);
 void gst_destroy (gamestate *gst);
 void gst_get_maparmy(gamestate *gst, map **m, army **ar);
 void gst_tobattle (gamestate *gst);
+void gst_toeditor (gamestate *gst);
 void gst_process (gamestate *gst, infos *info, float t);
 
 #endif

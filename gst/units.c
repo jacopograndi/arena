@@ -168,18 +168,18 @@ int army_move_step (infos *info, army *ar, map *m) {
     else return 1;
 }
 
-void army_move (infos *info, army *ar, map *m) {
+int army_move (infos *info, army *ar, map *m) {
     for (int i=0; i<ar->uslen; i++) {
         ar->us[i].move_points += info_unit_get_speed(info, &ar->us[i].info);
     }
-    int iter = 0, finished = 0;
+    int iter = 0, finished = army_move_step(info, ar, m);
     for (; iter<5 && !finished; iter++) {
         finished = army_move_step(info, ar, m);
     }
-    //printf("stepped %d %d\n", iter, finished);
+    return iter;
 }
 
-void army_fire (infos *info, army *ar, map *m) {
+int army_fire (infos *info, army *ar, map *m) {
     for (int i=0; i<ar->uslen; i++) {
         unit *u = ar->us+i;
         int lw = u->info.levels[LEVEL_CHASSIS];
@@ -216,6 +216,7 @@ void army_fire (infos *info, army *ar, map *m) {
             unit_dead(ar, m, dmgs[i].u);
         }
     }
+    return dmgslen;
 }
 
 void army_upkeep (infos *info, army *ar, map *m) {
