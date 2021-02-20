@@ -21,14 +21,14 @@ void net_init () {
     p_libsys_init ();
 }
 
-int net_open_socket(PSocket **socket, int port) {
+int net_open_socket(PSocket **socket, char ip[], int port) {
     *socket = p_socket_new (P_SOCKET_FAMILY_INET,
         P_SOCKET_TYPE_STREAM,
         P_SOCKET_PROTOCOL_TCP,
         NULL);
     p_socket_set_blocking (*socket, FALSE);
     p_socket_set_timeout (*socket, 10);
-    PSocketAddress *sock_addr = p_socket_address_new("127.0.0.1", port);
+    PSocketAddress *sock_addr = p_socket_address_new(ip, port);
     int sender_port = 0;
     if (p_socket_bind (*socket, sock_addr, FALSE, NULL) == FALSE) {
         p_socket_free (*socket);
@@ -58,7 +58,7 @@ int net_recv (PSocket *socket, char buffer[]) {
                 printf("received (%d)\n", len);
                 return len; 
             }
-            printf("error server recv\n");
+            printf("error recv\n");
             return -1;
         } else {
             len += recv_now;
@@ -74,7 +74,7 @@ int net_recv (PSocket *socket, char buffer[]) {
 
 
 void net_client_open(net_client *c) {
-    int err = net_open_socket(&c->socket, 0);
+    int err = net_open_socket(&c->socket, "127.0.0.1", 0);
     if (err > 0) printf("error opening client socket: %d\n", err);
 }
 
@@ -89,8 +89,8 @@ int net_client_connect (net_client *c, char ip[], int port) {
         {
             p_socket_address_free (c->addr_server);
             p_socket_free (c->socket);
-            p_uthread_exit (-1);
             printf("error client socket freed\n");
+            return 1;
         }
     }
 
@@ -116,15 +116,15 @@ int net_client_recv (net_client *c, char buffer[]) {
 }
 
 void net_client_close (net_client *c) {
-    p_socket_close (c->socket, NULL);
+    if (c->socket != NULL) p_socket_close (c->socket, NULL);
     p_socket_address_free (c->addr_server);
 	p_socket_free (c->socket);
 }
 
 
 
-void net_server_open(net_server *s, int port) {
-    int err = net_open_socket(&s->socket, port);
+void net_server_open(net_server *s, char ip[], int port) {
+    int err = net_open_socket(&s->socket, ip, port);
     if (err > 0) printf("error opening server socket: %d\n", err);
     if (p_socket_listen (s->socket, NULL) == FALSE) {
         printf("error server socket listen, nobody in.\n");
@@ -162,7 +162,7 @@ void net_server_send (net_server *s, char data[], int sizeofdata) {
 }
 
 void net_server_close (net_server *s) {
-    p_socket_close (s->socket, NULL);
-    p_socket_free (s->sock_client);
-	p_socket_free(s->socket);
+    if (s->socket != NULL) p_socket_close (s->socket, NULL);
+    if (s->sock_client != NULL) p_socket_free (s->sock_client);
+	if (s->socket != NULL) p_socket_free(s->socket);
 }

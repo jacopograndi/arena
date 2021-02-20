@@ -36,9 +36,11 @@ typedef struct {
     char army_list[64][32];
     int army_listlen;
     char army_listcur[32];
-    char playername[32];
     int battle_state;
-    int edit_playername;
+    char playername[32];
+    int input_playername;
+    char ip[32];
+    int input_ip;
 } overlay_game;
 
 typedef struct {

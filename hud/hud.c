@@ -98,9 +98,11 @@ void hud_init (graphic_settings *gs, hud *h, txtd *t) {
     info_unit_init(&h->fnu.uinfo);
     strcpy(h->og.army_listcur, "army");
     strcpy(h->og.playername, "");
+    strcpy(h->og.ip, "192.168.1.255");
     h->nameedit = NULL;
     h->og.battle_state = 0;
-    h->og.edit_playername = 0;
+    h->og.input_playername = 0;
+    h->og.input_ip = 0;
     hud_reset(gs, h, t);
 }
 
@@ -201,7 +203,11 @@ void hud_process_sel (graphic_settings *gs, hud *h, MKb *mkb,
 
 void hud_edit_close(hud *h) {
     h->nameedit = NULL;
-    h->og.edit_playername = 0;
+    if (h->og.input_playername != 0) {
+        info_save_playername(h->og.playername);
+    }
+    h->og.input_playername = 0;
+    h->og.input_ip = 0;
 }
 
 void hud_open_fnu (hud *h, info_unit *u, int i) {
@@ -353,6 +359,7 @@ void hud_process_overlay_game (graphic_settings *gs, hud *h, MKb *mkb,
                 gst->cam[0] = -gs->resx/2+gst->map_battle.sx*gst->map_battle.ts/2;
                 gst->cam[1] = -gs->resy/2+gst->map_battle.sy*gst->map_battle.ts/2;
                 h->state = 3;
+                net_server_close(nets);
             }
         }
     }
@@ -369,6 +376,7 @@ void hud_process_overlay_game (graphic_settings *gs, hud *h, MKb *mkb,
             gst->cam[0] = -gs->resx/2+gst->map_battle.sx*gst->map_battle.ts/2;
             gst->cam[1] = -gs->resy/2+gst->map_battle.sy*gst->map_battle.ts/2;
             h->state = 3;
+            net_client_close(netc);
         }
     }
             
@@ -398,22 +406,28 @@ void hud_process_overlay_game (graphic_settings *gs, hud *h, MKb *mkb,
         }
         
         if (mouse_in_button(mousepos, t, &h->og.join_game)) {
+            h->og.battle_state = 0;
+            net_server_close(nets);
             printf("open client\n");
             net_client_open(netc);
-            int conn = net_client_connect(netc, "127.0.0.1", SERVER_PORT);
+            int conn = net_client_connect(netc, h->og.ip, SERVER_PORT);
             if (conn == 0) {
                 int armysize = sizeof(unit)*gst->army_bp[0].uslen;
                 char data[armysize];
                 memcpy(data, gst->army_bp[0].us, armysize);
                 net_client_send(netc, data, armysize);
                 printf("send (%d)\n", armysize);
+                h->og.battle_state = 2;
+            } else {
+                printf("close client");
+                net_client_close(netc);
             }
-            h->og.battle_state = 2;
         }
         
         if (mouse_in_button(mousepos, t, &h->og.host_game)) {
+            net_client_close(netc);
             printf("open server\n");
-            net_server_open(nets, SERVER_PORT);
+            net_server_open(nets, "127.0.0.1", SERVER_PORT);
             h->og.battle_state = 1;
         }
         
@@ -474,8 +488,20 @@ void hud_process_overlay_game (graphic_settings *gs, hud *h, MKb *mkb,
             float sizen[2] = { get_text_width(sn, t), 10 };
             if (pt_rect(mousepos, pn, sizen)) {
                 h->nameedit = h->og.playername;
-                printf("editing this %s\n", h->nameedit);
-                h->og.edit_playername = 1;
+                h->og.input_playername = 1;
+            }
+        } else {
+            Mix_PlayChannel( -1, sounds[SOUND_SUCCESS], 0 );
+            hud_edit_close(h);
+        }
+        
+        if (h->nameedit == NULL) {
+            float pn[2] = { h->og.rect_battle.x+5, h->og.rect_battle.y+25 };
+            char sn[64]; sprintf(sn, "IP: %s", h->og.playername);
+            float sizen[2] = { get_text_width(sn, t), 10 };
+            if (pt_rect(mousepos, pn, sizen)) {
+                h->nameedit = h->og.ip;
+                h->og.input_ip = 1;
             }
         } else {
             Mix_PlayChannel( -1, sounds[SOUND_SUCCESS], 0 );
@@ -498,14 +524,32 @@ void hud_process_overlay_game (graphic_settings *gs, hud *h, MKb *mkb,
 
 void hud_edit_name(hud *h, MKb *mkb, Mix_Chunk *sounds[]) {
     for (int i=0; i<mkb->kbnum; i++) {
-        if (mkb->kb[i] >= SDL_SCANCODE_A
-         && mkb->kb[i] <= SDL_SCANCODE_Z) {
-            if (strlen(h->nameedit) < 31) {
+        if (strlen(h->nameedit) < 31) {
+            if (mkb->kb[i] >= SDL_SCANCODE_A
+             && mkb->kb[i] <= SDL_SCANCODE_Z) {
                 char c = mkb->kb[i]-SDL_SCANCODE_A+'a';
                 if (SDL_GetModState() & KMOD_SHIFT) {
                     c = mkb->kb[i]-SDL_SCANCODE_A+'A';
                 }
                 sprintf(h->nameedit, "%s%c", h->nameedit, c);
+            }
+            if (mkb->kb[i] >= SDL_SCANCODE_1
+             && mkb->kb[i] <= SDL_SCANCODE_9) {
+                char c = mkb->kb[i]-SDL_SCANCODE_1+'1';
+                sprintf(h->nameedit, "%s%c", h->nameedit, c);
+            }
+            if (mkb->kb[i] >= SDL_SCANCODE_KP_1
+             && mkb->kb[i] <= SDL_SCANCODE_KP_9) {
+                char c = mkb->kb[i]-SDL_SCANCODE_KP_1+'1';
+                sprintf(h->nameedit, "%s%c", h->nameedit, c);
+            }
+            if (mkb->kb[i] == SDL_SCANCODE_KP_0
+             || mkb->kb[i] == SDL_SCANCODE_0) {
+                sprintf(h->nameedit, "%s0", h->nameedit);
+            }
+            if (mkb->kb[i] == SDL_SCANCODE_KP_PERIOD
+             || mkb->kb[i] == SDL_SCANCODE_PERIOD) {
+                sprintf(h->nameedit, "%s.", h->nameedit);
             }
         }
     }
@@ -519,7 +563,8 @@ void hud_edit_name(hud *h, MKb *mkb, Mix_Chunk *sounds[]) {
         if (strlen(h->nameedit) > 0)
         h->nameedit[strlen(h->nameedit)-1] = '\0';
     }
-    if (mkb_search(mkb, SDL_SCANCODE_ESCAPE)) {
+    if (mkb_search(mkb, SDL_SCANCODE_ESCAPE) 
+     || mkb_search(mkb, SDL_SCANCODE_RETURN)) {
         Mix_PlayChannel( -1, sounds[SOUND_SUCCESS], 0 );
         hud_edit_close(h); return;
     }
@@ -773,13 +818,21 @@ void hud_render_overlay_game (overlay_game *og, MKb *mkb,
     
     float pn[2] = { og->rect_battle.x+5, og->rect_battle.y+5 };
     char sn[64]; 
-    if (og->edit_playername == 1) {
+    if (og->input_playername == 1) {
         sprintf(sn, "PLAYER NAME: %s_", og->playername);
-        printf("looool\n");
     } else {
         sprintf(sn, "PLAYER NAME: %s", og->playername);
     }
     render_text_scaled(rend, sn, pn, t, 1);
+    
+    float pip[2] = { og->rect_battle.x+5, og->rect_battle.y+25 };
+    char sip[64]; 
+    if (og->input_ip == 1) {
+        sprintf(sip, "IP: %s_", og->ip);
+    } else {
+        sprintf(sip, "IP: %s", og->ip);
+    }
+    render_text_scaled(rend, sip, pip, t, 1);
     
     render_button(rend, t, &og->host_game);
     render_button(rend, t, &og->join_game);

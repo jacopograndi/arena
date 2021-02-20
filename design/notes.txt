@@ -52,6 +52,13 @@ view from 18:02:21 to the end:
 
 details:
 
+implement stats hud view:
+? stats have to include individual weapon cooldowns and damage, what to do
+    either put all as lines in stats (clean, but ugly)
+    or modify the components directly (messy)
+    or have the components hold both values, with mouse over showing the chain of effects
+! components hold both values, stats screen is for stats only.
+
 implement cost function:
     oh boy
     cost of a component = c_c
@@ -159,12 +166,6 @@ implement augment calculation:
     ok add_hp
     ok add_speed
 -> done, not tested
-
-implement stats hud view:
-? stats have to include individual weapon cooldowns and damage, what to do
-    either put all as lines in stats (clean, but ugly)
-    or modify the components directly (messy)
-! put them in stats later
 
 implement sound:
     partially done, need sound design

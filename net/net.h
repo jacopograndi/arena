@@ -26,7 +26,7 @@ typedef struct {
     PSocket *sock_client;
 } net_server;
 
-void net_server_open(net_server *s, int port);
+void net_server_open(net_server *s, char ip[], int port);
 void net_server_accept(net_server *s);
 int net_server_recv(net_server *s, char buffer[]);
 void net_server_send (net_server *s, char data[], int sizeofdata);
