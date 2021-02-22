@@ -22,6 +22,7 @@ typedef struct army_ {
     unit **grid;
     int uslen;
     int sx, sy;
+    char name[32];
 } army;
 
 

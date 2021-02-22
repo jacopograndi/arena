@@ -22,6 +22,11 @@ typedef struct {
 } hud_sel;
 
 typedef struct {
+    SDL_Rect rect_back;
+    char *oppo[32];
+} overlay_battle;
+
+typedef struct {
     button new_template;
     button save_templates;
     button save_army;
@@ -64,6 +69,7 @@ typedef struct {
 
 typedef struct {
     hud_sel sc;
+    overlay_battle ob;
     overlay_game og;
     form_new_unit fnu;
     int state;
@@ -76,6 +82,6 @@ void hud_process (graphic_settings *gs, hud *h, MKb *mkb,
     infos *info, army *ar, map *m, txtd *t, gamestate *gst, 
     net_client *netc, net_server *nets, Mix_Chunk *sounds[]);
 void hud_render (hud *h, SDL_Renderer* rend, txtd *t, MKb *mkb, infos *info, 
-    SDL_Texture *sprites);
+    SDL_Texture *sprites, gamestate *gst, float time);
 
 #endif

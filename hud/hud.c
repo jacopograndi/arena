@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <math.h>
 
 #include <hud.h>
 #include <hud_views.h>
@@ -15,6 +16,14 @@
 
 
 // INIT
+void init_overlay_battle (graphic_settings *gs, overlay_battle *ob,
+    txtd *t) 
+{
+    int w = 400, h = 100;
+    int x = gs->resx-w-10, y = 10;
+    ob->rect_back = { x, y, w, h };
+}
+
 void init_sel_chassis (graphic_settings *gs, hud_sel *sc, txtd *t, 
     SDL_Rect back, float start) 
 {
@@ -98,6 +107,7 @@ void init_overlay_game (graphic_settings *gs, overlay_game *og, txtd *t) {
 
 void hud_reset (graphic_settings *gs, hud *h, txtd *t) {
     init_form_new_unit(gs, &h->fnu, t);
+    init_overlay_battle(gs, &h->ob, t);
     init_overlay_game(gs, &h->og, t);
     SDL_Rect clip = { h->fnu.rect_back.x, h->sc.ref->y,
         h->fnu.rect_back.w, 300 };
@@ -361,6 +371,10 @@ void hud_process_overlay_game (graphic_settings *gs, hud *h, MKb *mkb,
     infos *info, army *ar, map *m, txtd *t, gamestate *gst, 
     net_client *netc, net_server *nets, Mix_Chunk *sounds[]) 
 {
+    if (h->og.input_army != -1) {
+        // hack to not pass gst to everything
+        strcpy(gst->army_bp[0].name, h->nameedit);
+    }
     if (h->og.battle_state == 1) {
         if (nets->sock_client == NULL) {
             net_server_accept(nets);
@@ -369,15 +383,21 @@ void hud_process_overlay_game (graphic_settings *gs, hud *h, MKb *mkb,
             int len = net_server_recv(nets, buffer);
             if (len != -1) {
                 h->og.battle_state = 3;
-                
-                int armysize = sizeof(unit)*gst->army_bp[0].uslen;
+
+                int armysize = sizeof(unit)*gst->army_bp[0].uslen + 64;
                 char data[armysize];
                 memcpy(data, gst->army_bp[0].us, armysize);
+                memcpy(data+armysize-64, h->og.playername, 32);
+                memcpy(data+armysize-32, gst->army_bp[0].name, 32);
+                
                 net_server_send(nets, data, armysize);
                 printf("send (%d)\n", armysize);
             
-                memcpy(gst->army_bp[1].us, buffer, len);
-                gst->army_bp[1].uslen = len/sizeof(unit);
+                int arlen = len-64;
+                memcpy(gst->army_bp[1].us, buffer, arlen);
+                gst->army_bp[1].uslen = arlen/sizeof(unit);
+                memcpy(h->ob.oppo, buffer+arlen, 32);
+                memcpy(gst->army_bp[1].name, buffer+arlen+32, 32);
                 gst->playernum = 2;
                 gst_tobattle(gst);
                 gst->cam[0] = -gs->resx/2+gst->map_battle.sx*gst->map_battle.ts/2;
@@ -394,8 +414,11 @@ void hud_process_overlay_game (graphic_settings *gs, hud *h, MKb *mkb,
         if (len != -1) {
             h->og.battle_state = 3;
             
-            memcpy(gst->army_bp[1].us, buffer, len);
-            gst->army_bp[1].uslen = len/sizeof(unit);
+            int arlen = len-64;
+            memcpy(gst->army_bp[1].us, buffer, arlen);
+            gst->army_bp[1].uslen = arlen/sizeof(unit);
+            memcpy(h->ob.oppo, buffer+arlen, 32);
+            memcpy(gst->army_bp[1].name, buffer+arlen+32, 32);
             gst->playernum = 2;
             gst_tobattle(gst);
             gst->cam[0] = -gs->resx/2+gst->map_battle.sx*gst->map_battle.ts/2;
@@ -435,9 +458,11 @@ void hud_process_overlay_game (graphic_settings *gs, hud *h, MKb *mkb,
             net_client_open(netc);
             int conn = net_client_connect(netc, h->og.ip, SERVER_PORT);
             if (conn == 0) {
-                int armysize = sizeof(unit)*gst->army_bp[0].uslen;
+                int armysize = sizeof(unit)*gst->army_bp[0].uslen + 64;
                 char data[armysize];
                 memcpy(data, gst->army_bp[0].us, armysize);
+                memcpy(data+armysize-64, h->og.playername, 32);
+                memcpy(data+armysize-32, gst->army_bp[0].name, 32);
                 net_client_send(netc, data, armysize);
                 printf("send (%d)\n", armysize);
                 h->og.battle_state = 2;
@@ -549,6 +574,8 @@ void hud_process_overlay_game (graphic_settings *gs, hud *h, MKb *mkb,
             float posp[2] = { x, y };
             float sizep[2] = { wload, 11+4*2 };
             if (pt_rect(mousepos, posp, sizep)) {
+                int cur = h->og.army_listcur;
+                info_save_army(gst->army_bp+0, h->og.army_list[cur]);
                 h->og.army_listcur = i;
                 info_load_army(gst->army_bp+0, h->og.army_list[i]);
                 Mix_PlayChannel( -1, sounds[SOUND_SUCCESS], 0 );
@@ -577,7 +604,9 @@ void hud_process_overlay_game (graphic_settings *gs, hud *h, MKb *mkb,
         } 
         
         if (h->nameedit == NULL) {
-            float pn[2] = { h->og.rect_battle.x+5, h->og.rect_battle.y+25 };
+            float wjoin = get_text_width("join game", t);
+            float pn[2] = { h->og.join_game.pos[0]+wjoin + 4*2+10, 
+                h->og.join_game.pos[1]+4 };
             char sn[64]; sprintf(sn, "IP: %s", h->og.playername);
             float sizen[2] = { get_text_width(sn, t), 10 };
             if (pt_rect(mousepos, pn, sizen)) {
@@ -674,7 +703,7 @@ void hud_process (graphic_settings *gs, hud *h, MKb *mkb,
 // RENDER
 void hud_render_sel (hud_sel *sc, MKb *mkb, info_unit *u,
     SDL_Renderer* rend, SDL_Texture *sprites, txtd *t, infos *info, 
-    int sel, int ind) 
+    int sel, int ind, float time) 
 {
     int8_t *n = NULL; int bound = 0; int size[2];
     hud_map_sel(u, info, sel, ind, &n, &bound, size);
@@ -706,7 +735,7 @@ void hud_render_sel (hud_sel *sc, MKb *mkb, info_unit *u,
 }
 
 void hud_render_form_new_unit (form_new_unit *fnu, MKb *mkb,
-    SDL_Renderer* rend, txtd *t, infos *info, SDL_Texture *sprites)
+    SDL_Renderer* rend, txtd *t, infos *info, SDL_Texture *sprites, float time)
 {    
     SDL_SetRenderDrawColor(rend, 150, 200, 255, 255);
     SDL_RenderFillRect(rend, &fnu->rect_back);
@@ -839,7 +868,7 @@ void hud_render_form_new_unit (form_new_unit *fnu, MKb *mkb,
 }
 
 void hud_render_overlay_game (overlay_game *og, MKb *mkb, 
-    SDL_Renderer* rend, txtd *t, infos *info, SDL_Texture *sprites)
+    SDL_Renderer* rend, txtd *t, infos *info, SDL_Texture *sprites, float time)
 {    
     SDL_SetRenderDrawColor(rend, 40, 150, 200, 255);
     SDL_RenderFillRect(rend, &og->rect_templates);
@@ -869,7 +898,7 @@ void hud_render_overlay_game (overlay_game *og, MKb *mkb,
         float pname[2] = { wplace+wedit+4*4+10+px, py+4 };
         char *sname = info->templates[i].name;
         char sn[64]; 
-        if (og->input_temp == i) {
+        if (og->input_temp == i && time - ((long)time) < 0.5) {
             sprintf(sn, "%s_", sname);
         } else {
             sprintf(sn, "%s", sname);
@@ -901,7 +930,7 @@ void hud_render_overlay_game (overlay_game *og, MKb *mkb,
         render_button(rend, t, &b);
         
         char sn[64]; 
-        if (og->input_army == i) {
+        if (og->input_army == i && time - ((long)time) < 0.5) {
             sprintf(sn, "%s_", og->army_list[i]);
         } else {
             sprintf(sn, "%s", og->army_list[i]);
@@ -922,16 +951,19 @@ void hud_render_overlay_game (overlay_game *og, MKb *mkb,
     
     float pn[2] = { og->rect_battle.x+5, og->rect_battle.y+5 };
     char sn[64]; 
-    if (og->input_playername == 1) {
+    if (og->input_playername == 1 && time - ((long)time) < 0.5) {
         sprintf(sn, "PLAYER NAME: %s_", og->playername);
     } else {
         sprintf(sn, "PLAYER NAME: %s", og->playername);
     }
     render_text_scaled(rend, sn, pn, t, 1);
     
-    float pip[2] = { og->rect_battle.x+5, og->rect_battle.y+25 };
+    float wjoin = get_text_width("join game", t);
+    float pip[2] = { og->join_game.pos[0]+wjoin + 4*2+10, 
+        og->join_game.pos[1]+4 };
     char sip[64]; 
-    if (og->input_ip == 1) {
+    int _;
+    if (og->input_ip == 1 && time - ((long)time) < 0.5) {
         sprintf(sip, "IP: %s_", og->ip);
     } else {
         sprintf(sip, "IP: %s", og->ip);
@@ -950,22 +982,71 @@ void hud_render_overlay_game (overlay_game *og, MKb *mkb,
     }
 }
 
+void hud_render_overlay_battle (overlay_battle *ob, MKb *mkb, 
+    SDL_Renderer* rend, txtd *t, infos *info, gamestate *gst, float time) 
+{    
+
+    SDL_SetRenderDrawColor(rend, 240, 240, 240, 255);
+    SDL_RenderFillRect(rend, &ob->rect_back);
+    SDL_SetRenderDrawColor(rend, 0, 0, 0, 255);
+    SDL_RenderDrawRect(rend, &ob->rect_back);
+    
+    float x = ob->rect_back.x, y = ob->rect_back.y;
+    float w = ob->rect_back.w;
+    
+    float h = 10;
+    { 
+        float p[2] = { x+10, y+h };
+        char s[32]; sprintf(s, "%s", ob->oppo);
+        render_text_scaled(rend, s, p, t, 2);
+    } h += 35;
+    { 
+        float p[2] = { x+10, y+h };
+        char s[64]; sprintf(s, "%s", gst->army_bp[0].name);
+        render_text_scaled(rend, s, p, t, 1);
+        
+        char p2[64]; sprintf(p2, "%s", gst->army_bp[1].name);
+        float p2w = get_text_width(p2, t);
+        float q[2] = { x+w-10-p2w, y+h };
+        render_text_scaled(rend, p2, q, t, 1);
+    } h += 20;
+    { 
+        float dps = 0;
+        for (int i=0; i<gst->ar.uslen; i++) {
+            if (gst->ar.us[i].hp <= 0) continue;
+            dps += info_unit_get_dps(info, &gst->ar.us[i].info);
+        }
+        float p[2] = { x+10, y+h };
+        char s[64]; sprintf(s, "DAMAGE PER TURN: %.0f", dps);
+        render_text_scaled(rend, s, p, t, 1); 
+    } h += 15;
+}
+
 void hud_render (hud *h, SDL_Renderer* rend, txtd *t, MKb *mkb, infos *info, 
-    SDL_Texture *sprites) 
+    SDL_Texture *sprites, gamestate *gst, float time) 
 {
     switch (h->state) {
         case 0: 
-            hud_render_overlay_game(&h->og, mkb, rend, t, info, sprites); 
+            hud_render_overlay_game(&h->og, mkb, rend, t, info, sprites, 
+                time); 
             break;
         case 1: 
-            hud_render_overlay_game(&h->og, mkb, rend, t, info, sprites); 
-            hud_render_form_new_unit(&h->fnu, mkb, rend, t, info, sprites); 
+            hud_render_overlay_game(&h->og, mkb, rend, t, info, sprites, 
+                time); 
+            hud_render_form_new_unit(&h->fnu, mkb, rend, t, info, sprites, 
+                time); 
             break;
         case 2:
-            hud_render_overlay_game(&h->og, mkb, rend, t, info, sprites); 
-            hud_render_form_new_unit(&h->fnu, mkb, rend, t, info, sprites); 
+            hud_render_overlay_game(&h->og, mkb, rend, t, info, sprites, 
+                time); 
+            hud_render_form_new_unit(&h->fnu, mkb, rend, t, info, sprites, 
+                time); 
             hud_render_sel(&h->sc, mkb, &h->fnu.uinfo, 
-                rend, sprites, t, info, h->fnu.sel, h->fnu.ind); 
+                rend, sprites, t, info, h->fnu.sel, h->fnu.ind, time); 
+            break;
+        case 3: 
+            hud_render_overlay_battle(&h->ob, mkb, rend, t, info, gst, 
+                time); 
             break;
     }
 }

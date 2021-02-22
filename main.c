@@ -101,7 +101,8 @@ int main( int argc, char* args[] ) {
     hud _hud;
     hud_init(&gs, &_hud, &textd);
     _hud.og.army_listlen = info_army_get_list(_hud.og.army_list);
-    info_load_army(gst.army_bp+0, _hud.og.army_list[0]);
+    if (_hud.og.army_listlen > 0)
+        info_load_army(gst.army_bp+0, _hud.og.army_list[0]);
     info_load_playername(_hud.og.playername);
     
     float mlast[2] = {0, 0};
@@ -223,7 +224,8 @@ int main( int argc, char* args[] ) {
                 SDL_SetTextureColorMod(txsmall, 0, 0, 0);
             }
             
-            hud_render(&_hud, rend, &textd, &mkb, &info, txsprites);
+            hud_render(&_hud, rend, &textd, &mkb, &info, txsprites, &gst,
+                tot_time);
             
             SDL_RenderPresent(rend);
             frames++;

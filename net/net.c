@@ -117,8 +117,8 @@ int net_client_recv (net_client *c, char buffer[]) {
 
 void net_client_close (net_client *c) {
     if (c->socket != NULL) p_socket_close (c->socket, NULL);
-    p_socket_address_free (c->addr_server);
-	p_socket_free (c->socket);
+    if (c->addr_server != NULL) p_socket_address_free (c->addr_server);
+	if (c->socket != NULL) p_socket_free (c->socket);
 }
 
 

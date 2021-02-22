@@ -899,6 +899,7 @@ void info_template_add (infos *info, info_unit *temp) {
 }
 
 void info_load_army(struct army_ *ar, char *filename) {
+    strcpy(ar->name, filename);
     char buf[1024*64];
     char pathname[64]; sprintf(pathname, "army/%s.txt", filename);
     int len = info_read_file(buf, pathname, 1024*64);
@@ -908,6 +909,7 @@ void info_load_army(struct army_ *ar, char *filename) {
 }
 
 void info_save_army(struct army_ *ar, char *filename) {
+    strcpy(ar->name, filename);
     char pathname[64]; sprintf(pathname, "army/%s.txt", filename);
     FILE *f = fopen(pathname, "wb");
     fwrite(ar, 1, sizeof(army), f);
