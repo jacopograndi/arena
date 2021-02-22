@@ -240,13 +240,14 @@ float info_unit_get_range(infos *info, info_unit *u, int w) {
 
 float info_unit_get_maxrange(infos *info, info_unit *u) {
     int lc = u->levels[LEVEL_CHASSIS];
-    float sum = 0;
+    float max = 0;
     for(int i=0; i<info->chassis[u->chassis].slot_weapon[lc]; i++) {
         if (u->weapons[i] != -1) {
-            sum += info_unit_get_range(info, u, i);
+            float range = info_unit_get_range(info, u, i);
+            if (range > max) { max = range; }
         }
     }
-    return sum;
+    return max;
 }
 
 float info_unit_get_charge_per_shot (infos *info, info_unit *u, int w) {

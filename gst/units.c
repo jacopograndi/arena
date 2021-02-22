@@ -64,7 +64,6 @@ void unit_remove (army *ar, map *m, unit *u) {
     ar->uslen--;
     ar->grid[xytoi(m, tx, ty)] = u;
     ar->grid[xytoi(m, ux, uy)] = NULL;
-    printf("ar->uslen: %d\n", ar->uslen);
 }
 
 void unit_dead (army *ar, map *m, unit *u) {
@@ -76,7 +75,6 @@ void unit_search (infos *info, army *ar, map *m, unit *u,
 {
     for (int f=0; f<32; t[f] = NULL, f++);
     int mult[4][2] = { {1, 1},{1,-1},{-1,-1},{-1,1} }, x, y, dx, dy, tmp;
-    *t = NULL;
     for (int r=1; r<range*1.42 && *t==NULL; r++) {
     for (int k=0; k<4 && *t==NULL; k++) {
     for (int j=0; j<r && *t==NULL; j++) {
@@ -96,8 +94,8 @@ void unit_search (infos *info, army *ar, map *m, unit *u,
             float diff[2] = {
                 u->gridpos[0] - (*t)->gridpos[0],
                 u->gridpos[1] - (*t)->gridpos[1]
-            }; float mag = vec2_mag(diff);
-            if (mag > range) *t = NULL;
+            }; float mag = vec2_mag2(diff);
+            if (mag > range*range) *t = NULL;
         }
     }}}
 }
