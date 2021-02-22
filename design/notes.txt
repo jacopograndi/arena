@@ -3,10 +3,9 @@ tasks: (date)
 [ ] implement stats hud view (issued on 18:02:21)
 [ ] implement net hud and minilobby (issued on 18:02:21)
 [ ] implement brain behaviour (issued on 18:02:21)
-[ ] implement army hud view (issued on 18:02:21)
 [ ] implement lobby cost constraints (issued on 18:02:21)
 [ ] implement edit unit directly (issued on 18:02:21)
-[ ] implement persistent settings (issued on 18:02:21)
+[ ] implement persistent settings ini (issued on 18:02:21)
 [ ] implement move animation (issued on 18:02:21)
 [ ] implement fire animation (issued on 18:02:21)
 [ ] implement explosions (issued on 18:02:21)
@@ -16,6 +15,7 @@ tasks: (date)
 [ ] design component sprites (issued on 18:02:21)
 [ ] implement sound (issued on 18:02:21)
 
+[x] implement army hud view (issued on 18:02:21, done on 22:02:21)
 [x] implement naming template and army (issued on 18:02:21, done on 22:02:21)
 [x] implement cost function (issued on 18:02:21, done on 20:02:21)
 [x] implement end of battle condition (issued on 19:02:21, done on 19:02:21)
@@ -36,6 +36,7 @@ testing:
 
 [ ] write test suit (issued on 19:02:21)
 [ ] armor calculations (issued on 18:02:21)
+[ ] hud states/flags/input interactions (issued on 22:02:21)
 
 
 balance:

@@ -23,7 +23,7 @@ typedef struct {
 
 typedef struct {
     SDL_Rect rect_back;
-    char *oppo[32];
+    char oppo[32];
 } overlay_battle;
 
 typedef struct {
@@ -51,6 +51,7 @@ typedef struct {
     int input_army;
     int input_temp;
     char army_rename[32];
+    int start_battle_flag;
 } overlay_game;
 
 typedef struct {

@@ -3,7 +3,7 @@
 
 #include <plibsys.h>
 
-#define SERVER_PORT 9999
+#define SERVER_PORT 25565
 
 void itob (char *buf, int n);
 int btoi (char *buf);

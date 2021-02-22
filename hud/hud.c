@@ -123,12 +123,14 @@ void hud_init (graphic_settings *gs, hud *h, txtd *t) {
     h->og.army_listcur = 0;
     strcpy(h->og.playername, "");
     strcpy(h->og.ip, "192.168.1.255");
+    strcpy(h->ob.oppo, "cpu");
     h->nameedit = NULL;
     h->og.battle_state = 0;
     h->og.input_playername = 0;
     h->og.input_ip = 0;
     h->og.input_army = -1;
     h->og.input_temp = -1;
+    h->og.start_battle_flag = 0;
     hud_reset(gs, h, t);
 }
 
@@ -442,15 +444,6 @@ void hud_process_overlay_game (graphic_settings *gs, hud *h, MKb *mkb,
             Mix_PlayChannel( -1, sounds[SOUND_SUCCESS], 0 );
         }
         
-        if (mouse_in_button(mousepos, t, &h->og.start_battle)) {
-            gst_tobattle(gst);
-            gst->cam[0] = -gs->resx/2+gst->map_battle.sx*gst->map_battle.ts/2;
-            gst->cam[1] = -gs->resy/2+gst->map_battle.sy*gst->map_battle.ts/2;
-            h->og.battle_state = 3;
-            h->state = 3;
-            Mix_PlayChannel( -1, sounds[SOUND_SUCCESS], 0 );
-        }
-        
         if (mouse_in_button(mousepos, t, &h->og.join_game)) {
             h->og.battle_state = 0;
             net_server_close(nets);
@@ -569,16 +562,34 @@ void hud_process_overlay_game (graphic_settings *gs, hud *h, MKb *mkb,
 
         for (int i=0; i<h->og.army_listlen; i++) {
             float x = h->og.rect_army.x+5;
-            float y = h->og.rect_army.y+5 + i*20 + 30;
+            float y = h->og.rect_army.y+5 + i*20 + 50;
             float wload = get_text_width("load", t)+4*2;
             float posp[2] = { x, y };
             float sizep[2] = { wload, 11+4*2 };
             if (pt_rect(mousepos, posp, sizep)) {
-                int cur = h->og.army_listcur;
-                info_save_army(gst->army_bp+0, h->og.army_list[cur]);
-                h->og.army_listcur = i;
-                info_load_army(gst->army_bp+0, h->og.army_list[i]);
-                Mix_PlayChannel( -1, sounds[SOUND_SUCCESS], 0 );
+                if (h->og.start_battle_flag == 1) {
+                    // start battle
+                    printf("ahia\n");
+                    h->og.start_battle_flag = 0;
+                    hud_edit_close(h, info);
+                    info_load_army(gst->army_bp+1, h->og.army_list[i]);
+                    gst->playernum = 2;
+                    gst_tobattle(gst);
+                    gst->cam[0] = -gs->resx/2
+                        +gst->map_battle.sx*gst->map_battle.ts/2;
+                    gst->cam[1] = -gs->resy/2
+                        +gst->map_battle.sy*gst->map_battle.ts/2;
+                    h->og.battle_state = 3;
+                    h->state = 3;
+                    Mix_PlayChannel( -1, sounds[SOUND_SUCCESS], 0 );
+                } else {
+                    printf("lol\n");
+                    int cur = h->og.army_listcur;
+                    info_save_army(gst->army_bp+0, h->og.army_list[cur]);
+                    h->og.army_listcur = i;
+                    info_load_army(gst->army_bp+0, h->og.army_list[i]);
+                    Mix_PlayChannel( -1, sounds[SOUND_SUCCESS], 0 );
+                }
             }
             else if (h->nameedit == NULL) {
                 float pn[2] = { x+wload+5, y+4 };
@@ -614,6 +625,13 @@ void hud_process_overlay_game (graphic_settings *gs, hud *h, MKb *mkb,
                 h->og.input_ip = 1;
             }
         } 
+        if (h->og.start_battle_flag == 1) {
+            h->og.start_battle_flag = 0;
+        }
+        
+        if (mouse_in_button(mousepos, t, &h->og.start_battle)) {
+            h->og.start_battle_flag = 1;
+        }
     }
     
     // rm unit
@@ -868,7 +886,8 @@ void hud_render_form_new_unit (form_new_unit *fnu, MKb *mkb,
 }
 
 void hud_render_overlay_game (overlay_game *og, MKb *mkb, 
-    SDL_Renderer* rend, txtd *t, infos *info, SDL_Texture *sprites, float time)
+    SDL_Renderer* rend, txtd *t, infos *info, SDL_Texture *sprites, 
+    gamestate *gst, float time)
 {    
     SDL_SetRenderDrawColor(rend, 40, 150, 200, 255);
     SDL_RenderFillRect(rend, &og->rect_templates);
@@ -917,14 +936,20 @@ void hud_render_overlay_game (overlay_game *og, MKb *mkb,
     };
     render_text_scaled(rend, sarmy, parmy, t, 2);
     
-    render_button(rend, t, &og->save_army);
-    render_button(rend, t, &og->new_army);
-    render_button(rend, t, &og->delete_army);
+    float cost = 0;
+    for (int i=0; i<gst->army_bp[0].uslen; i++) {
+        cost += info_unit_get_cost(info, &gst->army_bp[0].us[i].info);
+    }
+    float cx = og->rect_army.x+5;
+    float cy = og->rect_army.y+5 + 30;
+    float p[2] = { cx, cy };
+    char s[64]; sprintf(s, "COST: %.0f", cost);
+    render_text_scaled(rend, s, p, t, 1); 
     
     button b = { "load", 4, { 0, 0 } };
     for (int i=0; i<og->army_listlen; i++) {
         float x = og->rect_army.x+5;
-        float y = og->rect_army.y+5 + i*20 + 30;
+        float y = og->rect_army.y+5 + i*20 + 50;
         float bw = get_text_width("load", t)+4*2;
         b.pos[0] = x; b.pos[1] = y;
         render_button(rend, t, &b);
@@ -943,6 +968,10 @@ void hud_render_overlay_game (overlay_game *og, MKb *mkb,
             render_text_scaled(rend, "<- editing", pe, t, 1);
         }
     }
+    
+    render_button(rend, t, &og->save_army);
+    render_button(rend, t, &og->new_army);
+    render_button(rend, t, &og->delete_army);
     
     SDL_SetRenderDrawColor(rend, 250, 60, 60, 255);
     SDL_RenderFillRect(rend, &og->rect_battle);
@@ -972,7 +1001,19 @@ void hud_render_overlay_game (overlay_game *og, MKb *mkb,
     
     render_button(rend, t, &og->host_game);
     render_button(rend, t, &og->join_game);
-    render_button(rend, t, &og->start_battle);
+    
+    if (og->start_battle_flag == 0) {
+        render_button(rend, t, &og->start_battle);
+    } else {
+        char stip[32] = "select an army to fight";
+        float wbat = get_text_width("start battle", t);
+        float wtip = get_text_width(stip, t);
+        float ptip[2] = { 
+            og->start_battle.pos[0]-wtip+wbat-5+4*2, 
+            og->start_battle.pos[1]+4
+        };
+        render_text_scaled(rend, stip, ptip, t, 1); 
+    }
     
     if (og->temp_place != -1) {
         SDL_Rect srcRect = { 
@@ -997,7 +1038,7 @@ void hud_render_overlay_battle (overlay_battle *ob, MKb *mkb,
     float h = 10;
     { 
         float p[2] = { x+10, y+h };
-        char s[32]; sprintf(s, "%s", ob->oppo);
+        char s[32]; sprintf(s, "vs: %s", ob->oppo);
         render_text_scaled(rend, s, p, t, 2);
     } h += 35;
     { 
@@ -1011,14 +1052,46 @@ void hud_render_overlay_battle (overlay_battle *ob, MKb *mkb,
         render_text_scaled(rend, p2, q, t, 1);
     } h += 20;
     { 
+        float cost = 0;
+        for (int i=0; i<gst->army_bp[0].uslen; i++) {
+            cost += info_unit_get_cost(info, &gst->army_bp[0].us[i].info);
+        }
+        float p[2] = { x+10, y+h };
+        char s[64]; sprintf(s, "COST: %.0f", cost);
+        render_text_scaled(rend, s, p, t, 1); 
+        
+        float cost2 = 0;
+        for (int i=0; i<gst->army_bp[1].uslen; i++) {
+            cost2 += info_unit_get_cost(info, &gst->army_bp[1].us[i].info);
+        }
+        char p2[64]; sprintf(p2, "COST: %.0f", cost2);
+        float p2w = get_text_width(p2, t);
+        float q[2] = { x+w-10-p2w, y+h };
+        render_text_scaled(rend, p2, q, t, 1);
+    } h += 15;
+    { 
         float dps = 0;
         for (int i=0; i<gst->ar.uslen; i++) {
             if (gst->ar.us[i].hp <= 0) continue;
-            dps += info_unit_get_dps(info, &gst->ar.us[i].info);
+            if (gst->ar.us[i].owner == 0) {
+                dps += info_unit_get_dps(info, &gst->ar.us[i].info);
+            }
         }
         float p[2] = { x+10, y+h };
-        char s[64]; sprintf(s, "DAMAGE PER TURN: %.0f", dps);
+        char s[64]; sprintf(s, "DAMAGE: %.0f", dps);
         render_text_scaled(rend, s, p, t, 1); 
+        
+        float dps2 = 0;
+        for (int i=0; i<gst->ar.uslen; i++) {
+            if (gst->ar.us[i].hp <= 0) continue;
+            if (gst->ar.us[i].owner == 1) {
+                dps2 += info_unit_get_dps(info, &gst->ar.us[i].info);
+            }
+        }
+        char p2[64]; sprintf(p2, "DAMAGE: %.0f", dps2);
+        float p2w = get_text_width(p2, t);
+        float q[2] = { x+w-10-p2w, y+h };
+        render_text_scaled(rend, p2, q, t, 1);
     } h += 15;
 }
 
@@ -1027,17 +1100,17 @@ void hud_render (hud *h, SDL_Renderer* rend, txtd *t, MKb *mkb, infos *info,
 {
     switch (h->state) {
         case 0: 
-            hud_render_overlay_game(&h->og, mkb, rend, t, info, sprites, 
+            hud_render_overlay_game(&h->og, mkb, rend, t, info, sprites, gst,
                 time); 
             break;
         case 1: 
-            hud_render_overlay_game(&h->og, mkb, rend, t, info, sprites, 
+            hud_render_overlay_game(&h->og, mkb, rend, t, info, sprites, gst,
                 time); 
             hud_render_form_new_unit(&h->fnu, mkb, rend, t, info, sprites, 
                 time); 
             break;
         case 2:
-            hud_render_overlay_game(&h->og, mkb, rend, t, info, sprites, 
+            hud_render_overlay_game(&h->og, mkb, rend, t, info, sprites, gst,
                 time); 
             hud_render_form_new_unit(&h->fnu, mkb, rend, t, info, sprites, 
                 time); 
