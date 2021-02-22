@@ -116,11 +116,17 @@ int army_move_step (infos *info, army *ar, map *m) {
         if (u->move_points <= 0) continue;
         if (u->hp <= 0) continue;
         if (u->charge <= 0) continue;
-        // search target
+        // search target inside max range
         unit *t[32];
+        float maxrange = info_unit_get_maxrange(info, &u->info);
+        unit_search(info, ar, m, u, t, maxrange);
+        // stop if found
+        if (t[0] != NULL) { continue; }
+        
+        // search target 
         unit_search(info, ar, m, u, t, 100);
         if (t[0] != NULL) {
-            // in range to shoot
+            // in range to move
             diff[0] = u->gridpos[0] - t[0]->gridpos[0];
             diff[1] = u->gridpos[1] - t[0]->gridpos[1];
             if (vec2_mag(diff) > /*info->units[u->who].range*/1) {

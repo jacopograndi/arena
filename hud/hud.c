@@ -167,12 +167,12 @@ void hud_map_sel (info_unit *u, infos *info, int sel, int ind,
     if (sel == 2) { 
         *n = &u->armor[ind]; 
         *bound = info->armorslen; 
-        size[0] = 150; size[1] = 250;
+        size[0] = 150; size[1] = 200;
     }
     if (sel == 3) { 
         *n = &u->weapons[ind]; 
         *bound = info->weaponslen; 
-        size[0] = 200; size[1] = 110;
+        size[0] = 200; size[1] = 170;
     }
     if (sel == 4) { 
         *n = &u->augs[ind]; 
@@ -260,6 +260,7 @@ void hud_close_fnu (hud *h, infos *info) {
     } else {
         info->templates[h->og.temp_modify] = h->fnu.uinfo;
     }
+    info_save_templates(info, "default");
     h->state = 0;
 }
 

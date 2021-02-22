@@ -23,7 +23,7 @@ void json_parse_array(char *json, void *temp, jsmntok_t *t, int r, char type) {
                 *p = atoi(val); 
             }
             if (type == 'f') {
-                float *p = (float*)(intptr_t)temp+sizeof(float)*i;
+                float *p = (float*)(intptr_t)temp+i;
                 *p = atof(val); 
             }
         }

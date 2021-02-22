@@ -5,20 +5,33 @@
 
 #include <hud_views.h>
 
+#define LABEL(x, y, s, d) {\
+    float p[2]={x,y};\
+    render_text_scaled(rend, s, p, t, d);\
+}
+
+#define LABEL_F3(x, y, s, q, v, d) {\
+    float p[2]={x,y}; char ss[64]; \
+    sprintf(ss, "%s: %."#q"f %."#q"f %."#q"f", s, v[0], v[1], v[2]);\
+    render_text_scaled(rend, ss, p, t, d);\
+}
+
+#define LABEL_I3(x, y, s, v, d) {\
+    float p[2]={x,y}; char ss[64]; \
+    sprintf(ss, "%s: %d %d %d", s, v[0], v[1], v[2]);\
+    render_text_scaled(rend, ss, p, t, 1);\
+}
+
 void render_view_stats (SDL_Renderer* rend, txtd *t, int px, int py, 
     infos *info, info_unit *tm) 
 {
     float h = 10;
-    float pname[2] = { px+10, py+h };
-    char sname[64]; sprintf(sname, "STATS");
-    render_text_scaled(rend, sname, pname, t, 2);
-    h += 35;
+    LABEL(px+10, py+h, "STATS", 2); h += 35;
     
-    float cost = info_unit_get_cost(info, tm);
-    float pcost[2] = { px+10, py+h };
-    char scost[64]; sprintf(scost, "COST: %.2f", cost);
-    render_text_scaled(rend, scost, pcost, t, 1);
-    h += 20;
+    {   float val = info_unit_get_cost(info, tm);
+        char s[64]; sprintf(s, "COST: %.2f", val);
+        LABEL(px+10, py+h, s, 1); 
+    } h += 20;
     
     float calcweight = info_unit_get_weight(info, tm);
     float maxweight = info->chassis[tm->chassis].weight_max[
@@ -65,22 +78,15 @@ void render_view_chassis (SDL_Renderer* rend, txtd *t, int px, int py,
     infos *info, int chassis, int lvl, SDL_Texture *sprites) 
 {
     if (chassis != -1) {
-        float pname[2] = { px+10, py+10 };
-        char sname[64]; sprintf(sname, "%s", 
-            info->chassis[chassis].name);
-        render_text_scaled(rend, sname, pname, t, 2);
-        float pweight[2] = { px+10, py+40 };
-        char sweight[64]; sprintf(sweight, "MAX WEIGHT: %0.0f", 
-            info->chassis[chassis].weight_max[lvl]);
-        render_text_scaled(rend, sweight, pweight, t, 1);
-        float php[2] = { px+10, py+55 };
-        char shp[64]; sprintf(shp, "HP: %0.1f", 
-            info->chassis[chassis].hp[lvl]);
-        render_text_scaled(rend, shp, php, t, 1);
-        float pspeed[2] = { px+10, py+70 };
-        char sspeed[64]; sprintf(sspeed, "SPEED: %0.2f tiles/turn", 
-            info->chassis[chassis].speed[lvl]);
-        render_text_scaled(rend, sspeed, pspeed, t, 1);
+        info_chassis *ch = info->chassis+chassis;
+        int h = 10;
+        
+        LABEL(px+10, py+h, info->chassis[chassis].name, 1); h += 30;
+        
+        LABEL_F3(px+10, py+h, "MAX WEIGHT", 0, ch->weight_max, 1); h += 15;
+        LABEL_F3(px+10, py+h, "HP", 0, ch->hp, 1); h += 15;
+        LABEL_F3(px+10, py+h, "SPEED", 2, ch->speed, 1); h += 15;
+        LABEL_F3(px+10, py+h, "UPKEEP", 2, ch->upkeep, 1); h += 15;
         
         SDL_Rect srcRect = { chassis*32, 32, 32, 32 };
         SDL_Rect dstRect = { px+300-32-10, py+10, 32, 32 };
@@ -95,25 +101,17 @@ void render_view_battery (SDL_Renderer* rend, txtd *t, int px, int py,
     infos *info, int batt, int lvl) 
 {
     if (batt != -1) {
-        float pname[2] = { px+10, py+10 };
-        char sname[64]; sprintf(sname, "%s", 
-            info->batteries[batt].name);
-        render_text_scaled(rend, sname, pname, t, 1);
-        float pweight[2] = { px+10, py+40 };
-        char sweight[64]; sprintf(sweight, "WEIGHT: %0.0f", 
-            info->batteries[batt].weight[lvl]);
-        render_text_scaled(rend, sweight, pweight, t, 1);
-        float pcapacity[2] = { px+10, py+55 };
-        char scapacity[64]; sprintf(scapacity, "CAPACITY: %0.1f", 
-            info->batteries[batt].capacity[lvl]);
-        render_text_scaled(rend, scapacity, pcapacity, t, 1);
-        float prech[2] = { px+10, py+70 };
-        char srech[64]; 
+        info_battery *battery = info->batteries+batt;
+        int h = 10;
+        LABEL(px+10, py+h, info->batteries[batt].name, 1); h += 30;
+        
+        LABEL_F3(px+10, py+h, "MAX WEIGHT", 0, battery->weight, 1); h += 15;
+        LABEL_F3(px+10, py+h, "CAPACITY", 0, battery->capacity, 1); h += 15;
+        
+        float prech[2] = { px+10, py+h }; char srech[64]; 
         if (info->batteries[batt].recharge[lvl] == 0) {
             strcpy(srech, "NOT RECHARGEABLE");
-        } else {
-            strcpy(srech, "RECHARGEABLE");
-        }
+        } else { strcpy(srech, "RECHARGEABLE"); }
         render_text_scaled(rend, srech, prech, t, 1);
     } else {
         float pname[2] = { px+10, py+10 };
@@ -155,25 +153,21 @@ void render_view_armor_detail (SDL_Renderer* rend, txtd *t, int px, int py,
     infos *info, int armor, int lvl) 
 {
     if (armor != -1) {
-        float pname[2] = { px+10, py+10 };
-        char sname[64]; sprintf(sname, "%s", info->armors[armor].name);
-        render_text_scaled(rend, sname, pname, t, 1);
-        float pweight[2] = { px+10, py+40 };
-        char sweight[64]; sprintf(sweight, "WEIGHT: %0.0f", 
-            info->armors[armor].weight[lvl]);
-        render_text_scaled(rend, sweight, pweight, t, 1);
+        info_armor *arm = info->armors+armor;
+        int h = 10;
         
-        float pred[2] = { px+10, py+60 };
-        render_text_scaled(rend, "DAMAGE REDUCTION", pred, t, 1);
+        LABEL(px+10, py+h, arm->name, 1); h += 30;
+        LABEL_F3(px+10, py+h, "WEIGHT", 0, arm->weight, 1); h += 20;
+        LABEL(px+10, py+h, "DAMAGE REDUCTION", 1); h += 15;
         
-        int h=0;
         for (int i=0; i<7; i++) {
-            if (info->armors[armor].armor[i][lvl] < 0.001) continue;
-            float pa[2] = { px+10, py+75+h*15 };
-            char sa[64]; sprintf(sa, "%s: %.1f%", 
-                info->damage_types[i], info->armors[armor].armor[i][lvl]);
-            render_text_scaled(rend, sa, pa, t, 1);
-            h++;
+            float sum = 0; for(int j=0;j<MAXLEVEL;j++) 
+                sum+=fabs(arm->armor[i][j]);
+            if (sum > 0) {
+                LABEL_F3(px+10, py+h, info->damage_types[i], 
+                    1, arm->armor[i], 1);
+            }
+            h += 15;
         }
     } else {
         render_view_weapon(rend, t, px, py, info, armor, lvl);
@@ -185,30 +179,19 @@ void render_view_weapon (SDL_Renderer* rend, txtd *t, int px, int py,
     infos *info, int weapon, int lvl) 
 {
     if (weapon != -1) {
-        float pname[2] = { px+10, py+10 };
-        char sname[64]; sprintf(sname, "%s", 
-            info->weapons[weapon].name);
-        render_text_scaled(rend, sname, pname, t, 1);
-        float pweight[2] = { px+10, py+30 };
-        char sweight[64]; sprintf(sweight, "WEIGHT: %.0f", 
-            info->weapons[weapon].weight[lvl]);
-        render_text_scaled(rend, sweight, pweight, t, 1);
-        float ptype[2] = { px+10, py+45 };
-        char stype[64]; sprintf(stype, "DAMAGE TYPE: %s", 
+        info_weapon *weap = info->weapons+weapon;
+        int h = 10;
+        
+        char dt[32]; 
+        sprintf(dt, "DAMAGE TYPE: %s", 
             info->damage_types[info->weapons[weapon].damage_type]);
-        render_text_scaled(rend, stype, ptype, t, 1);
-        float pdamage[2] = { px+10, py+60 };
-        char sdamage[64]; sprintf(sdamage, "DAMAGE: %.0f", 
-            info->weapons[weapon].damage[lvl]);
-        render_text_scaled(rend, sdamage, pdamage, t, 1);
-        float prange[2] = { px+10, py+75 };
-        char srange[64]; sprintf(srange, "RANGE: %.0f", 
-            info->weapons[weapon].range[lvl]);
-        render_text_scaled(rend, srange, prange, t, 1);
-        float pcool[2] = { px+10, py+90 };
-        char scool[64]; sprintf(scool, "COOLDOWN: %.0f", 
-            info->weapons[weapon].cooldown[lvl]);
-        render_text_scaled(rend, scool, pcool, t, 1);
+        
+        LABEL(px+10, py+h, weap->name, 1); h += 20;
+        LABEL_F3(px+10, py+h, "WEIGHT", 0, weap->weight, 1); h += 15;
+        LABEL(px+10, py+h, dt, 1); h += 15;
+        LABEL_F3(px+10, py+h, "DAMAGE", 0, weap->damage, 1); h += 15;
+        LABEL_F3(px+10, py+h, "RANGE", 0, weap->range, 1); h += 15;
+        LABEL_F3(px+10, py+h, "COOLDOWN", 0, weap->cooldown, 1); h += 15;
     } else {
         float pname[2] = { px+10, py+10 };
         render_text_scaled(rend, "select a weapon...", pname, t, 1);
@@ -219,30 +202,34 @@ void render_view_weapon_detail (SDL_Renderer* rend, txtd *t,
     int px, int py, infos *info, int weapon, int lvl)
 {
     if (weapon != -1) {
-        float pname[2] = { px+10, py+10 };
-        char sname[64]; sprintf(sname, "%s", 
-            info->weapons[weapon].name);
-        render_text_scaled(rend, sname, pname, t, 1);
-        float pweight[2] = { px+10, py+30 };
-        char sweight[64]; sprintf(sweight, "WEIGHT: %.0f", 
-            info->weapons[weapon].weight[lvl]);
-        render_text_scaled(rend, sweight, pweight, t, 1);
-        float ptype[2] = { px+10, py+45 };
-        char stype[64]; sprintf(stype, "DAMAGE TYPE: %s", 
+        info_weapon *weap = info->weapons+weapon;
+        int h = 10;
+        
+        char dt[32]; 
+        sprintf(dt, "DAMAGE TYPE: %s", 
             info->damage_types[info->weapons[weapon].damage_type]);
-        render_text_scaled(rend, stype, ptype, t, 1);
-        float pdamage[2] = { px+10, py+60 };
-        char sdamage[64]; sprintf(sdamage, "DAMAGE: %.0f", 
-            info->weapons[weapon].damage[lvl]);
-        render_text_scaled(rend, sdamage, pdamage, t, 1);
-        float prange[2] = { px+10, py+75 };
-        char srange[64]; sprintf(srange, "RANGE: %.0f", 
-            info->weapons[weapon].range[lvl]);
-        render_text_scaled(rend, srange, prange, t, 1);
-        float pcool[2] = { px+10, py+90 };
-        char scool[64]; sprintf(scool, "COOLDOWN: %.0f", 
-            info->weapons[weapon].cooldown[lvl]);
-        render_text_scaled(rend, scool, pcool, t, 1);
+        
+        LABEL(px+10, py+h, weap->name, 1); h += 20;
+        LABEL_F3(px+10, py+h, "WEIGHT", 0, weap->weight, 1); h += 15;
+        LABEL(px+10, py+h, dt, 1); h += 15;
+        LABEL_F3(px+10, py+h, "DAMAGE", 0, weap->damage, 1); h += 15;
+        LABEL_F3(px+10, py+h, "RANGE", 0, weap->range, 1); h += 15;
+        LABEL_F3(px+10, py+h, "COOLDOWN", 0, weap->cooldown, 1); h += 15;
+        LABEL_F3(px+10, py+h, "UPKEEP", 0, weap->upkeep, 1); h += 15;
+        
+        float kb = 0; for(int i=0;i<MAXLEVEL;i++) 
+            kb += fabs(weap->knockback[i]);
+        if (kb > 0) {
+            LABEL_I3(px+10, py+h, "KNOCKBACK", weap->knockback, 1);
+            h += 15;
+        }
+        
+        float cps = 0; for(int i=0;i<MAXLEVEL;i++) 
+            cps += fabs(weap->charge_per_shot[i]);
+        if (cps > 0) {
+            LABEL_F3(px+10, py+h, "CHARGE PER SHOT",0,weap->charge_per_shot, 1);
+            h += 15;
+        }
     } else {
         render_view_weapon(rend, t, px, py, info, weapon, lvl);
     }
@@ -253,14 +240,11 @@ void render_view_aug (SDL_Renderer* rend, txtd *t, int px, int py,
     infos *info, int aug, int lvl) 
 {
     if (aug != -1) {
-        float pname[2] = { px+10, py+10 };
-        char sname[64]; sprintf(sname, "%s", 
-            info->augs[aug].name);
-        render_text_scaled(rend, sname, pname, t, 1);
-        float pweight[2] = { px+10, py+30 };
-        char sweight[64]; sprintf(sweight, "WEIGHT: %.0f", 
-            info->augs[aug].weight[lvl]);
-        render_text_scaled(rend, sweight, pweight, t, 1);
+        info_aug *augm = info->augs+aug;
+        int h = 10;
+        
+        LABEL(px+10, py+h, augm->name, 1); h += 20;
+        LABEL_F3(px+10, py+h, "WEIGHT", 0, augm->weight, 1); h += 15;
     } else {
         float pname[2] = { px+10, py+10 };
         render_text_scaled(rend, "select an augment...", pname, t, 1);
@@ -271,82 +255,68 @@ void render_view_aug_detail (SDL_Renderer* rend, txtd *t, int px, int py,
     infos *info, int aug, int lvl) 
 {
     if (aug != -1) {
-        float h = 10;
-        float pname[2] = { px+10, py+h };
-        char sname[64]; sprintf(sname, "%s", 
-            info->augs[aug].name);
-        render_text_scaled(rend, sname, pname, t, 1);
-        h += 20;
+        info_aug *augm = info->augs+aug;
+        int h = 10;
         
-        float pweight[2] = { px+10, py+h };
-        char sweight[64]; sprintf(sweight, "WEIGHT: %.0f", 
-            info->augs[aug].weight[lvl]);
-        render_text_scaled(rend, sweight, pweight, t, 1);
-        h += 15;
+        LABEL(px+10, py+h, augm->name, 1); h += 20;
+        LABEL_F3(px+10, py+h, "WEIGHT", 0, augm->weight, 1); h += 15;
         
-        float range = info->augs[aug].add_range[lvl];
-        if (range != 0) {
-            float p[2] = { px+10, py+h };
-            char s[64]; sprintf(s, "RANGE: %.1f", range);
-            render_text_scaled(rend, s, p, t, 1);
-            h += 15;
+        float range = 0; for(int i=0;i<MAXLEVEL;i++) 
+            range += fabs(augm->add_range[i]);
+        if (range > 0) {
+            LABEL_F3(px+10, py+h, "RANGE", 0, augm->add_range, 1); h += 15;
         }
         
-        float cooldown = info->augs[aug].add_cooldown[lvl];
+        float cooldown = 0; for(int i=0;i<MAXLEVEL;i++) 
+            cooldown += fabs(augm->add_cooldown[i]);
         if (cooldown != 0) {
-            float p[2] = { px+10, py+h };
-            char s[64]; sprintf(s, "COOLDOWN: %.2f", cooldown);
-            render_text_scaled(rend, s, p, t, 1);
+            LABEL_F3(px+10, py+h, "COOLDOWN", 2, augm->add_cooldown, 1); 
             h += 15;
         }
         
-        float speed = info->augs[aug].add_speed[lvl];
+        float speed = 0; for(int i=0;i<MAXLEVEL;i++) 
+            speed += fabs(augm->add_speed[i]);
         if (speed != 0) {
-            float p[2] = { px+10, py+h };
-            char s[64]; sprintf(s, "SPEED: %.2f", speed);
-            render_text_scaled(rend, s, p, t, 1);
-            h += 15;
+            LABEL_F3(px+10, py+h, "SPEED", 2, augm->add_speed, 1); h += 15;
         }
         
-        float hp = info->augs[aug].add_hp[lvl];
+        float hp = 0; for(int i=0;i<MAXLEVEL;i++) 
+            hp += fabs(augm->add_hp[i]);
         if (hp != 0) {
-            float p[2] = { px+10, py+h };
-            char s[64]; sprintf(s, "HP: %.1f", hp);
-            render_text_scaled(rend, s, p, t, 1);
-            h += 15;
+            LABEL_F3(px+10, py+h, "HP", 1, augm->add_hp, 1); h += 15;
         }
         
         h += 5;
         
         float sum = 0;
-        for (int i=0; i<7; i++) sum += fabs(info->augs[aug].add_armor[i][lvl]);
+        for (int i=0; i<7; i++) 
+            for(int j=0;j<MAXLEVEL;j++) 
+                sum += fabs(augm->add_armor[i][j]);
         if (sum != 0) {
-            float p[2] = { px+10, py+h };
-            render_text_scaled(rend, "ARMOR: ", p, t, 1);
-            h += 15;
             for (int i=0; i<7; i++) {
-                if (info->augs[aug].add_armor[i][lvl] == 0) continue;
-                float pa[2] = { px+10, py+h };
-                char sa[64]; sprintf(sa, "%s: %.1f%", 
-                    info->damage_types[i], info->augs[aug].add_armor[i][lvl]);
-                render_text_scaled(rend, sa, pa, t, 1);
-                h += 15;
+                float suml = 0; for(int j=0;j<MAXLEVEL;j++) 
+                    suml+=fabs(augm->add_armor[i][j]);
+                if (suml > 0) {
+                    LABEL_F3(px+10, py+h, info->damage_types[i], 
+                        1, augm->add_armor[i], 1);
+                    h += 15;
+                }
             }
         }
         
         sum = 0;
-        for (int i=0; i<7; i++) sum += fabs(info->augs[aug].add_damage[i][lvl]);
+        for (int i=0; i<7; i++) 
+            for(int j=0;j<MAXLEVEL;j++) 
+                sum += fabs(augm->add_damage[i][j]);
         if (sum != 0) {
-            float p[2] = { px+10, py+h };
-            render_text_scaled(rend, "DAMAGE: ", p, t, 1);
-            h += 15;
             for (int i=0; i<7; i++) {
-                if (info->augs[aug].add_damage[i][lvl] == 0) continue;
-                float pa[2] = { px+10, py+h };
-                char sa[64]; sprintf(sa, "%s: %.1f%", 
-                    info->damage_types[i], info->augs[aug].add_damage[i][lvl]);
-                render_text_scaled(rend, sa, pa, t, 1);
-                h += 15;
+                float suml = 0; for(int j=0;j<MAXLEVEL;j++) 
+                    suml+=fabs(augm->add_damage[i][j]);
+                if (suml > 0) {
+                    LABEL_F3(px+10, py+h, info->damage_types[i], 
+                        1, augm->add_damage[i], 1);
+                    h += 15;
+                }
             }
         }
     } else {

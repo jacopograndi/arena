@@ -115,6 +115,7 @@ float info_unit_get_damage_target(infos *info, info_unit *u, int w,
     info_unit *t);
 float info_unit_get_cooldown(infos *info, info_unit *u, int w);
 float info_unit_get_range(infos *info, info_unit *u, int w);
+float info_unit_get_maxrange(infos *info, info_unit *u);
 float info_unit_get_armor(infos *info, info_unit *u, int d);
 float info_unit_get_cost(infos *info, info_unit *u);
 

@@ -4,6 +4,9 @@
 
 void char_width_init (int *char_width) {
     for (int i=0; i<128; char_width[i++]=5);
+    char_width['('] = 2; char_width[')'] = 2;
+    char_width['['] = 2; char_width[']'] = 2;
+    char_width['{'] = 3; char_width['}'] = 3;
     char_width[','] = 1; char_width['-'] = 3; char_width['.'] = 1; 
     char_width['/'] = 4; char_width['!'] = 1;
     char_width[':'] = 1; char_width[';'] = 1;

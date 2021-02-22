@@ -33,4 +33,6 @@ if __name__ == "__main__":
     #comp("brains", ["name"])
     #comp("brains", ["name"])
     
-    #comp("armor", ["weight"], query, lambda x: [x[i]/5 for i in range(3)])
+    amt = .5
+    perc_inc = lambda x: [x[i]*(1.0+(i/2.0)*amt) for i in range(3)]
+    comp("weapons", ["damage"], query, perc_inc)
