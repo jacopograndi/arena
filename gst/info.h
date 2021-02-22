@@ -128,6 +128,8 @@ void info_load_army(struct army_ *ar, char *filename);
 void info_save_army(struct army_ *ar, char *filename);
 
 int info_army_get_list(char l[][32]);
+void info_army_rename (char oldn[], char newn[]);
+void info_army_remove (char name[]);
 
 void info_load_playername(char n[]);
 void info_save_playername(char n[]);

@@ -373,13 +373,13 @@ void render_view_brain (SDL_Renderer* rend, txtd *t, int px, int py,
 void render_view_template (SDL_Renderer* rend, txtd *t, int px, int py, 
     infos *info, int temp, int lvl) 
 {
-    button b = { "edit", 4, { px, py } };
-    render_button(rend, t, &b);
-    float wedit = get_text_width("edit", t);
+    { button b = { "edit", 4, { px, py } };
+    render_button(rend, t, &b); }
+    float wedit = get_text_width("edit", t); 
     
-    button b1 = { "place", 4, { px+wedit+2*4+5, py } };
-    render_button(rend, t, &b1);
-    float wplace = get_text_width("place", t);
+    { button b = { "place", 4, { px+wedit+2*4+5, py } };
+    render_button(rend, t, &b); }
+    float wplace = get_text_width("place", t); 
     
     float pname[2] = { wplace+wedit+4*4+10+px, py+4 };
     char *sname = info->templates[temp].name;

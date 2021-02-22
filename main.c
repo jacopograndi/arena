@@ -101,6 +101,7 @@ int main( int argc, char* args[] ) {
     hud _hud;
     hud_init(&gs, &_hud, &textd);
     _hud.og.army_listlen = info_army_get_list(_hud.og.army_list);
+    info_load_army(gst.army_bp+0, _hud.og.army_list[0]);
     info_load_playername(_hud.og.playername);
     
     float mlast[2] = {0, 0};

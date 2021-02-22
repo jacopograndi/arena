@@ -25,6 +25,8 @@ typedef struct {
     button new_template;
     button save_templates;
     button save_army;
+    button delete_army;
+    button new_army;
     button start_battle;
     button host_game;
     button join_game;
@@ -35,12 +37,15 @@ typedef struct {
     SDL_Rect rect_army;
     char army_list[64][32];
     int army_listlen;
-    char army_listcur[32];
+    int army_listcur;
     int battle_state;
     char playername[32];
     int input_playername;
     char ip[32];
     int input_ip;
+    int input_army;
+    int input_temp;
+    char army_rename[32];
 } overlay_game;
 
 typedef struct {

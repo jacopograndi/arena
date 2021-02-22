@@ -53,17 +53,31 @@ void init_overlay_game (graphic_settings *gs, overlay_game *og, txtd *t) {
     og->rect_templates = { 10, gs->resy-10-h, w, h };
     
     float wnu = get_text_width("new template", t);
-    button b = { "new template", 4, { w-wnu-4*2, 20 } };
+    button b = { "new template", 4, { w-wnu-4*2+5, 10+5 } };
     og->new_template = b;
     
     float wst = get_text_width("save templates", t);
-    button b2 = { "save templates", 4, { w-wst-4*2, gs->resy-20-4*2-10 } };
+    button b2 = { "save templates", 4, { w-wst-4*2+5, gs->resy-20-4*2-5 } };
     og->save_templates = b2;
     
     int warmy = 250, harmy = gs->resy-20;
     og->rect_army = { gs->resx-warmy-10, gs->resy-harmy-10, warmy, harmy };
-    button b3 = { "save army", 4, { gs->resx-warmy, gs->resy-20-4*2-10 } };
+    button b3 = { "save army", 4, { gs->resx-warmy-5, gs->resy-20-4*2-5 } };
     og->save_army = b3;
+    
+    { 
+        int w = get_text_width("delete army", t);
+        button b = { "delete army", 4, { 
+            gs->resx-w-4*2-15, gs->resy-20-4*2-5 } };
+        og->delete_army = b; 
+    }
+    
+    { 
+        int w = get_text_width("new army", t);
+        button b = { "new army", 4, { 
+            gs->resx-warmy-5, gs->resy-15-4*4-20-5 } };
+        og->new_army = b; 
+    }
     
     int wbattle = 400, hbattle = 100;
     og->rect_battle = { gs->resx/2-wbattle/2, 10, wbattle, hbattle };
@@ -96,13 +110,15 @@ void hud_init (graphic_settings *gs, hud *h, txtd *t) {
     h->sc.ref = &h->fnu.rect_chassis;
     h->og.temp_place = -1;
     info_unit_init(&h->fnu.uinfo);
-    strcpy(h->og.army_listcur, "army");
+    h->og.army_listcur = 0;
     strcpy(h->og.playername, "");
     strcpy(h->og.ip, "192.168.1.255");
     h->nameedit = NULL;
     h->og.battle_state = 0;
     h->og.input_playername = 0;
     h->og.input_ip = 0;
+    h->og.input_army = -1;
+    h->og.input_temp = -1;
     hud_reset(gs, h, t);
 }
 
@@ -201,20 +217,28 @@ void hud_process_sel (graphic_settings *gs, hud *h, MKb *mkb,
 }
 
 
-void hud_edit_close(hud *h) {
-    h->nameedit = NULL;
+void hud_edit_close(hud *h, infos *info) {
     if (h->og.input_playername != 0) {
         info_save_playername(h->og.playername);
     }
     h->og.input_playername = 0;
     h->og.input_ip = 0;
+    if (h->og.input_army != -1) {
+        info_army_rename(h->og.army_rename, h->nameedit);
+    }
+    h->og.input_army = -1;
+    if (h->og.input_temp != -1) {
+        info_save_templates(info, "default");
+    }
+    h->og.input_temp = -1;
+    h->nameedit = NULL;
 }
 
-void hud_open_fnu (hud *h, info_unit *u, int i) {
+void hud_open_fnu (hud *h, infos *info, info_unit *u, int i) {
     h->state = 1;
     h->fnu.uinfo = *u;
     h->og.temp_modify = i;
-    hud_edit_close(h);
+    hud_edit_close(h, info);
 }
 
 void hud_close_fnu (hud *h, infos *info) {
@@ -360,6 +384,7 @@ void hud_process_overlay_game (graphic_settings *gs, hud *h, MKb *mkb,
                 gst->cam[1] = -gs->resy/2+gst->map_battle.sy*gst->map_battle.ts/2;
                 h->state = 3;
                 net_server_close(nets);
+                hud_edit_close(h, info);
             }
         }
     }
@@ -377,6 +402,7 @@ void hud_process_overlay_game (graphic_settings *gs, hud *h, MKb *mkb,
             gst->cam[1] = -gs->resy/2+gst->map_battle.sy*gst->map_battle.ts/2;
             h->state = 3;
             net_client_close(netc);
+            hud_edit_close(h, info);
         }
     }
             
@@ -384,7 +410,7 @@ void hud_process_overlay_game (graphic_settings *gs, hud *h, MKb *mkb,
     if (mkb->mheld[0] == 1) {
         if (mouse_in_button(mousepos, t, &h->og.new_template)) {
             info_unit u; info_unit_init(&u);
-            hud_open_fnu(h, &u, -1);
+            hud_open_fnu(h, info, &u, -1);
             h->og.temp_place = -1;
         }
         
@@ -394,9 +420,6 @@ void hud_process_overlay_game (graphic_settings *gs, hud *h, MKb *mkb,
         }
         
         if (mouse_in_button(mousepos, t, &h->og.start_battle)) {
-            /*
-            army_move(info, ar, m);
-            army_fire(info, ar, m);*/
             gst_tobattle(gst);
             gst->cam[0] = -gs->resx/2+gst->map_battle.sx*gst->map_battle.ts/2;
             gst->cam[1] = -gs->resy/2+gst->map_battle.sy*gst->map_battle.ts/2;
@@ -432,8 +455,47 @@ void hud_process_overlay_game (graphic_settings *gs, hud *h, MKb *mkb,
         }
         
         if (mouse_in_button(mousepos, t, &h->og.save_army)) {
-            info_save_army(gst->army_bp+0, h->og.army_listcur);
+            int cur = h->og.army_listcur;
+            info_save_army(gst->army_bp+0, h->og.army_list[cur]);
             h->og.army_listlen = info_army_get_list(h->og.army_list);
+        }
+        
+        if (mouse_in_button(mousepos, t, &h->og.new_army)) {
+            army ar; ar.uslen = 0; ar.sx = 10; ar.sy = 10;
+            char name[32]; strcpy(name, "new army");
+            char namecmp[32]; strcpy(namecmp, name);
+            for (int i=0; i<128; i++) {
+                int flag = 0;
+                for (int j=0; j<h->og.army_listlen; j++) {
+                    sprintf(namecmp, "%s %d", name, i);
+                    if (strcmp(namecmp, h->og.army_list[j]) == 0) {
+                        flag = 1; break;
+                    }
+                }
+                if (flag == 0) break;
+            }
+            info_save_army(&ar, namecmp);
+            h->og.army_listlen = info_army_get_list(h->og.army_list);
+            for (int i=0; i<h->og.army_listlen; i++) {
+                if (strcmp(namecmp, h->og.army_list[i]) == 0) {
+                    h->og.army_listcur = i; break;
+                }
+            }
+        }
+        
+        if (mouse_in_button(mousepos, t, &h->og.delete_army)) {
+            if (h->og.army_listlen > 1) {
+                if (h->og.input_army != -1) {
+                    h->og.input_army = -1;
+                    hud_edit_close(h, info);
+                }
+                int cur = h->og.army_listcur;
+                info_army_remove(h->og.army_list[cur]);
+                h->og.army_listlen = info_army_get_list(h->og.army_list);
+                if (cur >= 0) h->og.army_listcur--;
+                cur = h->og.army_listcur;
+                info_load_army(gst->army_bp+0, h->og.army_list[cur]);
+            }
         }
         
         if (h->og.temp_place != -1) {
@@ -450,7 +512,7 @@ void hud_process_overlay_game (graphic_settings *gs, hud *h, MKb *mkb,
                 h->og.temp_place = -1;
             }
         }
-        
+
         for (int i=0; i<info->templateslen; i++) {
             float x = h->og.rect_templates.x+5;
             float y = h->og.rect_templates.y+5 + i*20 + 30;
@@ -458,7 +520,7 @@ void hud_process_overlay_game (graphic_settings *gs, hud *h, MKb *mkb,
             float possa[2] = { x, y };
             float sizesa[2] = { wedit+4*2, 11+4*2 };
             if (pt_rect(mousepos, possa, sizesa)) {
-                hud_open_fnu(h, info->templates+i, i);
+                hud_open_fnu(h, info, info->templates+i, i);
                 h->og.temp_place = -1;
             }
             float wplace = get_text_width("place", t);
@@ -467,19 +529,41 @@ void hud_process_overlay_game (graphic_settings *gs, hud *h, MKb *mkb,
             if (pt_rect(mousepos, posp, sizep)) {
                 hud_og_place(h, i);
             }
+            if (h->nameedit == NULL) {
+                float pn[2] = { x+wedit+5+wplace+4*4, y+4 };
+                char *sname = info->templates[i].name;
+                float w = get_text_width(sname, t);
+                if (w==0) w = 5;
+                float sizen[2] = { w, 10 };
+                if (pt_rect(mousepos, pn, sizen)) {
+                    h->nameedit = sname;
+                    h->og.input_temp = i;
+                }
+            } 
         }
-        
+
         for (int i=0; i<h->og.army_listlen; i++) {
             float x = h->og.rect_army.x+5;
             float y = h->og.rect_army.y+5 + i*20 + 30;
-            float wload = get_text_width("load", t);
+            float wload = get_text_width("load", t)+4*2;
             float posp[2] = { x, y };
-            float sizep[2] = { wload+4*2, 11+4*2 };
+            float sizep[2] = { wload, 11+4*2 };
             if (pt_rect(mousepos, posp, sizep)) {
-                strcpy(h->og.army_listcur, h->og.army_list[i]);
-                info_load_army(gst->army_bp+0, h->og.army_listcur);
+                h->og.army_listcur = i;
+                info_load_army(gst->army_bp+0, h->og.army_list[i]);
                 Mix_PlayChannel( -1, sounds[SOUND_SUCCESS], 0 );
             }
+            else if (h->nameedit == NULL) {
+                float pn[2] = { x+wload+5, y+4 };
+                float w = get_text_width(h->og.army_list[i], t);
+                if (w==0) w = 5;
+                float sizen[2] = { w, 10 };
+                if (pt_rect(mousepos, pn, sizen)) {
+                    h->nameedit = h->og.army_list[i];
+                    strcpy(h->og.army_rename, h->nameedit);
+                    h->og.input_army = i;
+                }
+            } 
         }
         
         if (h->nameedit == NULL) {
@@ -489,11 +573,8 @@ void hud_process_overlay_game (graphic_settings *gs, hud *h, MKb *mkb,
             if (pt_rect(mousepos, pn, sizen)) {
                 h->nameedit = h->og.playername;
                 h->og.input_playername = 1;
-            }
-        } else {
-            Mix_PlayChannel( -1, sounds[SOUND_SUCCESS], 0 );
-            hud_edit_close(h);
-        }
+            } 
+        } 
         
         if (h->nameedit == NULL) {
             float pn[2] = { h->og.rect_battle.x+5, h->og.rect_battle.y+25 };
@@ -503,10 +584,7 @@ void hud_process_overlay_game (graphic_settings *gs, hud *h, MKb *mkb,
                 h->nameedit = h->og.ip;
                 h->og.input_ip = 1;
             }
-        } else {
-            Mix_PlayChannel( -1, sounds[SOUND_SUCCESS], 0 );
-            hud_edit_close(h);
-        }
+        } 
     }
     
     // rm unit
@@ -522,7 +600,8 @@ void hud_process_overlay_game (graphic_settings *gs, hud *h, MKb *mkb,
     }
 }
 
-void hud_edit_name(hud *h, MKb *mkb, Mix_Chunk *sounds[]) {
+void hud_edit_name(hud *h, infos *info, MKb *mkb, Mix_Chunk *sounds[]) {
+    if (h->nameedit == NULL) return;
     for (int i=0; i<mkb->kbnum; i++) {
         if (strlen(h->nameedit) < 31) {
             if (mkb->kb[i] >= SDL_SCANCODE_A
@@ -566,7 +645,7 @@ void hud_edit_name(hud *h, MKb *mkb, Mix_Chunk *sounds[]) {
     if (mkb_search(mkb, SDL_SCANCODE_ESCAPE) 
      || mkb_search(mkb, SDL_SCANCODE_RETURN)) {
         Mix_PlayChannel( -1, sounds[SOUND_SUCCESS], 0 );
-        hud_edit_close(h); return;
+        hud_edit_close(h, info); return;
     }
 }
 
@@ -574,7 +653,7 @@ void hud_process (graphic_settings *gs, hud *h, MKb *mkb,
     infos *info, army *ar, map *m, txtd *t, gamestate *gst, 
     net_client *netc, net_server *nets, Mix_Chunk *sounds[]) 
 {
-    if (h->nameedit != NULL) { hud_edit_name(h, mkb, sounds); }
+    if (h->nameedit != NULL) { hud_edit_name(h, info, mkb, sounds); }
     switch (h->state) {
         case 0: 
             hud_process_overlay_game(gs, h, mkb, info, ar, m, t, gst, 
@@ -777,9 +856,25 @@ void hud_render_overlay_game (overlay_game *og, MKb *mkb,
     render_button(rend, t, &og->save_templates);
     
     for (int i=0; i<info->templateslen; i++) {
-        float x = og->rect_templates.x+5;
-        float y = og->rect_templates.y+5 + i*20 + 30;
-        render_view_template(rend, t, x, y, info, i, 0);
+        float px = og->rect_templates.x+5;
+        float py = og->rect_templates.y+5 + i*20 + 30;
+        { button b = { "edit", 4, { px, py } };
+        render_button(rend, t, &b); }
+        float wedit = get_text_width("edit", t); 
+        
+        { button b = { "place", 4, { px+wedit+2*4+5, py } };
+        render_button(rend, t, &b); }
+        float wplace = get_text_width("place", t); 
+        
+        float pname[2] = { wplace+wedit+4*4+10+px, py+4 };
+        char *sname = info->templates[i].name;
+        char sn[64]; 
+        if (og->input_temp == i) {
+            sprintf(sn, "%s_", sname);
+        } else {
+            sprintf(sn, "%s", sname);
+        }
+        render_text_scaled(rend, sn, pname, t, 1);
     }
     
     SDL_SetRenderDrawColor(rend, 0, 200, 120, 255);
@@ -794,6 +889,8 @@ void hud_render_overlay_game (overlay_game *og, MKb *mkb,
     render_text_scaled(rend, sarmy, parmy, t, 2);
     
     render_button(rend, t, &og->save_army);
+    render_button(rend, t, &og->new_army);
+    render_button(rend, t, &og->delete_army);
     
     button b = { "load", 4, { 0, 0 } };
     for (int i=0; i<og->army_listlen; i++) {
@@ -802,10 +899,17 @@ void hud_render_overlay_game (overlay_game *og, MKb *mkb,
         float bw = get_text_width("load", t)+4*2;
         b.pos[0] = x; b.pos[1] = y;
         render_button(rend, t, &b);
+        
+        char sn[64]; 
+        if (og->input_army == i) {
+            sprintf(sn, "%s_", og->army_list[i]);
+        } else {
+            sprintf(sn, "%s", og->army_list[i]);
+        }
         float pa[2] = { x+bw+5, y+4 };
-        render_text_scaled(rend, og->army_list[i], pa, t, 1);
-        if (strcmp(og->army_listcur, og->army_list[i]) == 0) {
-            float w = get_text_width(og->army_list[i], t);
+        render_text_scaled(rend, sn, pa, t, 1);
+        if (og->army_listcur == i) {
+            float w = get_text_width(sn, t);
             float pe[2] = { x+bw+5+w+5, y+4 };
             render_text_scaled(rend, "<- editing", pe, t, 1);
         }

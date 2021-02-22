@@ -941,3 +941,14 @@ int info_army_get_list (char l[][32]) {
     }
     return len;
 }
+
+void info_army_rename (char oldn[], char newn[]) {
+    char pathnameold[64]; sprintf(pathnameold, "army/%s.txt", oldn);
+    char pathnamenew[64]; sprintf(pathnamenew, "army/%s.txt", newn);
+    rename(pathnameold, pathnamenew);
+}
+
+void info_army_remove (char name[]) {
+    char pathname[64]; sprintf(pathname, "army/%s.txt", name);
+    remove(pathname);
+}

@@ -1,6 +1,6 @@
 [ 
     { 
-        "name": "tank",
+        "name": "medium rare",
         "chassis": "0",
         "brain": "0",
         "battery": "0",
@@ -10,7 +10,7 @@
         "levels": [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ]
     },
     { 
-        "name": "tank2",
+        "name": "raw",
         "chassis": "5",
         "brain": "0",
         "battery": "0",
@@ -20,7 +20,7 @@
         "levels": [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ]
     },
     { 
-        "name": "nameless",
+        "name": "well done",
         "chassis": "9",
         "brain": "2",
         "battery": "2",
