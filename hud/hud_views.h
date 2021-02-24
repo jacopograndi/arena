@@ -15,6 +15,9 @@ void render_view_stats (SDL_Renderer* rend, txtd *t, int px, int py,
     infos *info, info_unit *tm);
 
 
+void render_view_level (SDL_Renderer *rend, int px, int py, int lvl);
+
+
 void render_view_chassis (SDL_Renderer* rend, txtd *t, int px, int py, 
     infos *info, int chassis, int lvl, SDL_Texture *sprites);
     

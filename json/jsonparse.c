@@ -15,11 +15,11 @@ void json_parse_array(char *json, void *temp, jsmntok_t *t, int r, char type) {
         if (t[i].type == JSMN_PRIMITIVE) {
             char val[32]; substr_token(json, val, t+i); 
             if (type == 'i') {
-                int *p = (int*)(intptr_t)temp+sizeof(int)*i;
+                int *p = (int*)(intptr_t)temp+i;
                 *p = atoi(val); 
             }
             if (type == 'c') {
-                int8_t *p = (int8_t*)(intptr_t)temp+sizeof(int8_t)*i;
+                int8_t *p = (int8_t*)(intptr_t)temp+i;
                 *p = atoi(val); 
             }
             if (type == 'f') {
@@ -35,7 +35,7 @@ void json_dump_array (char *str, void *arr, int len, char type) {
     sprintf(str+cur, "[ "); cur = strlen(str);
     for (int i=0; i<len; i++) { 
         if (type == 'i') {
-            sprintf(str+cur, "%d", (int)(intptr_t)(arr+i*sizeof(int))); 
+            sprintf(str+cur, "%d", ((int)(intptr_t)(arr))[i]); 
             cur = strlen(str);
         }
         if (type == 'c') {

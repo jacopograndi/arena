@@ -533,6 +533,7 @@ void info_chassis_parse (char *json, info_chassis *c, jsmntok_t *t, int r,
             if (strcmp(key, "slot_weapon") == 0) {
                 int rt = json_parse_subtokens(json, t, r, i+1);
                 json_parse_array(json, c->slot_weapon, t+i+2, rt-1, 'i');
+                printf("%d %d %d\n", c->slot_weapon[0], c->slot_weapon[1], c->slot_weapon[2]);
                 i += rt;
             }
             if (strcmp(key, "slot_armor") == 0) {

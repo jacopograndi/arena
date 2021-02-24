@@ -89,16 +89,18 @@ void gst_spawn_bullets (gamestate *gst, fxs *fx, a_dmg dmgs[], int dmgslen,
     gst_get_maparmy(gst, &m, &ar);
     
     bullet b;
+    
+    // for every unit count how many shots
     int counts[MAXUNITS]; 
     for (int j=0;j<MAXUNITS; counts[j]=0, j++);
-    // for every unit count how many shots
-    
     for (int i=0; i<ar->uslen; i++) {
         for (int j=0; j<dmgslen; j++) {
             unit *u = ar->us+i;
             if (dmgs[j].u == u) { counts[i]++; }
         }
     } 
+    
+    // then spawn a bullet for every shot
     int curr[MAXUNITS]; 
     for (int j=0;j<MAXUNITS; curr[j]=0, j++);
     for (int i=0; i<ar->uslen; i++) {
@@ -111,9 +113,10 @@ void gst_spawn_bullets (gamestate *gst, fxs *fx, a_dmg dmgs[], int dmgslen,
                 b.to[0] = t->pos[0]+16;
                 b.to[1] = t->pos[1]+16;
                 float n = (float)curr[i]/counts[i];
+                float travel_time = 0.1;
                 float shot_time = time + n*gst->turnspeed;
                 b.starttime = shot_time;
-                b.endtime = shot_time + 0.1;
+                b.endtime = shot_time + travel_time;
                 if (u->owner == 0) {
                     b.color[0] = 0; b.color[1] = 255; b.color[2] = 0;
                 } else {
@@ -155,7 +158,6 @@ void gst_process (gamestate *gst, infos *info, fxs *fx, float t) {
             a_dmg dmgs[1024*8];
             int fire = army_fire(info, ar, m, dmgs);
             army_upkeep(info, ar, m);
-            printf("%d, %d\n", move, fire);
             if (move == 0 && fire == 0) {
                 gst->turn_until_finish--;
             } else { gst->turn_until_finish = 5; }

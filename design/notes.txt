@@ -1,6 +1,7 @@
 tasks: (date)
 
 [ ] implement healing beam (issued on 24:02:21)
+[ ] implement battery recharge beam (issued on 24:02:21)
 [ ] implement net hud and minilobby (issued on 18:02:21)
 [ ] implement brain behaviour (issued on 18:02:21)
 [ ] implement lobby cost constraints (issued on 18:02:21)
@@ -65,7 +66,7 @@ implement fire animation:
     calculate target position by interpolating
     when needed spawn explosion
     what is a bullet? sprite? line? -> for now a line
-    
+-> done
     
 
 implement move animation:

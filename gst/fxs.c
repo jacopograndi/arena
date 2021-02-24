@@ -39,7 +39,10 @@ void fx_render (SDL_Renderer *rend, fxs *fx, float cam[], float time) {
             b->from[1] *(1-amt) + b->to[1] *amt
         };
         float head[2]; vec2_sub(head, b->from, b->to);
-        vec2_norm(head); vec2_mul(head, head, 10);
+        float mag = 10;
+        float dist = amt*vec2_mag(head);
+        if (dist < 10) { mag = dist; }
+        vec2_norm(head); vec2_mul(head, head, mag);
         SDL_SetRenderDrawColor(rend, 
             b->color[0], 
             b->color[1], 

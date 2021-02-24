@@ -78,6 +78,10 @@ typedef struct {
 } hud;
 
 void hud_init(graphic_settings *gs, hud *h, txtd *t);
+
+void hud_map_sel (info_unit *u, infos *info, int sel, int ind, 
+    int8_t **n, int *bound, int size[]);
+
 void hud_resize (graphic_settings *gs, hud *h, txtd *t);
 void hud_process (graphic_settings *gs, hud *h, MKb *mkb, 
     infos *info, army *ar, map *m, txtd *t, gamestate *gst, 

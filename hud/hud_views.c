@@ -74,6 +74,30 @@ void render_view_stats (SDL_Renderer* rend, txtd *t, int px, int py,
     h += 5;
 }
 
+
+void render_view_level (SDL_Renderer *rend, int px, int py, int lvl) {
+    // position is of bottom right corner
+    for (int i=0; i<MAXLEVEL; i++) {
+        int sel = 0;
+        if (lvl == i) {
+            SDL_SetRenderDrawColor(rend, 240, 250, 240, 255);
+            sel = 1;
+        } else {
+            SDL_SetRenderDrawColor(rend, 140, 140, 140, 255);
+            sel = 0;
+        }
+        SDL_Rect rect = { 
+            px-MAXLEVEL*9-1 + 9*i, 
+            py-9-1-sel*2, 
+            10, 
+            10+sel*2 };
+        SDL_RenderFillRect(rend, &rect);
+        SDL_SetRenderDrawColor(rend, 0, 0, 0, 255);
+        SDL_RenderDrawRect(rend, &rect);
+    }
+}
+
+
 void render_view_chassis (SDL_Renderer* rend, txtd *t, int px, int py, 
     infos *info, int chassis, int lvl, SDL_Texture *sprites) 
 {
@@ -86,11 +110,20 @@ void render_view_chassis (SDL_Renderer* rend, txtd *t, int px, int py,
         LABEL_F3(px+10, py+h, "MAX WEIGHT", 0, ch->weight_max, 1); h += 15;
         LABEL_F3(px+10, py+h, "HP", 0, ch->hp, 1); h += 15;
         LABEL_F3(px+10, py+h, "SPEED", 2, ch->speed, 1); h += 15;
-        LABEL_F3(px+10, py+h, "UPKEEP", 2, ch->upkeep, 1); h += 15;
+        LABEL_F3(px+10, py+h, "UPKEEP", 2, ch->upkeep, 1); h += 20;
+        
+        LABEL_I3(px+10, py+h, "WEAPON SLOTS", ch->slot_weapon, 1); h += 15;
+        LABEL_I3(px+10, py+h, "ARMOR SLOTS", ch->slot_armor, 1); h += 15;
+        LABEL_I3(px+10, py+h, "AUGMENT SLOTS", ch->slot_aug, 1); h += 15;
         
         SDL_Rect srcRect = { chassis*32, 32, 32, 32 };
         SDL_Rect dstRect = { px+300-32-10, py+10, 32, 32 };
         SDL_RenderCopy(rend, sprites, &srcRect, &dstRect);
+        
+        info_unit u; int8_t *_; int __; int size[2];
+        hud_map_sel(&u, info, 0, 0, &_, &__, size);
+        size[0] -= 5; size[1] -= 5;
+        render_view_level(rend, px+size[0], py+size[1], lvl);
     } else {
         float pname[2] = { px+10, py+10 };
         render_text_scaled(rend, "select a chassis...", pname, t, 1);
@@ -113,6 +146,9 @@ void render_view_battery (SDL_Renderer* rend, txtd *t, int px, int py,
             strcpy(srech, "NOT RECHARGEABLE");
         } else { strcpy(srech, "RECHARGEABLE"); }
         render_text_scaled(rend, srech, prech, t, 1);
+        
+        float size[2] = {145, 145}; size[0] -= 5; size[1] -= 5;
+        render_view_level(rend, px+size[0], py+size[1], lvl);
     } else {
         float pname[2] = { px+10, py+10 };
         render_text_scaled(rend, "select a battery...", pname, t, 1);
@@ -124,10 +160,13 @@ void render_view_armor (SDL_Renderer* rend, txtd *t, int px, int py,
     infos *info, int armor, int lvl) 
 {
     if (armor != -1) {
-        float pname[2] = { px+10, py+10 };
-        char sname[64]; sprintf(sname, "%s", info->armors[armor].name);
-        render_text_scaled(rend, sname, pname, t, 1);        
-        char sa[64]; int j=0;
+        info_armor *arm = info->armors+armor;
+        int h = 10;
+        
+        LABEL(px+10, py+h, arm->name, 1); h += 20;  
+        LABEL_F3(px+10, py+h, "WEIGHT", 0, arm->weight, 1); h += 20;
+        
+        /*char sa[64]; int j=0;
         char temp[16] = "red: ";
         strcpy(sa+j, temp);
         j += strlen(temp);
@@ -143,6 +182,9 @@ void render_view_armor (SDL_Renderer* rend, txtd *t, int px, int py,
         sa[j] = '\0';
         float pa[2] = { px+10, py+25 };
         render_text_scaled(rend, sa, pa, t, 1);
+        */
+        float size[2] = { 150, 50 }; size[0] -= 5; size[1] -= 5;
+        render_view_level(rend, px+size[0], py+size[1], lvl);
     } else {
         float pname[2] = { px+10, py+10 };
         render_text_scaled(rend, "select an armor...", pname, t, 1);
@@ -169,6 +211,10 @@ void render_view_armor_detail (SDL_Renderer* rend, txtd *t, int px, int py,
             }
             h += 15;
         }
+        info_unit u; int8_t *_; int __; int size[2];
+        hud_map_sel(&u, info, 2, 0, &_, &__, size);
+        size[0] -= 5; size[1] -= 5;
+        render_view_level(rend, px+size[0], py+size[1], lvl);
     } else {
         render_view_weapon(rend, t, px, py, info, armor, lvl);
     }
@@ -192,10 +238,14 @@ void render_view_weapon (SDL_Renderer* rend, txtd *t, int px, int py,
         LABEL_F3(px+10, py+h, "DAMAGE", 0, weap->damage, 1); h += 15;
         LABEL_F3(px+10, py+h, "RANGE", 0, weap->range, 1); h += 15;
         LABEL_F3(px+10, py+h, "COOLDOWN", 0, weap->cooldown, 1); h += 15;
+        
+        float size[2] = { 200, 110 }; size[0] -= 5; size[1] -= 5;
+        render_view_level(rend, px+size[0], py+size[1], lvl);
     } else {
         float pname[2] = { px+10, py+10 };
         render_text_scaled(rend, "select a weapon...", pname, t, 1);
     }
+    
 }
 
 void render_view_weapon_detail (SDL_Renderer* rend, txtd *t, 
@@ -230,6 +280,10 @@ void render_view_weapon_detail (SDL_Renderer* rend, txtd *t,
             LABEL_F3(px+10, py+h, "CHARGE PER SHOT",0,weap->charge_per_shot, 1);
             h += 15;
         }
+        info_unit u; int8_t *_; int __; int size[2];
+        hud_map_sel(&u, info, 3, 0, &_, &__, size);
+        size[0] -= 5; size[1] -= 5;
+        render_view_level(rend, px+size[0], py+size[1], lvl);
     } else {
         render_view_weapon(rend, t, px, py, info, weapon, lvl);
     }
@@ -245,6 +299,9 @@ void render_view_aug (SDL_Renderer* rend, txtd *t, int px, int py,
         
         LABEL(px+10, py+h, augm->name, 1); h += 20;
         LABEL_F3(px+10, py+h, "WEIGHT", 0, augm->weight, 1); h += 15;
+        
+        float size[2] = { 150, 50 }; size[0] -= 5; size[1] -= 5;
+        render_view_level(rend, px+size[0], py+size[1], lvl);
     } else {
         float pname[2] = { px+10, py+10 };
         render_text_scaled(rend, "select an augment...", pname, t, 1);
@@ -319,6 +376,10 @@ void render_view_aug_detail (SDL_Renderer* rend, txtd *t, int px, int py,
                 }
             }
         }
+        info_unit u; int8_t *_; int __; int size[2];
+        hud_map_sel(&u, info, 4, 0, &_, &__, size);
+        size[0] -= 5; size[1] -= 5;
+        render_view_level(rend, px+size[0], py+size[1], lvl);
     } else {
         render_view_aug(rend, t, px, py, info, aug, lvl);
     }
@@ -333,6 +394,9 @@ void render_view_brain (SDL_Renderer* rend, txtd *t, int px, int py,
         char sname[64]; sprintf(sname, "%s", 
             info->brains[brain].name);
         render_text_scaled(rend, sname, pname, t, 1);
+        
+        float size[2] = { 145, 145 }; size[0] -= 5; size[1] -= 5;
+        render_view_level(rend, px+size[0], py+size[1], lvl);
     } else {
         float pname[2] = { px+10, py+10 };
         render_text_scaled(rend, "select a controller...", pname, t, 1);

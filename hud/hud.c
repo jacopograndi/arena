@@ -282,6 +282,17 @@ void hud_open_sel (graphic_settings *gs, hud *h,
     h->sc.rect_back.h = size[1];
 }
 
+int hud_mouse_level (float *mp, float *pos, float *size) {
+    for (int i=0; i<MAXLEVEL; i++) {
+        float p[2] = { 
+            pos[0]+size[0]-5-MAXLEVEL*9-1 + 9*i, 
+            pos[1]+size[1]-5-9-1 -1 };
+        float s[2] = { 10, 10 };
+        if (pt_rect(mp, p, s)) { return i; }
+    }
+    return -1;
+}
+
 void hud_process_form_new_unit (graphic_settings *gs, hud *h, MKb *mkb, 
     infos *info, army *ar, map *m, txtd *t, Mix_Chunk *sounds[]) 
 {
@@ -300,20 +311,32 @@ void hud_process_form_new_unit (graphic_settings *gs, hud *h, MKb *mkb,
         float possc[2] = { h->fnu.rect_chassis.x, h->fnu.rect_chassis.y };
         float sizesc[2] = { h->fnu.rect_chassis.w, h->fnu.rect_chassis.h };
         if (pt_rect(mousepos, possc, sizesc)) {
-            h->fnu.sel = 0; h->state = 2;
-            hud_open_sel(gs, h, t, info, &h->fnu.rect_chassis);
+            int lvl = hud_mouse_level(mousepos, possc, sizesc);
+            if (lvl != -1) h->fnu.uinfo.levels[LEVEL_CHASSIS] = lvl;
+            else {
+                h->fnu.sel = 0; h->state = 2;
+                hud_open_sel(gs, h, t, info, &h->fnu.rect_chassis);
+            }
         }
         float possb[2] = { h->fnu.rect_battery.x, h->fnu.rect_battery.y };
         float sizesb[2] = { h->fnu.rect_battery.w, h->fnu.rect_battery.h };
         if (pt_rect(mousepos, possb, sizesb)) {
-            h->fnu.sel = 1; h->state = 2;
-            hud_open_sel(gs, h, t, info, &h->fnu.rect_battery);
+            int lvl = hud_mouse_level(mousepos, possb, sizesb);
+            if (lvl != -1) h->fnu.uinfo.levels[LEVEL_BATTERY] = lvl;
+            else {
+                h->fnu.sel = 1; h->state = 2;
+                hud_open_sel(gs, h, t, info, &h->fnu.rect_battery);
+            }
         }
         float possbr[2] = { h->fnu.rect_brain.x, h->fnu.rect_brain.y };
         float sizesbr[2] = { h->fnu.rect_brain.w, h->fnu.rect_brain.h };
         if (pt_rect(mousepos, possbr, sizesbr)) {
-            h->fnu.sel = 5; h->state = 2;
-            hud_open_sel(gs, h, t, info, &h->fnu.rect_brain);
+            int lvl = hud_mouse_level(mousepos, possbr, sizesbr);
+            if (lvl != -1) h->fnu.uinfo.levels[LEVEL_BRAIN] = lvl;
+            else {
+                h->fnu.sel = 5; h->state = 2;
+                hud_open_sel(gs, h, t, info, &h->fnu.rect_brain);
+            }
         }
         if (h->fnu.uinfo.chassis != -1) {
             int lc = h->fnu.uinfo.levels[LEVEL_CHASSIS];
@@ -325,8 +348,12 @@ void hud_process_form_new_unit (graphic_settings *gs, hud *h, MKb *mkb,
                 float sizesa[2] = { 
                     h->fnu.rect_armor[i].w, h->fnu.rect_armor[i].h };
                 if (pt_rect(mousepos, possa, sizesa)) {
-                    h->fnu.sel = 2; h->fnu.ind = i; h->state = 2;
-                    hud_open_sel(gs, h, t, info, &h->fnu.rect_armor[i]);
+                    int lvl = hud_mouse_level(mousepos, possa, sizesa);
+                    if (lvl != -1) h->fnu.uinfo.levels[LEVEL_ARMOR+i] = lvl;
+                    else {
+                        h->fnu.sel = 2; h->fnu.ind = i; h->state = 2;
+                        hud_open_sel(gs, h, t, info, &h->fnu.rect_armor[i]);
+                    }
                 }
             }
             for (int i=0; 
@@ -337,8 +364,12 @@ void hud_process_form_new_unit (graphic_settings *gs, hud *h, MKb *mkb,
                 float sizesa[2] = { 
                     h->fnu.rect_weapons[i].w, h->fnu.rect_weapons[i].h };
                 if (pt_rect(mousepos, possa, sizesa)) {
-                    h->fnu.sel = 3; h->fnu.ind = i; h->state = 2;
-                    hud_open_sel(gs, h, t, info, &h->fnu.rect_weapons[i]);
+                    int lvl = hud_mouse_level(mousepos, possa, sizesa);
+                    if (lvl != -1) h->fnu.uinfo.levels[LEVEL_WEAPONS+i] = lvl;
+                    else {
+                        h->fnu.sel = 3; h->fnu.ind = i; h->state = 2;
+                        hud_open_sel(gs, h, t, info, &h->fnu.rect_weapons[i]);
+                    }
                 }
             }
             for (int i=0; 
@@ -349,8 +380,12 @@ void hud_process_form_new_unit (graphic_settings *gs, hud *h, MKb *mkb,
                 float sizesa[2] = { 
                     h->fnu.rect_augs[i].w, h->fnu.rect_augs[i].h };
                 if (pt_rect(mousepos, possa, sizesa)) {
-                    h->fnu.sel = 4; h->fnu.ind = i; h->state = 2;
-                    hud_open_sel(gs, h, t, info, &h->fnu.rect_augs[i]);
+                    int lvl = hud_mouse_level(mousepos, possa, sizesa);
+                    if (lvl != -1) h->fnu.uinfo.levels[LEVEL_AUGS+i] = lvl;
+                    else {
+                        h->fnu.sel = 4; h->fnu.ind = i; h->state = 2;
+                        hud_open_sel(gs, h, t, info, &h->fnu.rect_augs[i]);
+                    }
                 }
             }
         }
@@ -1027,7 +1062,6 @@ void hud_render_overlay_game (overlay_game *og, MKb *mkb,
 void hud_render_overlay_battle (overlay_battle *ob, MKb *mkb, 
     SDL_Renderer* rend, txtd *t, infos *info, gamestate *gst, float time) 
 {    
-
     SDL_SetRenderDrawColor(rend, 240, 240, 240, 255);
     SDL_RenderFillRect(rend, &ob->rect_back);
     SDL_SetRenderDrawColor(rend, 0, 0, 0, 255);
