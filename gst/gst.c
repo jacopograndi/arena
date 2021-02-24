@@ -13,7 +13,7 @@ void gst_init (gamestate *gst) {
     gst->starttime = FLT_MAX;
     gst->turn = 0;
     gst->coveredtime = 0;
-    gst->turnspeed = 0.35f;
+    gst->turnspeed = 0.75;
 }
 
 void gst_destroy (gamestate *gst) {
@@ -29,6 +29,13 @@ void gst_get_maparmy(gamestate *gst, map **m, army **ar) {
     if (gst->state == 1) {
         *m = &gst->map_battle;
         *ar = &gst->ar;
+    }
+}
+
+void gst_lastpos (gamestate *gst) {
+    for (int i=0; i<gst->ar.uslen; i++) {
+        gst->ar_lastpos[i][0] = gst->ar.us[i].pos[0];
+        gst->ar_lastpos[i][1] = gst->ar.us[i].pos[1];
     }
 }
 
@@ -63,6 +70,7 @@ void gst_tobattle (gamestate *gst) {
             gst->ar.us[gst->ar.uslen].owner = i;
         }
     }
+    gst_lastpos(gst);
     gst->starttime = FLT_MAX;
     gst->turn = 0;
     gst->coveredtime = 0;
@@ -72,6 +80,51 @@ void gst_tobattle (gamestate *gst) {
 
 void gst_toeditor(gamestate *gst) {
     gst->playernum = 1;
+}
+
+void gst_spawn_bullets (gamestate *gst, fxs *fx, a_dmg dmgs[], int dmgslen,
+    float time) 
+{
+    map *m; army *ar;
+    gst_get_maparmy(gst, &m, &ar);
+    
+    bullet b;
+    int counts[MAXUNITS]; 
+    for (int j=0;j<MAXUNITS; counts[j]=0, j++);
+    // for every unit count how many shots
+    
+    for (int i=0; i<ar->uslen; i++) {
+        for (int j=0; j<dmgslen; j++) {
+            unit *u = ar->us+i;
+            if (dmgs[j].u == u) { counts[i]++; }
+        }
+    } 
+    int curr[MAXUNITS]; 
+    for (int j=0;j<MAXUNITS; curr[j]=0, j++);
+    for (int i=0; i<ar->uslen; i++) {
+        for (int j=0; j<dmgslen; j++) {
+            unit *u = ar->us+i;
+            if (dmgs[j].u == u) {
+                unit *t = dmgs[j].t;
+                b.from[0] = u->pos[0]+16;
+                b.from[1] = u->pos[1]+16;
+                b.to[0] = t->pos[0]+16;
+                b.to[1] = t->pos[1]+16;
+                float n = (float)curr[i]/counts[i];
+                float shot_time = time + n*gst->turnspeed;
+                b.starttime = shot_time;
+                b.endtime = shot_time + 0.1;
+                if (u->owner == 0) {
+                    b.color[0] = 0; b.color[1] = 255; b.color[2] = 0;
+                } else {
+                    b.color[0] = 255; b.color[1] = 0; b.color[2] = 0;
+                }
+                fx_add_bullet(fx, &b);
+                curr[i] ++;
+            }
+        }
+    }
+    
 }
 
 int gst_check_victory (gamestate *gst) {
@@ -86,23 +139,93 @@ int gst_check_victory (gamestate *gst) {
     return imax;
 }
 
-void gst_process (gamestate *gst, infos *info, float t) {
-    if (gst->starttime > t) gst->starttime = t; 
-    float t_elapsed = t-gst->starttime;
-    if (t_elapsed > gst->coveredtime) {
-        gst->coveredtime += gst->turnspeed;
-        gst->turn ++;
-        map *m; army *ar;
-        gst_get_maparmy(gst, &m, &ar);
-        int move = army_move(info, ar, m);
-        int fire = army_fire(info, ar, m);
-        army_upkeep(info, ar, m);
-        printf("%d, %d\n", move, fire);
-        if (move == 0 && fire == 0) {
-            gst->turn_until_finish--;
-        } else { gst->turn_until_finish = 5; }
-        if (gst->turn_until_finish <= 0) {
-            gst->over = 1;
+void gst_process (gamestate *gst, infos *info, fxs *fx, float t) {
+    if (gst->state == 1) {
+        if (gst->starttime > t) gst->starttime = t; 
+        float t_elapsed = t-gst->starttime;
+        if (t_elapsed > gst->coveredtime) {
+            // next turn
+            gst_lastpos(gst);
+            gst->coveredtime += gst->turnspeed;
+            gst->turn ++;
+            map *m; army *ar;
+            gst_get_maparmy(gst, &m, &ar);
+            int move = army_move(info, ar, m);
+            
+            a_dmg dmgs[1024*8];
+            int fire = army_fire(info, ar, m, dmgs);
+            army_upkeep(info, ar, m);
+            printf("%d, %d\n", move, fire);
+            if (move == 0 && fire == 0) {
+                gst->turn_until_finish--;
+            } else { gst->turn_until_finish = 5; }
+            if (gst->turn_until_finish <= 0) {
+                gst->over = 1;
+            }
+            gst_spawn_bullets(gst, fx, dmgs, fire, t);
         }
+    }
+}
+
+void gst_render (SDL_Renderer *rend, SDL_Texture *txsprites, txtd *textd,
+    gamestate *gst, infos *info, float t) 
+{  
+    float ts = 32;
+    int posx = gst->cam[0];
+    int posy = gst->cam[1];
+    map *m; army *ar;
+    gst_get_maparmy(gst, &m, &ar);
+    
+    // render map
+    for (int y=0; y<m->sy; y++) {
+        for (int x=0; x<m->sx; x++) {
+            float px = x*ts;
+            float py = y*ts;
+            SDL_Rect srcRect = { 1*ts, 0*ts, ts, ts };
+            SDL_Rect dstRect = { (int)px-posx, (int)py-posy, ts, ts };
+            SDL_RenderCopy(rend, txsprites, &srcRect, &dstRect);
+        }
+    }
+    
+    /* assuming one turn = 1s, amt domain = [0, 1) */
+    float amt = t - (gst->starttime+gst->coveredtime);
+    amt = (amt / gst->turnspeed) + 1;
+    if (amt > 1) amt = 1; if (amt < 0) amt = 0; // clamping away fuzzyness
+    
+    // render enemies
+    for (int i=0; i<ar->uslen; i++) {
+        if (ar->us[i].hp <= 0) continue;
+        float present_x = ar->us[i].pos[0];
+        float present_y = ar->us[i].pos[1];
+        
+        float x = present_x, y = present_y;
+        if (gst->state == 1) {
+            x = present_x*(amt) + gst->ar_lastpos[i][0]*(1-amt);
+            y = present_y*(amt) + gst->ar_lastpos[i][1]*(1-amt);
+        } 
+        
+        SDL_Rect srcRect = { ar->us[i].info.chassis*ts, ts, ts, ts };
+        SDL_Rect dstRect = { (int)x-posx, (int)y-posy, ts, ts };
+        SDL_RenderCopy(rend, txsprites, &srcRect, &dstRect);
+        
+        float amt = ar->us[i].hp 
+            / info_unit_get_health(info, &ar->us[i].info);
+        SDL_Rect hprect = { 
+            (int)x-posx, (int)y-posy+ts-5, 
+            ts*amt, 6 };
+        int sw = 1 ? ar->us[i].owner : 0;
+        SDL_SetRenderDrawColor(rend, 255*sw, 255*(1-sw), 0, 255);
+        SDL_RenderFillRect(rend, &hprect);
+        
+        SDL_SetTextureColorMod(textd->tex_small, sw*100, 100*(1-sw), 0);
+        char shp[32]; sprintf(shp, "%.0f", ar->us[i].hp);
+        float php[2] = { (int)x-posx, (int)y-posy+ts-5 };
+        render_text_small(rend, shp, php, textd);
+        
+        SDL_SetTextureColorMod(textd->tex_small, 255, 160, 0);
+        char sch[32]; sprintf(sch, "%.0f", ar->us[i].charge);
+        float pch[2] = { (int)x-posx, (int)y-posy+ts+1 };
+        render_text_small(rend, sch, pch, textd);
+        SDL_SetTextureColorMod(textd->tex_small, 0, 0, 0);
     }
 }

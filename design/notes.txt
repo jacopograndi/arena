@@ -1,13 +1,12 @@
 tasks: (date)
 
+[ ] implement healing beam (issued on 24:02:21)
 [ ] implement net hud and minilobby (issued on 18:02:21)
 [ ] implement brain behaviour (issued on 18:02:21)
 [ ] implement lobby cost constraints (issued on 18:02:21)
 [ ] implement edit unit directly (issued on 18:02:21)
 [ ] implement persistent settings ini (issued on 18:02:21)
 [ ] implement stats hud view (issued on 18:02:21)
-[ ] implement move animation (issued on 18:02:21)
-[ ] implement fire animation (issued on 18:02:21)
 [ ] implement explosions (issued on 18:02:21)
 [ ] design 3d units (issued on 18:02:21)
 [ ] design 3d map tiles (issued on 18:02:21)
@@ -16,6 +15,8 @@ tasks: (date)
 [ ] implement sound (issued on 18:02:21)
 
 
+[x] implement fire animation (issued on 18:02:21, done on 24:02:21)
+[x] implement move animation (issued on 18:02:21, done on 24:02:21)
 [x] implement army hud view (issued on 18:02:21, done on 22:02:21)
 [x] implement naming template and army (issued on 18:02:21, done on 22:02:21)
 [x] implement cost function (issued on 18:02:21, done on 20:02:21)
@@ -26,6 +27,7 @@ tasks: (date)
 [x] implement armor calculation (issued on 18:02:21, done on 18:02:21)
 [x] implement augment calculations (issued on 18:02:21, done on 18:02:21)
 [x] implement augment hud view (issued on 18:02:21, done on 18:02:21)
+
 
 bugs:
 
@@ -54,8 +56,35 @@ view from 18:02:21 to the end:
 
 details:
 
+implement fire animation:
+    istantaneous: shot fxs and explosions are with their own timing
+    get an fx module -> bullets, damage, aoe explosions
+    spawn fxs at evenly spaced times throughout the turn
+    uneven salvo? (small random delay?) -> maybe
+    bullet travel <= time btw last shot and start of next turn
+    calculate target position by interpolating
+    when needed spawn explosion
+    what is a bullet? sprite? line? -> for now a line
+    
+    
+
+implement move animation:
+    interpolate from prev turn to current turn linerarly
+    modify unit.pos? do it in gst_render.
+    order of operations: m0, f0, m1, f1, m2, f2, ...
+    transitions: m0->m1 while f0, m1->m2 while f1, ...
+    at turn k: 
+        k-1 m and f have to be available
+    at time t, timeof(k-1) < timeof(k) < t:
+        t is between k and k+1
+        render animated position from m(k-1) to m(k), fire f(k-1)
+        need army snapshot from k-1 and from k
+        the one from k is the current state at t
+        the one before has to be saved somewhere -> army position buffer
+-> done, little testing
+
 implement naming army -> done
-implement naming template -> almost
+implement naming template -> done
 
 implement stats hud view:
 ? stats have to include individual weapon cooldowns and damage, what to do

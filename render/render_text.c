@@ -50,15 +50,14 @@ void render_text_scaled (SDL_Renderer* rend, char str[],
     }
 }
 
-void render_text_small (SDL_Renderer* rend, char str[], float off[], 
-    SDL_Texture *texsmall) 
+void render_text_small (SDL_Renderer* rend, char str[], float off[], txtd *t)
 {
     int width = 0;
     for (int i=0; str[i]!='\0'; i++) {
         int char_i = str[i];
         SDL_Rect srcRect = { (char_i%32)*5+1, (char_i/32)*7+1, 4, 6 };
         SDL_Rect dstRect = { off[0]+width, off[1], 4, 6 };
-        SDL_RenderCopy(rend, texsmall, &srcRect, &dstRect);
+        SDL_RenderCopy(rend, t->tex_small, &srcRect, &dstRect);
         width += 5;
     }
 }

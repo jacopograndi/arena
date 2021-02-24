@@ -184,7 +184,7 @@ int army_move (infos *info, army *ar, map *m) {
     return iter;
 }
 
-int army_fire (infos *info, army *ar, map *m) {
+int army_fire (infos *info, army *ar, map *m, a_dmg dmgs[]) {
     for (int i=0; i<ar->uslen; i++) {
         unit *u = ar->us+i;
         int lw = u->info.levels[LEVEL_CHASSIS];
@@ -192,7 +192,7 @@ int army_fire (infos *info, army *ar, map *m) {
             u->cooldown[j] += 1;
         }
     }
-    struct dmg { unit *u; float dam; } dmgs[1024*8]; int dmgslen = 0;
+    int dmgslen = 0;
     unit *t[32];
     for (int i=0; i<ar->uslen; i++) {
         unit *u = ar->us+i;
@@ -205,7 +205,8 @@ int army_fire (infos *info, army *ar, map *m) {
             float range = info_unit_get_range(info, &u->info, j);
             unit_search(info, ar, m, u, t, range);
             if (t[0]!=NULL) {
-                dmgs[dmgslen].u = t[0];
+                dmgs[dmgslen].u = u;
+                dmgs[dmgslen].t = t[0];
                 dmgs[dmgslen].dam = info_unit_get_damage_target(
                     info, &u->info, j, &t[0]->info);
                 dmgslen++;
@@ -216,9 +217,9 @@ int army_fire (infos *info, army *ar, map *m) {
         }
     }
     for (int i=0; i<dmgslen; i++) {
-        dmgs[i].u->hp -= dmgs[i].dam;
-        if (dmgs[i].u->hp <= 0) {
-            unit_dead(ar, m, dmgs[i].u);
+        dmgs[i].t->hp -= dmgs[i].dam;
+        if (dmgs[i].t->hp <= 0) {
+            unit_dead(ar, m, dmgs[i].t);
         }
     }
     return dmgslen;
