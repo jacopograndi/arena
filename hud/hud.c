@@ -144,45 +144,41 @@ int hud_fnu_check (info_unit *u, infos *info) {
     if (u->chassis == -1) return 1;
     if (u->battery == -1) return 2;
     if (u->brain == -1) return 3;
-    float curweight = info_unit_get_weight(info, u);
     int chassis_lvl = u->levels[LEVEL_CHASSIS];
-    float maxweight = info->chassis[u->chassis].weight_max[chassis_lvl];
-    if (curweight > maxweight) { return 4; }
+        
+    stats_unit base;
+    stats_unit_compute(info, u, &base);
+    if (base.frame.weight > base.frame.weight_max) { return 4; }
     return 0;
 }
 
 void hud_map_sel (info_unit *u, infos *info, int sel, int ind, 
     int8_t **n, int *bound, int size[]) 
 {
+    *bound = info->statslen[sel];
     if (sel == 0) { 
         *n = &u->chassis; 
-        *bound = info->chassislen; 
         size[0] = 300; size[1] = 300;
     }
     if (sel == 1) { 
-        *n = &u->battery; 
-        *bound = info->batterieslen; 
+        *n = &u->brain; 
         size[0] = 145; size[1] = 145;
     }
     if (sel == 2) { 
-        *n = &u->armor[ind]; 
-        *bound = info->armorslen; 
-        size[0] = 150; size[1] = 200;
+        *n = &u->battery; 
+        size[0] = 145; size[1] = 145;
     }
     if (sel == 3) { 
         *n = &u->weapons[ind]; 
-        *bound = info->weaponslen; 
         size[0] = 200; size[1] = 170;
     }
     if (sel == 4) { 
-        *n = &u->augs[ind]; 
-        *bound = info->augslen; 
+        *n = &u->armor[ind]; 
         size[0] = 150; size[1] = 200;
     }
     if (sel == 5) { 
-        *n = &u->brain; 
-        *bound = info->brainslen; 
-        size[0] = 145; size[1] = 145;
+        *n = &u->augs[ind]; 
+        size[0] = 150; size[1] = 200;
     }
 }
 
@@ -324,7 +320,7 @@ void hud_process_form_new_unit (graphic_settings *gs, hud *h, MKb *mkb,
             int lvl = hud_mouse_level(mousepos, possb, sizesb);
             if (lvl != -1) h->fnu.uinfo.levels[LEVEL_BATTERY] = lvl;
             else {
-                h->fnu.sel = 1; h->state = 2;
+                h->fnu.sel = 2; h->state = 2;
                 hud_open_sel(gs, h, t, info, &h->fnu.rect_battery);
             }
         }
@@ -334,15 +330,16 @@ void hud_process_form_new_unit (graphic_settings *gs, hud *h, MKb *mkb,
             int lvl = hud_mouse_level(mousepos, possbr, sizesbr);
             if (lvl != -1) h->fnu.uinfo.levels[LEVEL_BRAIN] = lvl;
             else {
-                h->fnu.sel = 5; h->state = 2;
+                h->fnu.sel = 1; h->state = 2;
                 hud_open_sel(gs, h, t, info, &h->fnu.rect_brain);
             }
         }
         if (h->fnu.uinfo.chassis != -1) {
             int lc = h->fnu.uinfo.levels[LEVEL_CHASSIS];
-            for (int i=0; 
-                i<info->chassis[h->fnu.uinfo.chassis].slot_armor[lc]; i++) 
-            {
+            stats_comp *comp = 
+                info->stats[STATS_CHASSIS] +h->fnu.uinfo.chassis;
+                
+            for (int i=0; i<comp->base[lc].slot_armor; i++) {
                 float possa[2] = { 
                     h->fnu.rect_armor[i].x, h->fnu.rect_armor[i].y };
                 float sizesa[2] = { 
@@ -351,14 +348,12 @@ void hud_process_form_new_unit (graphic_settings *gs, hud *h, MKb *mkb,
                     int lvl = hud_mouse_level(mousepos, possa, sizesa);
                     if (lvl != -1) h->fnu.uinfo.levels[LEVEL_ARMOR+i] = lvl;
                     else {
-                        h->fnu.sel = 2; h->fnu.ind = i; h->state = 2;
+                        h->fnu.sel = 4; h->fnu.ind = i; h->state = 2;
                         hud_open_sel(gs, h, t, info, &h->fnu.rect_armor[i]);
                     }
                 }
             }
-            for (int i=0; 
-                i<info->chassis[h->fnu.uinfo.chassis].slot_weapon[lc]; i++) 
-            {
+            for (int i=0; i<comp->base[lc].slot_weapon; i++) {
                 float possa[2] = { 
                     h->fnu.rect_weapons[i].x, h->fnu.rect_weapons[i].y };
                 float sizesa[2] = { 
@@ -372,9 +367,7 @@ void hud_process_form_new_unit (graphic_settings *gs, hud *h, MKb *mkb,
                     }
                 }
             }
-            for (int i=0; 
-                i<info->chassis[h->fnu.uinfo.chassis].slot_aug[lc]; i++) 
-            {
+            for (int i=0; i<comp->base[lc].slot_armor; i++) {
                 float possa[2] = { 
                     h->fnu.rect_augs[i].x, h->fnu.rect_augs[i].y };
                 float sizesa[2] = { 
@@ -383,7 +376,7 @@ void hud_process_form_new_unit (graphic_settings *gs, hud *h, MKb *mkb,
                     int lvl = hud_mouse_level(mousepos, possa, sizesa);
                     if (lvl != -1) h->fnu.uinfo.levels[LEVEL_AUGS+i] = lvl;
                     else {
-                        h->fnu.sel = 4; h->fnu.ind = i; h->state = 2;
+                        h->fnu.sel = 5; h->fnu.ind = i; h->state = 2;
                         hud_open_sel(gs, h, t, info, &h->fnu.rect_augs[i]);
                     }
                 }
@@ -437,7 +430,7 @@ void hud_process_overlay_game (graphic_settings *gs, hud *h, MKb *mkb,
                 memcpy(h->ob.oppo, buffer+arlen, 32);
                 memcpy(gst->army_bp[1].name, buffer+arlen+32, 32);
                 gst->playernum = 2;
-                gst_tobattle(gst);
+                gst_tobattle(gst, info);
                 gst->cam[0] = -gs->resx/2+gst->map_battle.sx*gst->map_battle.ts/2;
                 gst->cam[1] = -gs->resy/2+gst->map_battle.sy*gst->map_battle.ts/2;
                 h->state = 3;
@@ -458,7 +451,7 @@ void hud_process_overlay_game (graphic_settings *gs, hud *h, MKb *mkb,
             memcpy(h->ob.oppo, buffer+arlen, 32);
             memcpy(gst->army_bp[1].name, buffer+arlen+32, 32);
             gst->playernum = 2;
-            gst_tobattle(gst);
+            gst_tobattle(gst, info);
             gst->cam[0] = -gs->resx/2+gst->map_battle.sx*gst->map_battle.ts/2;
             gst->cam[1] = -gs->resy/2+gst->map_battle.sy*gst->map_battle.ts/2;
             h->state = 3;
@@ -560,6 +553,7 @@ void hud_process_overlay_game (graphic_settings *gs, hud *h, MKb *mkb,
                     unit u;
                     unit_init(info, ar, m, x, y, 
                         info->templates+h->og.temp_place, 0, &u);
+                    
                     army_spawn(ar, m, u);
                 }
             } else {
@@ -605,12 +599,11 @@ void hud_process_overlay_game (graphic_settings *gs, hud *h, MKb *mkb,
             if (pt_rect(mousepos, posp, sizep)) {
                 if (h->og.start_battle_flag == 1) {
                     // start battle
-                    printf("ahia\n");
                     h->og.start_battle_flag = 0;
                     hud_edit_close(h, info);
                     info_load_army(gst->army_bp+1, h->og.army_list[i]);
                     gst->playernum = 2;
-                    gst_tobattle(gst);
+                    gst_tobattle(gst, info);
                     gst->cam[0] = -gs->resx/2
                         +gst->map_battle.sx*gst->map_battle.ts/2;
                     gst->cam[1] = -gs->resy/2
@@ -619,7 +612,6 @@ void hud_process_overlay_game (graphic_settings *gs, hud *h, MKb *mkb,
                     h->state = 3;
                     Mix_PlayChannel( -1, sounds[SOUND_SUCCESS], 0 );
                 } else {
-                    printf("lol\n");
                     int cur = h->og.army_listcur;
                     info_save_army(gst->army_bp+0, h->og.army_list[cur]);
                     h->og.army_listcur = i;
@@ -783,24 +775,24 @@ void hud_render_sel (hud_sel *sc, MKb *mkb, info_unit *u,
             render_view_chassis(rend, t, x, y, info, i, lvl, sprites);
         }
         if (sel==1) {
-            int lvl = u->levels[LEVEL_BATTERY];
-            render_view_battery(rend, t, x, y, info, i, lvl);
+            int lvl = u->levels[LEVEL_BRAIN];
+            render_view_brain(rend, t, x, y, info, i, lvl);
         }
         if (sel==2) {
-            int lvl = u->levels[LEVEL_ARMOR+ind];
-            render_view_armor_detail(rend, t, x, y, info, i, lvl);
+            int lvl = u->levels[LEVEL_BATTERY];
+            render_view_battery(rend, t, x, y, info, i, lvl);
         }
         if (sel==3) {
             int lvl = u->levels[LEVEL_WEAPONS+ind];
             render_view_weapon_detail(rend, t, x, y, info, i, lvl);
         }
         if (sel==4) {
-            int lvl = u->levels[LEVEL_AUGS+ind];
-            render_view_aug_detail(rend, t, x, y, info, i, lvl);
+            int lvl = u->levels[LEVEL_ARMOR+ind];
+            render_view_armor_detail(rend, t, x, y, info, i, lvl);
         }
         if (sel==5) {
-            int lvl = u->levels[LEVEL_BRAIN];
-            render_view_brain(rend, t, x, y, info, i, lvl);
+            int lvl = u->levels[LEVEL_AUGS+ind];
+            render_view_aug_detail(rend, t, x, y, info, i, lvl);
         }
     }
     SDL_RenderSetClipRect(rend, NULL);
@@ -832,7 +824,10 @@ void hud_render_form_new_unit (form_new_unit *fnu, MKb *mkb,
     
     int lc = fnu->uinfo.levels[LEVEL_CHASSIS];
     if (fnu->uinfo.chassis != -1) {
-        for (int i=0; i<info->chassis[fnu->uinfo.chassis].slot_weapon[lc]; i++) {
+        stats_comp *comp = 
+            info->stats[STATS_CHASSIS] +fnu->uinfo.chassis;
+            
+        for (int i=0; i<comp->base[lc].slot_weapon; i++) {
             SDL_SetRenderDrawColor(rend, 200, 100, 255, 255);
             SDL_RenderFillRect(rend, fnu->rect_weapons+i);
             SDL_SetRenderDrawColor(rend, 0, 0, 0, 255);
@@ -842,7 +837,7 @@ void hud_render_form_new_unit (form_new_unit *fnu, MKb *mkb,
                 fnu->rect_weapons[i].y, info, fnu->uinfo.weapons[i], 
                 fnu->uinfo.levels[LEVEL_WEAPONS+i]); 
         }
-        for (int i=0; i<info->chassis[fnu->uinfo.chassis].slot_armor[lc]; i++) {
+        for (int i=0; i<comp->base[lc].slot_armor; i++) {
             SDL_SetRenderDrawColor(rend, 200, 200, 255, 255);
             SDL_RenderFillRect(rend, fnu->rect_armor+i);
             SDL_SetRenderDrawColor(rend, 0, 0, 0, 255);
@@ -852,7 +847,7 @@ void hud_render_form_new_unit (form_new_unit *fnu, MKb *mkb,
                 fnu->rect_armor[i].y, info, fnu->uinfo.armor[i], 
                 fnu->uinfo.levels[LEVEL_ARMOR+i]); 
         }
-        for (int i=0; i<info->chassis[fnu->uinfo.chassis].slot_aug[lc]; i++) {
+        for (int i=0; i<comp->base[lc].slot_aug; i++) {
             SDL_SetRenderDrawColor(rend, 200, 200, 255, 255);
             SDL_RenderFillRect(rend, fnu->rect_augs+i);
             SDL_SetRenderDrawColor(rend, 0, 0, 0, 255);

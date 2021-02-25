@@ -31,14 +31,16 @@ void army_destory(army *ar) {
 void unit_init (infos *info, army *ar, map *m, 
     int x, int y, info_unit *iu, int owner, unit *u) 
 {
+    stats_unit base; stats_unit_compute(info, iu, &base);
     u->pos[0] = x*m->ts; u->pos[1] = y*m->ts;
     u->gridpos[0] = x; u->gridpos[1] = y;
     u->info = *iu;
     u->owner = owner;
-    u->hp = info_unit_get_health(info, iu);
+    u->hp = base.frame.hp;
     u->move_points = 0;
-    u->charge = info_unit_get_capacity(info, iu);
+    u->charge = base.frame.capacity;
     for (int i=0; i<8; u->cooldown[i] = 1, i++);
+    for (int i=0; i<7; u->reduced_armor[i] = 0, i++);
 }
 
 void army_spawn (army *ar, map *m, unit u) {
@@ -102,7 +104,7 @@ void unit_search (infos *info, army *ar, map *m, unit *u,
 
 
 typedef struct { unit *u; int *dir; int done; } mcom;
-int army_move_step (infos *info, army *ar, map *m) {
+int army_move_step (infos *info, army *ar, map *m, stats_unit *ustats) {
     int dirs[4][2] = { {1, 0},{0, 1},{-1,0},{0,-1} };
     mcom mcs[ar->uslen];
     int mclen = 0;
@@ -116,7 +118,11 @@ int army_move_step (infos *info, army *ar, map *m) {
         if (u->charge <= 0) continue;
         // search target inside max range
         unit *t[32];
-        float maxrange = info_unit_get_maxrange(info, &u->info);
+        float maxrange = 0;
+        for (int w=0; w<ustats[i].weaponlen; w++) {
+            float range = ustats[i].weapon[w].range;
+            if (maxrange < range) maxrange = range;
+        }
         unit_search(info, ar, m, u, t, maxrange);
         // stop if found
         if (t[0] != NULL) { continue; }
@@ -173,22 +179,24 @@ int army_move_step (infos *info, army *ar, map *m) {
     else return 1;
 }
 
-int army_move (infos *info, army *ar, map *m) {
+int army_move (infos *info, army *ar, map *m, stats_unit *ustats) {
     for (int i=0; i<ar->uslen; i++) {
-        ar->us[i].move_points += info_unit_get_speed(info, &ar->us[i].info);
+        ar->us[i].move_points += ustats[i].frame.speed;
     }
-    int iter = 0, finished = army_move_step(info, ar, m);
+    int iter = 0, finished = army_move_step(info, ar, m, ustats);
     for (; iter<5 && !finished; iter++) {
-        finished = army_move_step(info, ar, m);
+        finished = army_move_step(info, ar, m, ustats);
     }
     return iter;
 }
 
-int army_fire (infos *info, army *ar, map *m, a_dmg dmgs[]) {
+int army_fire (infos *info, army *ar, map *m, a_dmg dmgs[], 
+    stats_unit *ustats) 
+{
     for (int i=0; i<ar->uslen; i++) {
         unit *u = ar->us+i;
         int lw = u->info.levels[LEVEL_CHASSIS];
-        for (int j=0; j<info->chassis[u->info.chassis].slot_weapon[lw]; j++) {
+        for (int j=0; j<ustats[i].weaponlen; j++) {
             u->cooldown[j] += 1;
         }
     }
@@ -199,19 +207,26 @@ int army_fire (infos *info, army *ar, map *m, a_dmg dmgs[]) {
         if (u->hp <= 0) continue;
         if (u->charge <= 0) continue;
         int lw = u->info.levels[LEVEL_CHASSIS];
-        for (int j=0; j<info->chassis[u->info.chassis].slot_weapon[lw]; j++) {
-            if (u->info.weapons[j] == -1) continue;
+        for (int j=0; j<ustats[i].weaponlen; j++) {
             if (u->cooldown[j] <= 0) continue;
-            float range = info_unit_get_range(info, &u->info, j);
+            float range = ustats[i].weapon[j].range;
             unit_search(info, ar, m, u, t, range);
             if (t[0]!=NULL) {
                 dmgs[dmgslen].u = u;
                 dmgs[dmgslen].t = t[0];
-                dmgs[dmgslen].dam = info_unit_get_damage_target(
-                    info, &u->info, j, &t[0]->info);
+                
+                int t_i = 0;
+                for (int k=0; k<ar->uslen; k++) {
+                    if (ar->us+k == t[0]) { t_i = k; break; }
+                }
+                float dam = stats_compute_damage(
+                    &ustats[i].weapon[j], 
+                    &ustats[t_i].frame, u->reduced_armor);
+                
+                dmgs[dmgslen].dam = dam;
                 dmgslen++;
-                u->cooldown[j] -= info_unit_get_cooldown(info, &u->info, j);
-                u->charge -= info_unit_get_charge_per_shot(info, &u->info, j);
+                u->cooldown[j] -= ustats[i].weapon[j].cooldown;
+                u->charge -= ustats[i].weapon[j].charge_per_shot;
                 if (u->charge < 0) u->charge = 0;
             }
         }
@@ -225,12 +240,12 @@ int army_fire (infos *info, army *ar, map *m, a_dmg dmgs[]) {
     return dmgslen;
 }
 
-void army_upkeep (infos *info, army *ar, map *m) {
+void army_upkeep (infos *info, army *ar, map *m, stats_unit *ustats) {
     // battery drain or recharge
     for (int i=0; i<ar->uslen; i++) {
         unit *u = ar->us+i;
         if (u->hp <= 0) continue;
-        u->charge -= info_unit_get_upkeep(info, &u->info);
+        u->charge -= ustats[i].frame.upkeep;
         if (u->charge < 0) u->charge = 0;
     }
 }

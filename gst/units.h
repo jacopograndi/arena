@@ -15,6 +15,8 @@ typedef struct unit_ {
     float move_points;
     float cooldown[8];
     float charge;
+    float reduced_armor[7];
+    float stun;
 } unit;
 
 typedef struct army_ {
@@ -32,14 +34,15 @@ void unit_init (infos *info, army *ar, map *m,
     int x, int y, info_unit *iu, int owner, unit *u);
 void unit_remove (army *ar, map *m, unit *u);
 
-void army_grid_init(army *ar);
+void army_grid_init (army *ar);
 void army_init (army *ar, map *m);
-void army_destory(army *ar);
+void army_destory (army *ar);
 void army_spawn (army *ar, map *m, unit u);
-int army_move (infos *info, army *ar, map *m);
+int army_move (infos *info, army *ar, map *m, stats_unit *ustats);
 
 typedef struct { unit *u, *t; float dam; } a_dmg;
-int army_fire (infos *info, army *ar, map *m, a_dmg dmgs[]);
-void army_upkeep (infos *info, army *ar, map *m);
+int army_fire (infos *info, army *ar, map *m, a_dmg dmgs[], 
+    stats_unit *ustats);
+void army_upkeep (infos *info, army *ar, map *m, stats_unit *ustats);
 
 #endif

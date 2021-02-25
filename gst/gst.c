@@ -39,7 +39,13 @@ void gst_lastpos (gamestate *gst) {
     }
 }
 
-void gst_tobattle (gamestate *gst) {
+void gst_compute_stats (gamestate *gst, infos *info) {
+    for (int i=0; i<gst->ar.uslen; i++) {
+        stats_unit_compute(info, &gst->ar.us[i].info, gst->ustats +i);
+    }
+}
+
+void gst_tobattle (gamestate *gst, infos *info) {
     if (gst->playernum == 1) {
         //info_load_army(gst->army_bp+1, "army");
         gst->army_bp[1] = gst->army_bp[0];
@@ -70,6 +76,7 @@ void gst_tobattle (gamestate *gst) {
             gst->ar.us[gst->ar.uslen].owner = i;
         }
     }
+    gst_compute_stats(gst, info);
     gst_lastpos(gst);
     gst->starttime = FLT_MAX;
     gst->turn = 0;
@@ -153,11 +160,11 @@ void gst_process (gamestate *gst, infos *info, fxs *fx, float t) {
             gst->turn ++;
             map *m; army *ar;
             gst_get_maparmy(gst, &m, &ar);
-            int move = army_move(info, ar, m);
+            int move = army_move(info, ar, m, gst->ustats);
             
             a_dmg dmgs[1024*8];
-            int fire = army_fire(info, ar, m, dmgs);
-            army_upkeep(info, ar, m);
+            int fire = army_fire(info, ar, m, dmgs, gst->ustats);
+            army_upkeep(info, ar, m, gst->ustats);
             if (move == 0 && fire == 0) {
                 gst->turn_until_finish--;
             } else { gst->turn_until_finish = 5; }
@@ -194,7 +201,7 @@ void gst_render (SDL_Renderer *rend, SDL_Texture *txsprites, txtd *textd,
     amt = (amt / gst->turnspeed) + 1;
     if (amt > 1) amt = 1; if (amt < 0) amt = 0; // clamping away fuzzyness
     
-    // render enemies
+    // render units
     for (int i=0; i<ar->uslen; i++) {
         if (ar->us[i].hp <= 0) continue;
         float present_x = ar->us[i].pos[0];
@@ -210,8 +217,8 @@ void gst_render (SDL_Renderer *rend, SDL_Texture *txsprites, txtd *textd,
         SDL_Rect dstRect = { (int)x-posx, (int)y-posy, ts, ts };
         SDL_RenderCopy(rend, txsprites, &srcRect, &dstRect);
         
-        float amt = ar->us[i].hp 
-            / info_unit_get_health(info, &ar->us[i].info);
+        stats_unit base; stats_unit_compute(info, &ar->us[i].info, &base);
+        float amt = ar->us[i].hp / base.frame.hp;
         SDL_Rect hprect = { 
             (int)x-posx, (int)y-posy+ts-5, 
             ts*amt, 6 };

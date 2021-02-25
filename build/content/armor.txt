@@ -6,12 +6,12 @@
             7.5,
             5.0
         ],
-        "base_pierce": [
+        "base_armor_pierce": [
             5.0,
             6.25,
             7.5
         ],
-        "base_spread": [
+        "base_armor_spread": [
             8.0,
             10.0,
             12.0
@@ -24,17 +24,17 @@
             12.0,
             8.0
         ],
-        "base_pierce": [
+        "base_armor_pierce": [
             7.0,
             8.75,
             10.5
         ],
-        "base_spread": [
+        "base_armor_spread": [
             10.0,
             12.5,
             15.0
         ],
-        "base_impact": [
+        "base_armor_impact": [
             5.0,
             6.25,
             7.5
@@ -47,7 +47,7 @@
             6.0,
             4.0
         ],
-        "base_laser": [
+        "base_armor_laser": [
             10.0,
             12.5,
             15.0
@@ -60,7 +60,7 @@
             7.5,
             5.0
         ],
-        "base_fusion": [
+        "base_armor_fusion": [
             8.0,
             10.0,
             12.0
@@ -73,12 +73,12 @@
             3.0,
             2.0
         ],
-        "base_spread": [
+        "base_armor_spread": [
             5.0,
             6.25,
             7.5
         ],
-        "base_impact": [
+        "base_armor_impact": [
             8.0,
             10.0,
             12.0
@@ -91,7 +91,7 @@
             11.25,
             7.5
         ],
-        "base_explosive": [
+        "base_armor_explosive": [
             12.0,
             15.0,
             18.0
@@ -104,27 +104,27 @@
             3.75,
             2.5
         ],
-        "base_pierce": [
+        "base_armor_pierce": [
             3.0,
             3.75,
             4.5
         ],
-        "base_spread": [
+        "base_armor_spread": [
             3.0,
             3.75,
             4.5
         ],
-        "base_fusion": [
+        "base_armor_fusion": [
             3.0,
             3.75,
             4.5
         ],
-        "base_explosive": [
+        "base_armor_explosive": [
             3.0,
             3.75,
             4.5
         ],
-        "base_laser": [
+        "base_armor_laser": [
             3.0,
             3.75,
             4.5
@@ -137,17 +137,17 @@
             4.5,
             3.0
         ],
-        "base_pierce": [
+        "base_armor_pierce": [
             6.0,
             7.5,
             9.0
         ],
-        "base_spread": [
+        "base_armor_spread": [
             4.0,
             5.0,
             6.0
         ],
-        "base_impact": [
+        "base_armor_impact": [
             3.0,
             3.75,
             4.5
@@ -160,7 +160,7 @@
             1.5,
             1.0
         ],
-        "base_pierce": [
+        "base_armor_pierce": [
             4.0,
             5.0,
             6.0
@@ -173,12 +173,12 @@
             6.75,
             4.5
         ],
-        "base_pierce": [
+        "base_armor_pierce": [
             10.0,
             12.5,
             15.0
         ],
-        "base_spread": [
+        "base_armor_spread": [
             8.0,
             10.0,
             12.0
@@ -191,7 +191,7 @@
             15.0,
             10.0
         ],
-        "base_explosive": [
+        "base_armor_explosive": [
             25.0,
             31.25,
             37.5

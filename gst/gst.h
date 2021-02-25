@@ -19,6 +19,8 @@ typedef struct {
     map map_battle;
     army ar;
     float ar_lastpos[MAXUNITS][2];
+    stats_unit ustats[MAXUNITS];
+    
     int state;
     float cam[2];
     float starttime;
@@ -33,7 +35,7 @@ void gst_init (gamestate *gst);
 void gst_destroy (gamestate *gst);
 void gst_get_maparmy(gamestate *gst, map **m, army **ar);
 
-void gst_tobattle (gamestate *gst);
+void gst_tobattle (gamestate *gst, infos *info);
 void gst_toeditor (gamestate *gst);
 
 void gst_process (gamestate *gst, infos *info, fxs *fx, float t);

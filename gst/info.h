@@ -24,6 +24,7 @@
 typedef struct {
     float damage[7];
     float cooldown;
+    float range;
     float aoe;
     float knockback;
     float damage_battery;
@@ -152,8 +153,8 @@ typedef struct {
     info_brain brains[32];
     int brainslen;
     
-    stats_comp *stats[5];
-    int statslen[5];
+    stats_comp *stats[6];
+    int statslen[6];
 } infos;
 
 void info_unit_init (info_unit *u);
@@ -172,6 +173,13 @@ float info_unit_get_range(infos *info, info_unit *u, int w);
 float info_unit_get_maxrange(infos *info, info_unit *u);
 float info_unit_get_armor(infos *info, info_unit *u, int d);
 float info_unit_get_cost(infos *info, info_unit *u);
+
+int stats_frame_sprintf (infos *info, stats_frame *frame, char arr[][64]);
+int stats_weapon_sprintf (infos *info, stats_weapon *weap, char arr[][64]);
+void stats_unit_compute (infos *info, info_unit *u, stats_unit *base);
+
+float stats_compute_damage (stats_weapon *weapon, stats_frame *frame, 
+    float *red); 
 
 void info_load (infos *info);
 
