@@ -496,7 +496,7 @@ void info_weapon_parse (char *json, info_weapon *w, jsmntok_t *t, int r,
             }
             if (strcmp(key, "stun") == 0) {
                 int rt = json_parse_subtokens(json, t, r, i+1);
-                json_parse_array(json, w->stun, t+i+2, rt-1, 'i');
+                json_parse_array(json, w->stun, t+i+2, rt-1, 'f');
                 i += rt;
             }
             for (int h=0; h<7; h++) {
@@ -533,7 +533,6 @@ void info_chassis_parse (char *json, info_chassis *c, jsmntok_t *t, int r,
             if (strcmp(key, "slot_weapon") == 0) {
                 int rt = json_parse_subtokens(json, t, r, i+1);
                 json_parse_array(json, c->slot_weapon, t+i+2, rt-1, 'i');
-                printf("%d %d %d\n", c->slot_weapon[0], c->slot_weapon[1], c->slot_weapon[2]);
                 i += rt;
             }
             if (strcmp(key, "slot_armor") == 0) {
@@ -732,42 +731,246 @@ void info_parse_json (infos *info, char *json, char *obj) {
             if (strcmp(obj, "template") == 0) {
                 info_unit_parse(json, 
                     info->templates+index, t+i+1, rt, info);
-                info->templateslen = index+1;
+                info->templateslen ++;
             }
             if (strcmp(obj, "weapon") == 0) {
                 info_weapon_parse(json, 
                     info->weapons+index, t+i+1, rt, info);
-                info->weaponslen = index+1;
+                info->weaponslen ++;
             }
             if (strcmp(obj, "chassis") == 0) {
                 info_chassis_parse(json, 
                     info->chassis+index, t+i+1, rt, info);
-                info->chassislen = index+1;
+                info->chassislen ++;
             }
             if (strcmp(obj, "battery") == 0) {
                 info_battery_parse(json, 
                     info->batteries+index, t+i+1, rt, info);
-                info->batterieslen = index+1;
+                info->batterieslen ++;
             }
             if (strcmp(obj, "armor") == 0) {
                 info_armor_parse(json, 
                     info->armors+index, t+i+1, rt, info);
-                info->armorslen = index+1;
+                info->armorslen ++;
             }
             if (strcmp(obj, "aug") == 0) {
                 info_aug_parse(json, 
                     info->augs+index, t+i+1, rt, info);
-                info->augslen = index+1;
+                info->augslen ++;
             }
             if (strcmp(obj, "brain") == 0) {
                 info_brain_parse(json, 
                     info->brains+index, t+i+1, rt, info);
-                info->brainslen = index+1;
+                info->brainslen ++;
             }
             index ++;
             i += rt-1;
         }
     }
+}
+
+#define LOOP(x) for (int z=0; z<x; z++)
+
+void stats_weapon_init (stats_weapon *weap) {
+    LOOP(7) weap->damage[z] = 0;
+    weap->cooldown = 0;
+    weap->aoe = 0;
+    weap->knockback = 0;
+    weap->damage_battery = 0;
+    weap->stun = 0;
+    LOOP(7) weap->armor_reduce[z] = 0;
+    weap->charge_per_shot = 0;
+}
+
+void stats_frame_init (stats_frame *frame) {
+    frame->hp = 0;
+    frame->weight = 0;
+    frame->weight_max = 0;
+    frame->slot_weapon = 0;
+    frame->slot_armor = 0;
+    frame->slot_aug = 0;
+    frame->speed = 0;
+    frame->upkeep = 0;
+    frame->capacity = 0;
+    frame->recharge = 0;
+    LOOP(7) frame->armor[z] = 0;
+}
+
+void stats_comp_init (stats_comp *comp) {
+    strcpy(comp->name, "-");
+    strcpy(comp->description, "-");
+    LOOP(MAXLEVEL) {
+        stats_frame_init(comp->base +z);
+        stats_frame_init(comp->perc +z);
+        stats_weapon_init(comp->base_weapon +z);
+        stats_weapon_init(comp->perc_weapon +z);
+    }
+}
+
+#define PRINT(obj, attr, type) { \
+    if (obj->attr != 0) {\
+        printf("    "#attr": %"#type"\n", obj->attr); \
+    }\
+}
+
+void stats_frame_printf (stats_frame *frame) {
+    PRINT(frame, hp, f);
+    PRINT(frame, weight, f);
+    PRINT(frame, weight_max, f);
+    PRINT(frame, slot_weapon, d);
+    PRINT(frame, slot_armor, d);
+    PRINT(frame, slot_aug, d);
+    PRINT(frame, speed, f);
+    PRINT(frame, upkeep, f);
+    PRINT(frame, capacity, f);
+    PRINT(frame, recharge, f);
+    LOOP(7) PRINT(frame, armor[z], f);
+}
+
+void stats_weapon_printf (stats_weapon *weap) {
+    LOOP(7) PRINT(weap, damage[z], f);
+    PRINT(weap, cooldown, f);
+    PRINT(weap, aoe, f);
+    PRINT(weap, knockback, f);
+    PRINT(weap, damage_battery, f);
+    PRINT(weap, stun, f);
+    PRINT(weap, charge_per_shot, f);
+    LOOP(7) PRINT(weap, armor_reduce[z], f);
+}
+
+void stats_comp_printf (stats_comp *comp) {
+    printf("name: %s\n", comp->name);
+    printf("description: %s\n", comp->description);
+    LOOP(MAXLEVEL) {
+        printf("  level %d ->\n", z);
+        stats_frame_printf(comp->base +z);
+        stats_frame_printf(comp->perc +z);
+        stats_weapon_printf(comp->base_weapon +z);
+        stats_weapon_printf(comp->perc_weapon +z);
+    }
+}
+
+#define MATCH(frame, attr, type) {\
+    if (strcmp(key, #frame"_"#attr) == 0) {\
+        printf("  matched %s\n", #attr);\
+        int rt = json_parse_subtokens(json, t, r, i+1); \
+        if (type == 'f') {\
+            float v[3]; json_parse_array(json, v, t+i+2, rt-1, type);\
+            LOOP(MAXLEVEL) comp->frame[z].attr = v[z];\
+        } if (type == 'i') {\
+            int v[3]; json_parse_array(json, v, t+i+2, rt-1, type);\
+            LOOP(MAXLEVEL) comp->frame[z].attr = v[z];\
+        }\
+        i += rt;\
+    }\
+} 
+
+#define MATCH_ARRAY(frame, attr, attr2, type, num) {\
+    char str[64]; sprintf(str, "%s%s", #frame"_"#attr"_", attr2);\
+    if (strcmp(key, str) == 0) {\
+        printf("  matched\n");\
+        int rt = json_parse_subtokens(json, t, r, i+1); \
+        float v[3]; json_parse_array(json, v, t+i+2, rt-1, type);\
+        LOOP(MAXLEVEL) comp->frame[z].attr[num] = v[z];\
+        i += rt;\
+    }\
+} 
+
+/* REMOVE AFTER THIS */ #include <conio.h>
+
+void stats_comp_parse (char *json, stats_comp *comp, jsmntok_t *t, int r, 
+    infos *info) 
+{
+    stats_comp_init(comp);
+    int obj_i = 0, dict_i = -1; 
+    for (int i=0; i<r; i+=1) { 
+        if (t[i].type == JSMN_STRING) { 
+            char key[32]; substr_token(json, key, t+i); 
+            if (strcmp(key, "name") == 0) {
+                substr_token(json, comp->name, t+i+1); i++;
+            }
+            if (strcmp(key, "description") == 0) {
+                substr_token(json, comp->description, t+i+1); i++;
+            }
+            
+            MATCH(base, hp, 'f');
+            MATCH(base, weight, 'f');
+            MATCH(base, weight_max, 'f');
+            MATCH(base, slot_weapon, 'i');
+            MATCH(base, slot_armor, 'i');
+            MATCH(base, slot_aug, 'i');
+            MATCH(base, speed, 'f');
+            MATCH(base, upkeep, 'f');
+            MATCH(base, capacity, 'f');
+            MATCH(base, recharge, 'f');
+            for (int j=0;j<7; j++) {
+                MATCH_ARRAY(base, armor, info->damage_types[j], 'f', j);
+            }
+            
+            MATCH(perc, hp, 'f');
+            MATCH(perc, weight, 'f');
+            MATCH(perc, weight_max, 'f');
+            MATCH(perc, slot_weapon, 'i');
+            MATCH(perc, slot_armor, 'i');
+            MATCH(perc, slot_aug, 'i');
+            MATCH(perc, speed, 'f');
+            MATCH(perc, upkeep, 'f');
+            MATCH(perc, capacity, 'f');
+            MATCH(perc, recharge, 'f');
+            for (int j=0;j<7; j++) {
+                MATCH_ARRAY(perc, armor, info->damage_types[j], 'f', j);
+            }
+            
+            MATCH(base_weapon, cooldown, 'f');
+            MATCH(base_weapon, aoe, 'f');
+            MATCH(base_weapon, knockback, 'f');
+            MATCH(base_weapon, damage_battery, 'f');
+            MATCH(base_weapon, stun, 'f');
+            MATCH(base_weapon, charge_per_shot, 'f');
+            for (int j=0;j<7; j++) {
+                MATCH_ARRAY(base_weapon, damage, 
+                    info->damage_types[j], 'f', j);
+            }
+            for (int j=0;j<7; j++) {
+                MATCH_ARRAY(base_weapon, armor_reduce, 
+                    info->damage_types[j], 'f', j);
+            }
+            
+            MATCH(perc_weapon, cooldown, 'f');
+            MATCH(perc_weapon, aoe, 'f');
+            MATCH(perc_weapon, knockback, 'f');
+            MATCH(perc_weapon, damage_battery, 'f');
+            MATCH(perc_weapon, stun, 'f');
+            MATCH(perc_weapon, charge_per_shot, 'f');
+            for (int j=0;j<7; j++) {
+                MATCH_ARRAY(perc_weapon, damage, 
+                    info->damage_types[j], 'f', j);
+            }
+            for (int j=0;j<7; j++) {
+                MATCH_ARRAY(perc_weapon, armor_reduce, 
+                    info->damage_types[j], 'f', j);
+            }
+        }
+    }
+}
+
+void info_stats_parse (infos *info, char *json, int stats_type) { 
+    jsmn_parser p; jsmn_init(&p);
+    jsmntok_t t[MAXTOKENS];
+    int r = jsmn_parse(&p, json, strlen(json), t, MAXTOKENS);
+    int index = 0;
+    for (int i=1; i<r; i++) { // i=1: ignore outer []
+        if (t[i].type == JSMN_OBJECT) {
+            int rt = json_parse_subtokens(json, t, r, i);
+            stats_comp *comp = info->stats[stats_type]
+                +info->statslen[stats_type];
+            stats_comp_parse(json, comp, t+i+1, rt, info);
+            info->statslen[stats_type] ++;
+            i += rt-1;
+            
+            stats_comp_printf(comp);
+        }
+    } 
 }
 
 int info_read_file (char *dst, char *name, int size) {
@@ -802,67 +1005,25 @@ void info_load (infos *info) {
     
     info_read_file(json, "content/templates/default.txt", size);
     info_parse_json(info, json, "template");
-    /*
-    for (int i=0; i<info->unitslen; i++) {
-        printf("name: %s\n", info->units[i].name);
-        printf(" hp: %f\n", info->units[i].hp);
-        printf(" damage: %f\n", info->units[i].damage);
-        printf(" range: %f\n", info->units[i].range);
-    }*/
-    /*
-    for (int i=0; i<info->weaponslen; i++) {
-        printf("name: %s\n", info->weapons[i].name);
-        printf(" damage_type: %d\n", info->weapons[i].damage_type);
-        printf(" weight: %f\n", info->weapons[i].weight);
-        printf(" cooldown: %f\n", info->weapons[i].cooldown);
-        printf(" damage: %f\n", info->weapons[i].damage);
-        printf(" range: %f\n", info->weapons[i].range);
-        printf(" aoe: %f\n", info->weapons[i].aoe);
-        printf(" knockback: %d\n", info->weapons[i].knockback);
-        printf(" damage_battery: %f\n", info->weapons[i].damage_battery);
-        printf(" stun: %d\n", info->weapons[i].stun);
-        float sum = 0; for (int j=0; j<7; j++) { 
-            sum += info->weapons[i].reduce_armor[j];
-        }
-        if (sum > 0) {
-            printf(" red pierce: %f\n", info->weapons[i].reduce_armor[0]);
-            printf(" red laser: %f\n", info->weapons[i].reduce_armor[1]);
-            printf(" red impact: %f\n", info->weapons[i].reduce_armor[2]);
-            printf(" red fusion: %f\n", info->weapons[i].reduce_armor[3]);
-            printf(" red explosive: %f\n", info->weapons[i].reduce_armor[4]);
-            printf(" red emp: %f\n", info->weapons[i].reduce_armor[5]);
-            printf(" red spread: %f\n", info->weapons[i].reduce_armor[6]);
-        }
-    }*/
-    /*
-    for (int i=0; i<info->chassislen; i++) {
-        printf("name: %s\n", info->chassis[i].name);
-        printf(" slot_weapon: %d\n", info->chassis[i].slot_weapon);
-        printf(" slot_armor: %d\n", info->chassis[i].slot_armor);
-        printf(" slot_aug: %d\n", info->chassis[i].slot_aug);
-        printf(" weight_max: %f\n", info->chassis[i].weight_max);
-        printf(" hp: %f\n", info->chassis[i].hp);
-    }*/
-    /*
-    for (int i=0; i<info->batterieslen; i++) {
-        printf("name: %s\n", info->batteries[i].name);
-        printf(" weight: %f\n", info->batteries[i].weight);
-        printf(" capacity: %f\n", info->batteries[i].capacity);
-        printf(" recharge: %d\n", info->batteries[i].recharge);
-    }*/
-    /*
-    for (int i=0; i<info->armorslen; i++) {
-        printf("name: %s\n", info->armors[i].name);
-        printf(" weight: %f\n", info->armors[i].weight);
-        printf(" pierce: %f\n", info->armors[i].armor[0]);
-        printf(" laser: %f\n", info->armors[i].armor[1]);
-        printf(" impact: %f\n", info->armors[i].armor[2]);
-        printf(" fusion: %f\n", info->armors[i].armor[3]);
-        printf(" explosive: %f\n", info->armors[i].armor[4]);
-        printf(" emp: %f\n", info->armors[i].armor[5]);
-        printf(" spread: %f\n", info->armors[i].armor[6]);
-    }*/
+    
+    char files[6][32] = { 
+        "content/chassis.txt",
+        "content/brains.txt", 
+        "content/batteries.txt", 
+        "content/weapons.txt", 
+        "content/armor.txt", 
+        "content/augments.txt" 
+    };
+    for (int i=0; i<6; i++) {
+        info->stats[i] = (stats_comp*)malloc(64*sizeof(stats_comp));
+        if (info->stats[i] != NULL) {
+            info->statslen[i] = 0;
+            info_read_file(json, files[i], size);
+            info_stats_parse(info, json, i);
+        } else { printf("error: out of memory in allocating for stats"); }
+    }
 }
+
 
 void info_dump_json_templates (infos *info, char *str) {
     int len = 0;

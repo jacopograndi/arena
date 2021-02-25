@@ -778,12 +778,30 @@ void hud_render_sel (hud_sel *sc, MKb *mkb, info_unit *u,
         SDL_RenderFillRect(rend, &r);
         SDL_SetRenderDrawColor(rend, 0, 0, 0, 255);
         SDL_RenderDrawRect(rend, &r);
-        if (sel==0) render_view_chassis(rend, t, x, y, info, i, 0, sprites);
-        if (sel==1) render_view_battery(rend, t, x, y, info, i, 0);
-        if (sel==2) render_view_armor_detail(rend, t, x, y, info, i, 0);
-        if (sel==3) render_view_weapon_detail(rend, t, x, y, info, i, 0);
-        if (sel==4) render_view_aug_detail(rend, t, x, y, info, i, 0);
-        if (sel==5) render_view_brain(rend, t, x, y, info, i, 0);
+        if (sel==0) {
+            int lvl = u->levels[LEVEL_CHASSIS];
+            render_view_chassis(rend, t, x, y, info, i, lvl, sprites);
+        }
+        if (sel==1) {
+            int lvl = u->levels[LEVEL_BATTERY];
+            render_view_battery(rend, t, x, y, info, i, lvl);
+        }
+        if (sel==2) {
+            int lvl = u->levels[LEVEL_ARMOR+ind];
+            render_view_armor_detail(rend, t, x, y, info, i, lvl);
+        }
+        if (sel==3) {
+            int lvl = u->levels[LEVEL_WEAPONS+ind];
+            render_view_weapon_detail(rend, t, x, y, info, i, lvl);
+        }
+        if (sel==4) {
+            int lvl = u->levels[LEVEL_AUGS+ind];
+            render_view_aug_detail(rend, t, x, y, info, i, lvl);
+        }
+        if (sel==5) {
+            int lvl = u->levels[LEVEL_BRAIN];
+            render_view_brain(rend, t, x, y, info, i, lvl);
+        }
     }
     SDL_RenderSetClipRect(rend, NULL);
 }

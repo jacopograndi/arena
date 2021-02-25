@@ -1,50 +1,50 @@
 [
     {
         "name": "search and destroy",
-        "upkeep": [
+        "base_upkeep": [
             1.0,
-            1.0,
-            1.0
+            0.75,
+            0.5
         ]
     },
     {
         "name": "follower",
-        "upkeep": [
+        "base_upkeep": [
             1.0,
-            1.0,
-            1.0
+            0.75,
+            0.5
         ]
     },
     {
-        "name": "defensive",
-        "upkeep": [
+        "name": "friendly fire",
+        "base_upkeep": [
             1.0,
-            1.0,
-            1.0
+            0.75,
+            0.5
         ]
     },
     {
         "name": "kamikaze",
-        "upkeep": [
+        "base_upkeep": [
             1.0,
-            1.0,
-            1.0
+            0.75,
+            0.5
         ]
     },
     {
         "name": "run and gun",
-        "upkeep": [
+        "base_upkeep": [
             1.0,
-            1.0,
-            1.0
+            0.75,
+            0.5
         ]
     },
     {
         "name": "flank",
-        "upkeep": [
+        "base_upkeep": [
             1.0,
-            1.0,
-            1.0
+            0.75,
+            0.5
         ]
     }
 ]

@@ -1,200 +1,200 @@
 [
     {
         "name": "metal plating",
-        "weight": [
+        "base_weight": [
             10.0,
-            10.0,
-            10.0
-        ],
-        "pierce": [
-            5.0,
-            5.0,
+            7.5,
             5.0
         ],
-        "spread": [
-            8.0,
-            8.0,
-            8.0
-        ]
-    },
-    {
-        "name": "heavy metal plating",
-        "weight": [
-            16.0,
-            16.0,
-            16.0
-        ],
-        "pierce": [
-            7.0,
-            7.0,
-            7.0
-        ],
-        "spread": [
-            10.0,
-            10.0,
-            10.0
-        ],
-        "impact": [
+        "base_pierce": [
             5.0,
-            5.0,
-            5.0
-        ]
-    },
-    {
-        "name": "reflective plating",
-        "weight": [
-            8.0,
-            8.0,
-            8.0
+            6.25,
+            7.5
         ],
-        "laser": [
+        "base_spread": [
+            8.0,
             10.0,
-            10.0,
-            10.0
-        ]
-    },
-    {
-        "name": "heat resistent plating",
-        "weight": [
-            10.0,
-            10.0,
-            10.0
-        ],
-        "fusion": [
-            8.0,
-            8.0,
-            8.0
-        ]
-    },
-    {
-        "name": "padding",
-        "weight": [
-            4.0,
-            4.0,
-            4.0
-        ],
-        "spread": [
-            5.0,
-            5.0,
-            5.0
-        ],
-        "impact": [
-            8.0,
-            8.0,
-            8.0
-        ]
-    },
-    {
-        "name": "reactive armor",
-        "weight": [
-            15.0,
-            15.0,
-            15.0
-        ],
-        "explosive": [
-            12.0,
-            12.0,
             12.0
         ]
     },
     {
-        "name": "energy shields",
-        "weight": [
+        "name": "heavy metal plating",
+        "base_weight": [
+            16.0,
+            12.0,
+            8.0
+        ],
+        "base_pierce": [
+            7.0,
+            8.75,
+            10.5
+        ],
+        "base_spread": [
+            10.0,
+            12.5,
+            15.0
+        ],
+        "base_impact": [
             5.0,
-            5.0,
+            6.25,
+            7.5
+        ]
+    },
+    {
+        "name": "reflective plating",
+        "base_weight": [
+            8.0,
+            6.0,
+            4.0
+        ],
+        "base_laser": [
+            10.0,
+            12.5,
+            15.0
+        ]
+    },
+    {
+        "name": "heat resistent plating",
+        "base_weight": [
+            10.0,
+            7.5,
             5.0
         ],
-        "pierce": [
+        "base_fusion": [
+            8.0,
+            10.0,
+            12.0
+        ]
+    },
+    {
+        "name": "padding",
+        "base_weight": [
+            4.0,
             3.0,
-            3.0,
-            3.0
+            2.0
         ],
-        "spread": [
-            3.0,
-            3.0,
-            3.0
+        "base_spread": [
+            5.0,
+            6.25,
+            7.5
         ],
-        "fusion": [
-            3.0,
-            3.0,
-            3.0
+        "base_impact": [
+            8.0,
+            10.0,
+            12.0
+        ]
+    },
+    {
+        "name": "reactive armor",
+        "base_weight": [
+            15.0,
+            11.25,
+            7.5
         ],
-        "explosive": [
-            3.0,
-            3.0,
-            3.0
+        "base_explosive": [
+            12.0,
+            15.0,
+            18.0
+        ]
+    },
+    {
+        "name": "energy shields",
+        "base_weight": [
+            5.0,
+            3.75,
+            2.5
         ],
-        "laser": [
+        "base_pierce": [
             3.0,
+            3.75,
+            4.5
+        ],
+        "base_spread": [
             3.0,
-            3.0
+            3.75,
+            4.5
+        ],
+        "base_fusion": [
+            3.0,
+            3.75,
+            4.5
+        ],
+        "base_explosive": [
+            3.0,
+            3.75,
+            4.5
+        ],
+        "base_laser": [
+            3.0,
+            3.75,
+            4.5
         ]
     },
     {
         "name": "composite armor",
-        "weight": [
+        "base_weight": [
             6.0,
-            6.0,
-            6.0
-        ],
-        "pierce": [
-            6.0,
-            6.0,
-            6.0
-        ],
-        "spread": [
-            4.0,
-            4.0,
-            4.0
-        ],
-        "impact": [
-            3.0,
-            3.0,
+            4.5,
             3.0
+        ],
+        "base_pierce": [
+            6.0,
+            7.5,
+            9.0
+        ],
+        "base_spread": [
+            4.0,
+            5.0,
+            6.0
+        ],
+        "base_impact": [
+            3.0,
+            3.75,
+            4.5
         ]
     },
     {
         "name": "plastic armor",
-        "weight": [
+        "base_weight": [
             2.0,
-            2.0,
-            2.0
+            1.5,
+            1.0
         ],
-        "pierce": [
+        "base_pierce": [
             4.0,
-            4.0,
-            4.0
+            5.0,
+            6.0
         ]
     },
     {
         "name": "sloped steel armor",
-        "weight": [
+        "base_weight": [
             9.0,
-            9.0,
-            9.0
+            6.75,
+            4.5
         ],
-        "pierce": [
+        "base_pierce": [
             10.0,
-            10.0,
-            10.0
+            12.5,
+            15.0
         ],
-        "spread": [
+        "base_spread": [
             8.0,
-            8.0,
-            8.0
+            10.0,
+            12.0
         ]
     },
     {
         "name": "charged armor",
-        "weight": [
+        "base_weight": [
             20.0,
-            20.0,
-            20.0
+            15.0,
+            10.0
         ],
-        "explosive": [
+        "base_explosive": [
             25.0,
-            25.0,
-            25.0
+            31.25,
+            37.5
         ]
     }
 ]

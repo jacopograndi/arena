@@ -13,7 +13,57 @@
 #define LEVEL_ARMOR 11
 #define LEVEL_AUGS 19
 
-typedef struct  {
+#define STATS_CHASSIS 0
+#define STATS_BRAIN 1
+#define STATS_BATTERY 2
+#define STATS_WEAPONS 3
+#define STATS_ARMOR 4
+#define STATS_AUGS 5
+
+// loaded stats
+typedef struct {
+    float damage[7];
+    float cooldown;
+    float aoe;
+    float knockback;
+    float damage_battery;
+    float stun;
+    float armor_reduce[7];
+    float charge_per_shot;
+} stats_weapon;
+
+typedef struct {
+    float hp;
+    float weight;
+    float weight_max;
+    int slot_weapon;
+    int slot_armor;
+    int slot_aug;
+    float speed;
+    float upkeep;
+    float capacity;
+    float recharge;
+    float armor[7];
+} stats_frame;
+
+typedef struct {
+    char name[32];
+    char description[256];
+    stats_frame base[MAXLEVEL];
+    stats_frame perc[MAXLEVEL];
+    stats_weapon base_weapon[MAXLEVEL];
+    stats_weapon perc_weapon[MAXLEVEL];
+} stats_comp;
+
+
+// computed stats ready for army use
+typedef struct {
+    stats_frame frame;
+    stats_weapon weapon[8];
+} stats_unit;
+
+
+typedef struct {
     char name[32];
     // indexes of info.*
     int8_t chassis;
@@ -100,6 +150,9 @@ typedef struct {
     int augslen;
     info_brain brains[32];
     int brainslen;
+    
+    stats_comp *stats[5];
+    int statslen[5];
 } infos;
 
 void info_unit_init (info_unit *u);

@@ -12,13 +12,20 @@
 
 #define LABEL_F3(x, y, s, q, v, d) {\
     float p[2]={x,y}; char ss[64]; \
-    sprintf(ss, "%s: %."#q"f %."#q"f %."#q"f", s, v[0], v[1], v[2]);\
+    if (lvl == 0) \
+        sprintf(ss, "%s: (%."#q"f) %."#q"f %."#q"f", s, v[0], v[1], v[2]);\
+    if (lvl == 1) \
+        sprintf(ss, "%s: %."#q"f (%."#q"f) %."#q"f", s, v[0], v[1], v[2]);\
+    if (lvl == 2) \
+        sprintf(ss, "%s: %."#q"f %."#q"f (%."#q"f)", s, v[0], v[1], v[2]);\
     render_text_scaled(rend, ss, p, t, d);\
 }
 
 #define LABEL_I3(x, y, s, v, d) {\
     float p[2]={x,y}; char ss[64]; \
-    sprintf(ss, "%s: %d %d %d", s, v[0], v[1], v[2]);\
+    if (lvl == 0) sprintf(ss, "%s: (%d) %d %d", s, v[0], v[1], v[2]);\
+    if (lvl == 1) sprintf(ss, "%s: %d (%d) %d", s, v[0], v[1], v[2]);\
+    if (lvl == 2) sprintf(ss, "%s: %d %d (%d)", s, v[0], v[1], v[2]);\
     render_text_scaled(rend, ss, p, t, 1);\
 }
 

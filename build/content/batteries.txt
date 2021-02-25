@@ -1,43 +1,43 @@
 [
     {
         "name": "small alkaline pack",
-        "weight": [
+        "base_weight": [
             0.0,
             0.0,
             0.0
         ],
-        "capacity": [
+        "base_capacity": [
             50.0,
-            50.0,
-            50.0
+            62.5,
+            75.0
         ]
     },
     {
         "name": "big alkaline pack",
-        "weight": [
+        "base_weight": [
             2.0,
-            2.0,
-            2.0
+            1.5,
+            1.0
         ],
-        "capacity": [
+        "base_capacity": [
             200.0,
-            200.0,
-            200.0
+            250.0,
+            300.0
         ]
     },
     {
         "name": "small lithium pack",
-        "weight": [
+        "base_weight": [
             5.0,
-            5.0,
-            5.0
+            3.75,
+            2.5
         ],
-        "capacity": [
+        "base_capacity": [
             150.0,
-            150.0,
-            150.0
+            187.5,
+            225.0
         ],
-        "recharge": [
+        "base_recharge": [
             1,
             1,
             1
@@ -45,17 +45,17 @@
     },
     {
         "name": "big lithium pack",
-        "weight": [
+        "base_weight": [
             15.0,
-            15.0,
-            15.0
+            11.25,
+            7.5
         ],
-        "capacity": [
+        "base_capacity": [
             500.0,
-            500.0,
-            500.0
+            625.0,
+            750.0
         ],
-        "recharge": [
+        "base_recharge": [
             1,
             1,
             1
@@ -63,17 +63,17 @@
     },
     {
         "name": "lead battery",
-        "weight": [
+        "base_weight": [
             20.0,
-            20.0,
-            20.0
+            15.0,
+            10.0
         ],
-        "capacity": [
+        "base_capacity": [
             800.0,
-            800.0,
-            800.0
+            1000.0,
+            1200.0
         ],
-        "recharge": [
+        "base_recharge": [
             1,
             1,
             1
@@ -81,17 +81,17 @@
     },
     {
         "name": "small molten salt battery",
-        "weight": [
+        "base_weight": [
             40.0,
-            40.0,
-            40.0
+            30.0,
+            20.0
         ],
-        "capacity": [
+        "base_capacity": [
             1500.0,
-            1500.0,
-            1500.0
+            1875.0,
+            2250.0
         ],
-        "recharge": [
+        "base_recharge": [
             1,
             1,
             1
@@ -99,17 +99,17 @@
     },
     {
         "name": "big molten salt battery",
-        "weight": [
+        "base_weight": [
             70.0,
-            70.0,
-            70.0
+            52.5,
+            35.0
         ],
-        "capacity": [
+        "base_capacity": [
             2000.0,
-            2000.0,
-            2000.0
+            2500.0,
+            3000.0
         ],
-        "recharge": [
+        "base_recharge": [
             1,
             1,
             1
@@ -117,15 +117,15 @@
     },
     {
         "name": "atomic battery",
-        "weight": [
+        "base_weight": [
             150.0,
-            150.0,
-            150.0
+            112.5,
+            75.0
         ],
-        "capacity": [
+        "base_capacity": [
             10000.0,
-            10000.0,
-            10000.0
+            12500.0,
+            15000.0
         ]
     }
 ]

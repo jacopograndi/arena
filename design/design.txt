@@ -1,3 +1,12 @@
+major component redesign:
+every component has a big struct with everything
+when using the unit, condensate every component's struct into one, which is
+used in parallel to the army array
+
+
+
+
+
 descript: arena clone + autochess
 
 turn: move+attack

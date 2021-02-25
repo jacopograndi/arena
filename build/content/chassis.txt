@@ -1,37 +1,37 @@
 [
     {
         "name": "light two legged bot",
-        "slot_weapon": [
+        "base_slot_weapon": [
             1.0,
             1.0,
             1.0
         ],
-        "slot_armor": [
+        "base_slot_armor": [
             0.0,
             0.0,
             0.0
         ],
-        "slot_aug": [
+        "base_slot_aug": [
             1.0,
             1.0,
             1.0
         ],
-        "weight_max": [
+        "base_weight_max": [
             20.0,
-            20.0,
-            20.0
+            25.0,
+            30.0
         ],
-        "hp": [
+        "base_hp": [
             100.0,
-            100.0,
-            100.0
+            125.0,
+            150.0
         ],
-        "speed": [
+        "base_speed": [
             1.5,
-            1.5,
-            1.5
+            1.875,
+            2.25
         ],
-        "upkeep": [
+        "base_upkeep": [
             1.0,
             1.0,
             1.0
@@ -39,268 +39,268 @@
     },
     {
         "name": "heavy two legged bot",
-        "slot_weapon": [
+        "base_slot_weapon": [
             1.0,
             1.0,
             1.0
         ],
-        "slot_armor": [
+        "base_slot_armor": [
             1.0,
             1.0,
             1.0
         ],
-        "slot_aug": [
+        "base_slot_aug": [
             3.0,
             3.0,
             3.0
         ],
-        "weight_max": [
+        "base_weight_max": [
             45.0,
-            45.0,
-            45.0
+            56.25,
+            67.5
         ],
-        "hp": [
+        "base_hp": [
             350.0,
-            350.0,
-            350.0
+            437.5,
+            525.0
         ],
-        "speed": [
+        "base_speed": [
             1.0,
-            1.0,
-            1.0
+            1.25,
+            1.5
         ]
     },
     {
         "name": "light four legged bot",
-        "slot_weapon": [
+        "base_slot_weapon": [
             2.0,
             2.0,
             2.0
         ],
-        "slot_armor": [
+        "base_slot_armor": [
             1.0,
             1.0,
             1.0
         ],
-        "slot_aug": [
+        "base_slot_aug": [
             2.0,
             2.0,
             2.0
         ],
-        "weight_max": [
+        "base_weight_max": [
             50.0,
-            50.0,
-            50.0
+            62.5,
+            75.0
         ],
-        "hp": [
+        "base_hp": [
             400.0,
-            400.0,
-            400.0
+            500.0,
+            600.0
         ],
-        "speed": [
+        "base_speed": [
             1.0,
-            1.0,
-            1.0
+            1.25,
+            1.5
         ]
     },
     {
         "name": "heavy four legged bot",
-        "slot_weapon": [
+        "base_slot_weapon": [
             2.0,
             2.0,
             2.0
         ],
-        "slot_armor": [
+        "base_slot_armor": [
             2.0,
             2.0,
             2.0
         ],
-        "slot_aug": [
+        "base_slot_aug": [
             5.0,
             5.0,
             5.0
         ],
-        "weight_max": [
+        "base_weight_max": [
             150.0,
-            150.0,
-            150.0
+            187.5,
+            225.0
         ],
-        "hp": [
+        "base_hp": [
             1200.0,
-            1200.0,
-            1200.0
+            1500.0,
+            1800.0
         ],
-        "speed": [
+        "base_speed": [
             0.67,
-            0.67,
-            0.67
+            0.8375,
+            1.0050000000000001
         ]
     },
     {
         "name": "light six legged bot",
-        "slot_weapon": [
+        "base_slot_weapon": [
             2.0,
             2.0,
             2.0
         ],
-        "slot_armor": [
+        "base_slot_armor": [
             2.0,
             2.0,
             2.0
         ],
-        "slot_aug": [
+        "base_slot_aug": [
             3.0,
             3.0,
             3.0
         ],
-        "weight_max": [
+        "base_weight_max": [
             210.0,
-            210.0,
-            210.0
+            262.5,
+            315.0
         ],
-        "hp": [
+        "base_hp": [
             640.0,
-            640.0,
-            640.0
+            800.0,
+            960.0
         ],
-        "speed": [
+        "base_speed": [
             1.0,
-            1.0,
-            1.0
+            1.25,
+            1.5
         ]
     },
     {
         "name": "heavy six legged bot",
-        "slot_weapon": [
+        "base_slot_weapon": [
             2.0,
             2.0,
             2.0
         ],
-        "slot_armor": [
+        "base_slot_armor": [
             4.0,
             4.0,
             4.0
         ],
-        "slot_aug": [
+        "base_slot_aug": [
             6.0,
             6.0,
             6.0
         ],
-        "weight_max": [
+        "base_weight_max": [
             300.0,
-            300.0,
-            300.0
+            375.0,
+            450.0
         ],
-        "hp": [
+        "base_hp": [
             1500.0,
-            1500.0,
-            1500.0
+            1875.0,
+            2250.0
         ],
-        "speed": [
+        "base_speed": [
             1.0,
-            1.0,
-            1.0
+            1.25,
+            1.5
         ]
     },
     {
         "name": "light buggy",
-        "slot_weapon": [
+        "base_slot_weapon": [
             1.0,
             1.0,
             1.0
         ],
-        "slot_armor": [
+        "base_slot_armor": [
             1.0,
             1.0,
             1.0
         ],
-        "slot_aug": [
+        "base_slot_aug": [
             1.0,
             1.0,
             1.0
         ],
-        "weight_max": [
+        "base_weight_max": [
             50.0,
-            50.0,
-            50.0
+            62.5,
+            75.0
         ],
-        "hp": [
+        "base_hp": [
             200.0,
-            200.0,
-            200.0
+            250.0,
+            300.0
         ],
-        "speed": [
+        "base_speed": [
             1.0,
-            1.0,
-            1.0
+            1.25,
+            1.5
         ]
     },
     {
         "name": "buggy",
-        "slot_weapon": [
+        "base_slot_weapon": [
             2.0,
             2.0,
             2.0
         ],
-        "slot_armor": [
+        "base_slot_armor": [
             2.0,
             2.0,
             2.0
         ],
-        "slot_aug": [
+        "base_slot_aug": [
             2.0,
             2.0,
             2.0
         ],
-        "weight_max": [
+        "base_weight_max": [
             150.0,
-            150.0,
-            150.0
+            187.5,
+            225.0
         ],
-        "hp": [
+        "base_hp": [
             400.0,
-            400.0,
-            400.0
+            500.0,
+            600.0
         ],
-        "speed": [
+        "base_speed": [
             1.0,
-            1.0,
-            1.0
+            1.25,
+            1.5
         ]
     },
     {
         "name": "light wheeled vehicle",
-        "slot_weapon": [
+        "base_slot_weapon": [
             1.0,
             1.0,
             1.0
         ],
-        "slot_armor": [
+        "base_slot_armor": [
             0.0,
             0.0,
             0.0
         ],
-        "slot_aug": [
+        "base_slot_aug": [
             2.0,
             2.0,
             2.0
         ],
-        "weight_max": [
+        "base_weight_max": [
             60.0,
-            60.0,
-            60.0
+            75.0,
+            90.0
         ],
-        "hp": [
+        "base_hp": [
             320.0,
-            320.0,
-            320.0
+            400.0,
+            480.0
         ],
-        "speed": [
+        "base_speed": [
             1.0,
-            1.0,
-            1.0
+            1.25,
+            1.5
         ],
-        "recharge": [
+        "base_recharge": [
             0.3,
             0.3,
             0.3
@@ -308,37 +308,37 @@
     },
     {
         "name": "medium wheeled vehicle",
-        "slot_weapon": [
+        "base_slot_weapon": [
             2.0,
             2.0,
             2.0
         ],
-        "slot_armor": [
+        "base_slot_armor": [
             2.0,
             2.0,
             2.0
         ],
-        "slot_aug": [
+        "base_slot_aug": [
             3.0,
             3.0,
             3.0
         ],
-        "weight_max": [
+        "base_weight_max": [
             200.0,
-            200.0,
-            200.0
+            250.0,
+            300.0
         ],
-        "hp": [
+        "base_hp": [
             720.0,
-            720.0,
-            720.0
+            900.0,
+            1080.0
         ],
-        "speed": [
+        "base_speed": [
             1.0,
-            1.0,
-            1.0
+            1.25,
+            1.5
         ],
-        "recharge": [
+        "base_recharge": [
             0.2,
             0.2,
             0.2
@@ -346,37 +346,37 @@
     },
     {
         "name": "heavy wheeled vehicle",
-        "slot_weapon": [
+        "base_slot_weapon": [
             2.0,
             2.0,
             2.0
         ],
-        "slot_armor": [
+        "base_slot_armor": [
             4.0,
             4.0,
             4.0
         ],
-        "slot_aug": [
+        "base_slot_aug": [
             4.0,
             4.0,
             4.0
         ],
-        "weight_max": [
+        "base_weight_max": [
             270.0,
-            270.0,
-            270.0
+            337.5,
+            405.0
         ],
-        "hp": [
+        "base_hp": [
             950.0,
-            950.0,
-            950.0
+            1187.5,
+            1425.0
         ],
-        "speed": [
+        "base_speed": [
             1.0,
-            1.0,
-            1.0
+            1.25,
+            1.5
         ],
-        "recharge": [
+        "base_recharge": [
             0.2,
             0.2,
             0.2
@@ -384,37 +384,37 @@
     },
     {
         "name": "light tank",
-        "slot_weapon": [
+        "base_slot_weapon": [
             1.0,
             1.0,
             1.0
         ],
-        "slot_armor": [
+        "base_slot_armor": [
             3.0,
             3.0,
             3.0
         ],
-        "slot_aug": [
+        "base_slot_aug": [
             2.0,
             2.0,
             2.0
         ],
-        "weight_max": [
+        "base_weight_max": [
             300.0,
-            300.0,
-            300.0
+            375.0,
+            450.0
         ],
-        "hp": [
+        "base_hp": [
             700.0,
-            700.0,
-            700.0
+            875.0,
+            1050.0
         ],
-        "speed": [
+        "base_speed": [
             1.0,
-            1.0,
-            1.0
+            1.25,
+            1.5
         ],
-        "recharge": [
+        "base_recharge": [
             0.4,
             0.4,
             0.4
@@ -422,37 +422,37 @@
     },
     {
         "name": "medium tank",
-        "slot_weapon": [
+        "base_slot_weapon": [
             1.0,
             1.0,
             1.0
         ],
-        "slot_armor": [
+        "base_slot_armor": [
             4.0,
             4.0,
             4.0
         ],
-        "slot_aug": [
+        "base_slot_aug": [
             4.0,
             4.0,
             4.0
         ],
-        "weight_max": [
+        "base_weight_max": [
             400.0,
-            400.0,
-            400.0
+            500.0,
+            600.0
         ],
-        "hp": [
+        "base_hp": [
             1250.0,
-            1250.0,
-            1250.0
+            1562.5,
+            1875.0
         ],
-        "speed": [
+        "base_speed": [
             1.0,
-            1.0,
-            1.0
+            1.25,
+            1.5
         ],
-        "recharge": [
+        "base_recharge": [
             0.5,
             0.5,
             0.5
@@ -460,103 +460,103 @@
     },
     {
         "name": "heavy tank",
-        "slot_weapon": [
+        "base_slot_weapon": [
             2.0,
             2.0,
             2.0
         ],
-        "slot_armor": [
+        "base_slot_armor": [
             5.0,
             5.0,
             5.0
         ],
-        "slot_aug": [
+        "base_slot_aug": [
             5.0,
             5.0,
             5.0
         ],
-        "weight_max": [
+        "base_weight_max": [
             450.0,
-            450.0,
-            450.0
+            562.5,
+            675.0
         ],
-        "hp": [
+        "base_hp": [
             1600.0,
-            1600.0,
-            1600.0
+            2000.0,
+            2400.0
         ],
-        "speed": [
+        "base_speed": [
             1.0,
-            1.0,
-            1.0
+            1.25,
+            1.5
         ]
     },
     {
         "name": "super heavy tank",
-        "slot_weapon": [
+        "base_slot_weapon": [
             3.0,
             3.0,
             3.0
         ],
-        "slot_armor": [
+        "base_slot_armor": [
             6.0,
             6.0,
             6.0
         ],
-        "slot_aug": [
+        "base_slot_aug": [
             6.0,
             6.0,
             6.0
         ],
-        "weight_max": [
+        "base_weight_max": [
             500.0,
-            500.0,
-            500.0
+            625.0,
+            750.0
         ],
-        "hp": [
+        "base_hp": [
             2000.0,
-            2000.0,
-            2000.0
+            2500.0,
+            3000.0
         ],
-        "speed": [
+        "base_speed": [
             1.0,
-            1.0,
-            1.0
+            1.25,
+            1.5
         ]
     },
     {
         "name": "hovercraft",
-        "slot_weapon": [
+        "base_slot_weapon": [
             2.0,
             2.0,
             2.0
         ],
-        "slot_armor": [
+        "base_slot_armor": [
             0.0,
             0.0,
             0.0
         ],
-        "slot_aug": [
+        "base_slot_aug": [
             3.0,
             3.0,
             3.0
         ],
-        "weight_max": [
+        "base_weight_max": [
             40.0,
-            40.0,
-            40.0
+            50.0,
+            60.0
         ],
-        "hp": [
+        "base_hp": [
             300.0,
-            300.0,
-            300.0
+            375.0,
+            450.0
         ],
-        "speed": [
+        "base_speed": [
             1.0,
-            1.0,
-            1.0
+            1.25,
+            1.5
         ],
-        "recharge": [
+        "base_recharge": [
             -0.2,
             -0.2,
             -0.2
@@ -564,103 +564,103 @@
     },
     {
         "name": "jet floater",
-        "slot_weapon": [
+        "base_slot_weapon": [
             1.0,
             1.0,
             1.0
         ],
-        "slot_armor": [
+        "base_slot_armor": [
             0.0,
             0.0,
             0.0
         ],
-        "slot_aug": [
+        "base_slot_aug": [
             2.0,
             2.0,
             2.0
         ],
-        "weight_max": [
+        "base_weight_max": [
             30.0,
-            30.0,
-            30.0
+            37.5,
+            45.0
         ],
-        "hp": [
+        "base_hp": [
             60.0,
-            60.0,
-            60.0
+            75.0,
+            90.0
         ],
-        "speed": [
+        "base_speed": [
             1.0,
-            1.0,
-            1.0
+            1.25,
+            1.5
         ]
     },
     {
         "name": "one wheeler",
-        "slot_weapon": [
+        "base_slot_weapon": [
             1.0,
             1.0,
             1.0
         ],
-        "slot_armor": [
+        "base_slot_armor": [
             0.0,
             0.0,
             0.0
         ],
-        "slot_aug": [
+        "base_slot_aug": [
             4.0,
             4.0,
             4.0
         ],
-        "weight_max": [
+        "base_weight_max": [
             15.0,
-            15.0,
-            15.0
+            18.75,
+            22.5
         ],
-        "hp": [
+        "base_hp": [
             40.0,
-            40.0,
-            40.0
+            50.0,
+            60.0
         ],
-        "speed": [
+        "base_speed": [
             1.0,
-            1.0,
-            1.0
+            1.25,
+            1.5
         ]
     },
     {
         "name": "armored crawler",
-        "slot_weapon": [
+        "base_slot_weapon": [
             1.0,
             1.0,
             1.0
         ],
-        "slot_armor": [
+        "base_slot_armor": [
             4.0,
             4.0,
             4.0
         ],
-        "slot_aug": [
+        "base_slot_aug": [
             2.0,
             2.0,
             2.0
         ],
-        "weight_max": [
+        "base_weight_max": [
             200.0,
-            200.0,
-            200.0
+            250.0,
+            300.0
         ],
-        "hp": [
+        "base_hp": [
             750.0,
-            750.0,
-            750.0
+            937.5,
+            1125.0
         ],
-        "speed": [
+        "base_speed": [
             1.0,
-            1.0,
-            1.0
+            1.25,
+            1.5
         ],
-        "upkeep": [
+        "base_upkeep": [
             0.4,
             0.4,
             0.4

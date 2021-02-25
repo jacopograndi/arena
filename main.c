@@ -25,6 +25,8 @@ Mix_Music *gMusic = NULL;
 //The sound effects that will be used
 Mix_Chunk *sounds[16];
 
+#define A(a, arg) printf("value: %d", a.arg);
+struct a { int v; } biga;
 
 int main( int argc, char* args[] ) {   
     net_init();

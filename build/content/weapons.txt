@@ -1,244 +1,234 @@
 [
     {
         "name": "smg",
-        "damage_type": "pierce",
-        "weight": [
+        "base_weight": [
             10.0,
-            10.0,
-            10.0
+            7.5,
+            5.0
         ],
-        "cooldown": [
+        "base_weapon_cooldown": [
             1.0,
-            1.0,
-            1.0
+            0.75,
+            0.5
         ],
-        "damage": [
+        "base_weapon_damage_pierce": [
             10.0,
             12.5,
             15.0
         ],
-        "range": [
+        "base_weapon_range": [
             4.0,
-            4.0,
-            4.0
+            5.0,
+            6.0
         ]
     },
     {
         "name": "machinegun",
-        "damage_type": "pierce",
-        "weight": [
+        "base_weight": [
             25.0,
-            25.0,
-            25.0
+            18.75,
+            12.5
         ],
-        "cooldown": [
+        "base_weapon_cooldown": [
             1.0,
-            1.0,
-            1.0
+            0.75,
+            0.5
         ],
-        "damage": [
+        "base_weapon_damage_pierce": [
             15.0,
             18.75,
             22.5
         ],
-        "range": [
+        "base_weapon_range": [
             5.0,
-            5.0,
-            5.0
+            6.25,
+            7.5
         ]
     },
     {
         "name": "heavy machinegun",
-        "damage_type": "pierce",
-        "weight": [
+        "base_weight": [
             40.0,
-            40.0,
-            40.0
+            30.0,
+            20.0
         ],
-        "cooldown": [
+        "base_weapon_cooldown": [
             1.0,
-            1.0,
-            1.0
+            0.75,
+            0.5
         ],
-        "damage": [
+        "base_weapon_damage_pierce": [
             20.0,
             25.0,
             30.0
         ],
-        "range": [
+        "base_weapon_range": [
             5.0,
-            5.0,
-            5.0
+            6.25,
+            7.5
         ]
     },
     {
         "name": "semi autocannon",
-        "damage_type": "pierce",
-        "weight": [
+        "base_weight": [
             70.0,
-            70.0,
-            70.0
+            52.5,
+            35.0
         ],
-        "cooldown": [
+        "base_weapon_cooldown": [
             2.0,
-            2.0,
-            2.0
+            1.5,
+            1.0
         ],
-        "damage": [
+        "base_weapon_damage_pierce": [
             32.0,
             40.0,
             48.0
         ],
-        "range": [
+        "base_weapon_range": [
             6.0,
-            6.0,
-            6.0
+            7.5,
+            9.0
         ]
     },
     {
         "name": "autocannon",
-        "damage_type": "pierce",
-        "weight": [
+        "base_weight": [
             100.0,
-            100.0,
-            100.0
+            75.0,
+            50.0
         ],
-        "cooldown": [
+        "base_weapon_cooldown": [
             1.0,
-            1.0,
-            1.0
+            0.75,
+            0.5
         ],
-        "damage": [
+        "base_weapon_damage_pierce": [
             40.0,
             50.0,
             60.0
         ],
-        "range": [
+        "base_weapon_range": [
             6.0,
-            6.0,
-            6.0
+            7.5,
+            9.0
         ]
     },
     {
         "name": "high velocity cannon",
-        "damage_type": "pierce",
-        "weight": [
+        "base_weight": [
             120.0,
-            120.0,
-            120.0
+            90.0,
+            60.0
         ],
-        "cooldown": [
+        "base_weapon_cooldown": [
             4.0,
-            4.0,
-            4.0
+            3.0,
+            2.0
         ],
-        "damage": [
+        "base_weapon_damage_pierce": [
             250.0,
             312.5,
             375.0
         ],
-        "range": [
+        "base_weapon_range": [
             7.0,
-            7.0,
-            7.0
+            8.75,
+            10.5
         ]
     },
     {
         "name": "scrap gun",
-        "damage_type": "spread",
-        "weight": [
+        "base_weight": [
             5.0,
-            5.0,
-            5.0
+            3.75,
+            2.5
         ],
-        "cooldown": [
+        "base_weapon_cooldown": [
             2.0,
-            2.0,
-            2.0
+            1.5,
+            1.0
         ],
-        "damage": [
+        "base_weapon_damage_spread": [
             8.0,
             10.0,
             12.0
         ],
-        "range": [
+        "base_weapon_range": [
             3.0,
-            3.0,
-            3.0
+            3.75,
+            4.5
         ]
     },
     {
         "name": "burst cannon",
-        "damage_type": "spread",
-        "weight": [
+        "base_weight": [
             15.0,
-            15.0,
-            15.0
+            11.25,
+            7.5
         ],
-        "cooldown": [
+        "base_weapon_cooldown": [
             2.0,
-            2.0,
-            2.0
+            1.5,
+            1.0
         ],
-        "damage": [
+        "base_weapon_damage_spread": [
             25.0,
             31.25,
             37.5
         ],
-        "range": [
+        "base_weapon_range": [
             4.0,
-            4.0,
-            4.0
+            5.0,
+            6.0
         ]
     },
     {
         "name": "heavy burst cannon",
-        "damage_type": "spread",
-        "weight": [
+        "base_weight": [
             30.0,
-            30.0,
-            30.0
+            22.5,
+            15.0
         ],
-        "cooldown": [
+        "base_weapon_cooldown": [
             2.0,
-            2.0,
-            2.0
+            1.5,
+            1.0
         ],
-        "damage": [
+        "base_weapon_damage_spread": [
             40.0,
             50.0,
             60.0
         ],
-        "range": [
+        "base_weapon_range": [
             5.0,
-            5.0,
-            5.0
+            6.25,
+            7.5
         ]
     },
     {
         "name": "maul",
-        "damage_type": "impact",
-        "weight": [
+        "base_weight": [
             200.0,
-            200.0,
-            200.0
+            150.0,
+            100.0
         ],
-        "cooldown": [
+        "base_weapon_cooldown": [
             3.0,
-            3.0,
-            3.0
+            2.25,
+            1.5
         ],
-        "damage": [
+        "base_weapon_damage_impact": [
             400.0,
             500.0,
             600.0
         ],
-        "range": [
+        "base_weapon_range": [
             1.0,
-            1.0,
-            1.0
+            1.25,
+            1.5
         ],
-        "knockback": [
+        "base_weapon_knockback": [
             2.0,
             2.0,
             2.0
@@ -246,52 +236,50 @@
     },
     {
         "name": "slam",
-        "damage_type": "impact",
-        "weight": [
+        "base_weight": [
             0.0,
             0.0,
             0.0
         ],
-        "cooldown": [
+        "base_weapon_cooldown": [
             1.0,
-            1.0,
-            1.0
+            0.75,
+            0.5
         ],
-        "damage": [
+        "base_weapon_damage_impact": [
             6.0,
             7.5,
             9.0
         ],
-        "range": [
+        "base_weapon_range": [
             1.0,
-            1.0,
-            1.0
+            1.25,
+            1.5
         ]
     },
     {
         "name": "warhammer",
-        "damage_type": "impact",
-        "weight": [
+        "base_weight": [
             40.0,
-            40.0,
-            40.0
+            30.0,
+            20.0
         ],
-        "cooldown": [
+        "base_weapon_cooldown": [
             1.0,
-            1.0,
-            1.0
+            0.75,
+            0.5
         ],
-        "damage": [
+        "base_weapon_damage_impact": [
             60.0,
             75.0,
             90.0
         ],
-        "range": [
+        "base_weapon_range": [
             1.0,
-            1.0,
-            1.0
+            1.25,
+            1.5
         ],
-        "knockback": [
+        "base_weapon_knockback": [
             1.0,
             1.0,
             1.0
@@ -299,52 +287,50 @@
     },
     {
         "name": "rocket",
-        "damage_type": "explosive",
-        "weight": [
+        "base_weight": [
             60.0,
-            60.0,
-            60.0
+            45.0,
+            30.0
         ],
-        "cooldown": [
+        "base_weapon_cooldown": [
             3.0,
-            3.0,
-            3.0
+            2.25,
+            1.5
         ],
-        "damage": [
+        "base_weapon_damage_explosive": [
             100.0,
             125.0,
             150.0
         ],
-        "range": [
+        "base_weapon_range": [
             8.0,
-            8.0,
-            8.0
+            10.0,
+            12.0
         ]
     },
     {
         "name": "rocket swarm",
-        "damage_type": "explosive",
-        "weight": [
+        "base_weight": [
             120.0,
-            120.0,
-            120.0
+            90.0,
+            60.0
         ],
-        "cooldown": [
+        "base_weapon_cooldown": [
             3.0,
-            3.0,
-            3.0
+            2.25,
+            1.5
         ],
-        "damage": [
+        "base_weapon_damage_explosive": [
             60.0,
             75.0,
             90.0
         ],
-        "range": [
+        "base_weapon_range": [
             7.0,
-            7.0,
-            7.0
+            8.75,
+            10.5
         ],
-        "aoe": [
+        "base_weapon_aoe": [
             2.0,
             2.0,
             2.0
@@ -352,28 +338,27 @@
     },
     {
         "name": "tactical rocket",
-        "damage_type": "explosive",
-        "weight": [
+        "base_weight": [
             160.0,
-            160.0,
-            160.0
+            120.0,
+            80.0
         ],
-        "cooldown": [
+        "base_weapon_cooldown": [
             1.0,
-            1.0,
-            1.0
+            0.75,
+            0.5
         ],
-        "damage": [
+        "base_weapon_damage_explosive": [
             100.0,
             125.0,
             150.0
         ],
-        "range": [
+        "base_weapon_range": [
             8.0,
-            8.0,
-            8.0
+            10.0,
+            12.0
         ],
-        "aoe": [
+        "base_weapon_aoe": [
             1.0,
             1.0,
             1.0
@@ -381,28 +366,27 @@
     },
     {
         "name": "nuclear rocket",
-        "damage_type": "explosive",
-        "weight": [
+        "base_weight": [
             200.0,
-            200.0,
-            200.0
+            150.0,
+            100.0
         ],
-        "cooldown": [
+        "base_weapon_cooldown": [
             6.0,
-            6.0,
-            6.0
+            4.5,
+            3.0
         ],
-        "damage": [
+        "base_weapon_damage_explosive": [
             300.0,
             375.0,
             450.0
         ],
-        "range": [
+        "base_weapon_range": [
             9.0,
-            9.0,
-            9.0
+            11.25,
+            13.5
         ],
-        "aoe": [
+        "base_weapon_aoe": [
             3.0,
             3.0,
             3.0
@@ -410,172 +394,165 @@
     },
     {
         "name": "light laser",
-        "damage_type": "laser",
-        "weight": [
+        "base_weight": [
             20.0,
-            20.0,
-            20.0
+            15.0,
+            10.0
         ],
-        "cooldown": [
+        "base_weapon_cooldown": [
             1.0,
-            1.0,
-            1.0
+            0.75,
+            0.5
         ],
-        "damage": [
+        "base_weapon_damage_laser": [
             8.0,
             10.0,
             12.0
         ],
-        "range": [
+        "base_weapon_range": [
             5.0,
-            5.0,
-            5.0
+            6.25,
+            7.5
         ]
     },
     {
         "name": "combined light laser",
-        "damage_type": "laser",
-        "weight": [
+        "base_weight": [
             50.0,
-            50.0,
-            50.0
+            37.5,
+            25.0
         ],
-        "cooldown": [
+        "base_weapon_cooldown": [
             1.0,
-            1.0,
-            1.0
+            0.75,
+            0.5
         ],
-        "damage": [
+        "base_weapon_damage_laser": [
             20.0,
             25.0,
             30.0
         ],
-        "range": [
+        "base_weapon_range": [
             6.0,
-            6.0,
-            6.0
+            7.5,
+            9.0
         ]
     },
     {
         "name": "heavy laser",
-        "damage_type": "laser",
-        "weight": [
+        "base_weight": [
             130.0,
-            130.0,
-            130.0
+            97.5,
+            65.0
         ],
-        "cooldown": [
+        "base_weapon_cooldown": [
             1.0,
-            1.0,
-            1.0
+            0.75,
+            0.5
         ],
-        "damage": [
+        "base_weapon_damage_laser": [
             45.0,
             56.25,
             67.5
         ],
-        "range": [
+        "base_weapon_range": [
             6.0,
-            6.0,
-            6.0
+            7.5,
+            9.0
         ]
     },
     {
         "name": "combined heavy laser",
-        "damage_type": "laser",
-        "weight": [
+        "base_weight": [
             300.0,
-            300.0,
-            300.0
+            225.0,
+            150.0
         ],
-        "cooldown": [
+        "base_weapon_cooldown": [
             1.0,
-            1.0,
-            1.0
+            0.75,
+            0.5
         ],
-        "damage": [
+        "base_weapon_damage_laser": [
             150.0,
             187.5,
             225.0
         ],
-        "range": [
+        "base_weapon_range": [
             7.0,
-            7.0,
-            7.0
+            8.75,
+            10.5
         ]
     },
     {
         "name": "plasma cannon",
-        "damage_type": "fusion",
-        "weight": [
+        "base_weight": [
             80.0,
-            80.0,
-            80.0
+            60.0,
+            40.0
         ],
-        "cooldown": [
+        "base_weapon_cooldown": [
             2.0,
-            2.0,
-            2.0
+            1.5,
+            1.0
         ],
-        "damage": [
+        "base_weapon_damage_fusion": [
             125.0,
             156.25,
             187.5
         ],
-        "range": [
+        "base_weapon_range": [
             5.0,
-            5.0,
-            5.0
+            6.25,
+            7.5
         ]
     },
     {
         "name": "plasma autocannon",
-        "damage_type": "fusion",
-        "weight": [
+        "base_weight": [
             170.0,
-            170.0,
-            170.0
+            127.5,
+            85.0
         ],
-        "cooldown": [
+        "base_weapon_cooldown": [
             1.0,
-            1.0,
-            1.0
+            0.75,
+            0.5
         ],
-        "damage": [
+        "base_weapon_damage_fusion": [
             110.0,
             137.5,
             165.0
         ],
-        "range": [
+        "base_weapon_range": [
             5.0,
-            5.0,
-            5.0
+            6.25,
+            7.5
         ]
     },
     {
         "name": "plasma artillery",
-        "damage_type": "fusion",
-        "weight": [
+        "base_weight": [
             200.0,
-            200.0,
-            200.0
+            150.0,
+            100.0
         ],
-        "cooldown": [
+        "base_weapon_cooldown": [
             3.0,
-            3.0,
-            3.0
+            2.25,
+            1.5
         ],
-        "damage": [
+        "base_weapon_damage_fusion": [
             100.0,
             125.0,
             150.0
         ],
-        "range": [
+        "base_weapon_range": [
             7.0,
-            7.0,
-            7.0
+            8.75,
+            10.5
         ],
-        "aoe": [
+        "base_weapon_aoe": [
             2.0,
             2.0,
             2.0
@@ -583,225 +560,216 @@
     },
     {
         "name": "fusion blade",
-        "damage_type": "fusion",
-        "weight": [
+        "base_weight": [
             15.0,
-            15.0,
-            15.0
+            11.25,
+            7.5
         ],
-        "cooldown": [
+        "base_weapon_cooldown": [
             1.0,
-            1.0,
-            1.0
+            0.75,
+            0.5
         ],
-        "damage": [
+        "base_weapon_damage_fusion": [
             15.0,
             18.75,
             22.5
         ],
-        "range": [
+        "base_weapon_range": [
             1.0,
-            1.0,
-            1.0
+            1.25,
+            1.5
         ]
     },
     {
         "name": "fusion lance",
-        "damage_type": "fusion",
-        "weight": [
+        "base_weight": [
             50.0,
-            50.0,
-            50.0
+            37.5,
+            25.0
         ],
-        "cooldown": [
+        "base_weapon_cooldown": [
             1.0,
-            1.0,
-            1.0
+            0.75,
+            0.5
         ],
-        "damage": [
+        "base_weapon_damage_fusion": [
             45.0,
             56.25,
             67.5
         ],
-        "range": [
+        "base_weapon_range": [
             2.0,
-            2.0,
-            2.0
+            2.5,
+            3.0
         ]
     },
     {
         "name": "light railgun",
-        "damage_type": "impact",
-        "weight": [
+        "base_weight": [
             50.0,
-            50.0,
-            50.0
+            37.5,
+            25.0
         ],
-        "cooldown": [
+        "base_weapon_cooldown": [
             2.0,
-            2.0,
-            2.0
+            1.5,
+            1.0
         ],
-        "damage": [
+        "base_weapon_damage_impact": [
             90.0,
             112.5,
             135.0
         ],
-        "range": [
+        "base_weapon_range": [
             6.0,
-            6.0,
-            6.0
+            7.5,
+            9.0
         ]
     },
     {
         "name": "heavy railgun",
-        "damage_type": "impact",
-        "weight": [
+        "base_weight": [
             190.0,
-            190.0,
-            190.0
+            142.5,
+            95.0
         ],
-        "cooldown": [
+        "base_weapon_cooldown": [
             3.0,
-            3.0,
-            3.0
+            2.25,
+            1.5
         ],
-        "damage": [
+        "base_weapon_damage_impact": [
             450.0,
             562.5,
             675.0
         ],
-        "range": [
+        "base_weapon_range": [
             7.0,
-            7.0,
-            7.0
+            8.75,
+            10.5
         ]
     },
     {
         "name": "supercharged railgun",
-        "damage_type": "impact",
-        "weight": [
+        "base_weight": [
             240.0,
-            240.0,
-            240.0
+            180.0,
+            120.0
         ],
-        "cooldown": [
+        "base_weapon_cooldown": [
             4.0,
-            4.0,
-            4.0
+            3.0,
+            2.0
         ],
-        "damage": [
+        "base_weapon_damage_impact": [
             1000.0,
             1250.0,
             1500.0
         ],
-        "range": [
+        "base_weapon_range": [
             8.0,
-            8.0,
-            8.0
+            10.0,
+            12.0
         ]
     },
     {
         "name": "discharge beam",
-        "damage_type": "emp",
-        "weight": [
+        "base_weight": [
             40.0,
-            40.0,
-            40.0
+            30.0,
+            20.0
         ],
-        "cooldown": [
+        "base_weapon_cooldown": [
             2.0,
-            2.0,
-            2.0
+            1.5,
+            1.0
         ],
-        "damage_battery": [
+        "base_weapon_damage_battery": [
             3.0,
             3.0,
             3.0
         ],
-        "range": [
+        "base_weapon_range": [
             4.0,
-            4.0,
-            4.0
-        ]
-    },
-    {
-        "name": "haywire beam",
-        "damage_type": "emp",
-        "weight": [
-            50.0,
-            50.0,
-            50.0
-        ],
-        "cooldown": [
             5.0,
-            5.0,
-            5.0
-        ],
-        "damage": [
-            80.0,
-            100.0,
-            120.0
-        ],
-        "damage_battery": [
-            5.0,
-            5.0,
-            5.0
-        ],
-        "range": [
-            6.0,
-            6.0,
             6.0
         ]
     },
     {
-        "name": "stun beam",
-        "damage_type": "emp",
-        "weight": [
-            80.0,
-            80.0,
-            80.0
+        "name": "haywire beam",
+        "base_weight": [
+            50.0,
+            37.5,
+            25.0
         ],
-        "cooldown": [
+        "base_weapon_cooldown": [
+            5.0,
+            3.75,
+            2.5
+        ],
+        "base_weapon_damage_emp": [
+            80.0,
+            100.0,
+            120.0
+        ],
+        "base_weapon_damage_battery": [
             5.0,
             5.0,
             5.0
         ],
-        "stun": [
+        "base_weapon_range": [
+            6.0,
+            7.5,
+            9.0
+        ]
+    },
+    {
+        "name": "stun beam",
+        "base_weight": [
+            80.0,
+            60.0,
+            40.0
+        ],
+        "base_weapon_cooldown": [
+            5.0,
+            3.75,
+            2.5
+        ],
+        "base_weapon_stun": [
             1.0,
             1.0,
             1.0
         ],
-        "range": [
+        "base_weapon_range": [
             4.0,
-            4.0,
-            4.0
+            5.0,
+            6.0
         ]
     },
     {
         "name": "amplified discharge impulse",
-        "damage_type": "emp",
-        "weight": [
+        "base_weight": [
             150.0,
-            150.0,
-            150.0
+            112.5,
+            75.0
         ],
-        "cooldown": [
+        "base_weapon_cooldown": [
             3.0,
-            3.0,
-            3.0
+            2.25,
+            1.5
         ],
-        "damage_battery": [
+        "base_weapon_damage_battery": [
             10.0,
             10.0,
             10.0
         ],
-        "range": [
+        "base_weapon_range": [
             5.0,
-            5.0,
-            5.0
+            6.25,
+            7.5
         ],
-        "aoe": [
+        "base_weapon_aoe": [
             1.0,
             1.0,
             1.0
@@ -809,139 +777,134 @@
     },
     {
         "name": "amplified haywire beam",
-        "damage_type": "emp",
-        "weight": [
+        "base_weight": [
             120.0,
-            120.0,
-            120.0
+            90.0,
+            60.0
         ],
-        "cooldown": [
+        "base_weapon_cooldown": [
             5.0,
-            5.0,
-            5.0
+            3.75,
+            2.5
         ],
-        "damage": [
+        "base_weapon_damage_emp": [
             200.0,
             250.0,
             300.0
         ],
-        "damage_battery": [
+        "base_weapon_damage_battery": [
             12.0,
             12.0,
             12.0
         ],
-        "range": [
+        "base_weapon_range": [
             6.0,
-            6.0,
-            6.0
+            7.5,
+            9.0
         ]
     },
     {
         "name": "amplified stun beam",
-        "damage_type": "emp",
-        "weight": [
+        "base_weight": [
             200.0,
-            200.0,
-            200.0
+            150.0,
+            100.0
         ],
-        "cooldown": [
+        "base_weapon_cooldown": [
             6.0,
-            6.0,
-            6.0
+            4.5,
+            3.0
         ],
-        "stun": [
+        "base_weapon_stun": [
             1.0,
             1.0,
             1.0
         ],
-        "range": [
+        "base_weapon_range": [
             4.0,
-            4.0,
-            4.0
+            5.0,
+            6.0
         ]
     },
     {
         "name": "ion cannon",
-        "damage_type": "emp",
-        "weight": [
+        "base_weight": [
             75.0,
-            75.0,
-            75.0
+            56.25,
+            37.5
         ],
-        "cooldown": [
+        "base_weapon_cooldown": [
             2.0,
-            2.0,
-            2.0
+            1.5,
+            1.0
         ],
-        "reduce_fusion": [
+        "base_weapon_reduce_fusion": [
             1.0,
             1.0,
             1.0
         ],
-        "reduce_laser": [
+        "base_weapon_reduce_laser": [
             1.0,
             1.0,
             1.0
         ],
-        "range": [
+        "base_weapon_range": [
             5.0,
-            5.0,
-            5.0
+            6.25,
+            7.5
         ]
     },
     {
         "name": "heavy ion cannon",
-        "damage_type": "emp",
-        "weight": [
+        "base_weight": [
             150.0,
-            150.0,
-            150.0
+            112.5,
+            75.0
         ],
-        "cooldown": [
+        "base_weapon_cooldown": [
+            1.0,
+            0.75,
+            0.5
+        ],
+        "base_weapon_reduce_fusion": [
             1.0,
             1.0,
             1.0
         ],
-        "reduce_fusion": [
+        "base_weapon_reduce_laser": [
             1.0,
             1.0,
             1.0
         ],
-        "reduce_laser": [
-            1.0,
-            1.0,
-            1.0
-        ],
-        "range": [
+        "base_weapon_range": [
             6.0,
-            6.0,
-            6.0
+            7.5,
+            9.0
         ]
     },
     {
         "name": "explosive charges",
-        "damage_type": "explosive",
-        "weight": [
+        "base_weight": [
             5.0,
-            5.0,
+            3.75,
+            2.5
+        ],
+        "base_weapon_cooldown": [
+            10.0,
+            7.5,
             5.0
         ],
-        "cooldown": [
-            10.0,
-            10.0,
-            10.0
-        ],
-        "damage": [
+        "base_weapon_damage_explosive": [
             100.0,
             125.0,
             150.0
         ],
-        "range": [
+        "base_weapon_range": [
             0.0,
             0.0,
             0.0
         ],
-        "aoe": [
+        "base_weapon_aoe": [
             2.0,
             2.0,
             2.0
@@ -949,26 +912,25 @@
     },
     {
         "name": "javelin",
-        "damage_type": "explosive",
-        "weight": [
+        "base_weight": [
             60.0,
-            60.0,
-            60.0
+            45.0,
+            30.0
         ],
-        "cooldown": [
+        "base_weapon_cooldown": [
             2.0,
-            2.0,
-            2.0
+            1.5,
+            1.0
         ],
-        "damage": [
+        "base_weapon_damage_explosive": [
             40.0,
             50.0,
             60.0
         ],
-        "range": [
+        "base_weapon_range": [
             7.0,
-            7.0,
-            7.0
+            8.75,
+            10.5
         ]
     }
 ]

@@ -35,7 +35,7 @@ void json_dump_array (char *str, void *arr, int len, char type) {
     sprintf(str+cur, "[ "); cur = strlen(str);
     for (int i=0; i<len; i++) { 
         if (type == 'i') {
-            sprintf(str+cur, "%d", ((int)(intptr_t)(arr))[i]); 
+            sprintf(str+cur, "%d", ((int*)(intptr_t)(arr))[i]); 
             cur = strlen(str);
         }
         if (type == 'c') {
