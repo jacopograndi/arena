@@ -60,6 +60,7 @@ typedef struct {
 typedef struct {
     stats_frame frame;
     stats_weapon weapon[8];
+    int weaponlen;
 } stats_unit;
 
 

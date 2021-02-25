@@ -771,6 +771,7 @@ void info_parse_json (infos *info, char *json, char *obj) {
 
 #define LOOP(x) for (int z=0; z<x; z++)
 
+// weapon = 0
 void stats_weapon_init (stats_weapon *weap) {
     LOOP(7) weap->damage[z] = 0;
     weap->cooldown = 0;
@@ -782,6 +783,7 @@ void stats_weapon_init (stats_weapon *weap) {
     weap->charge_per_shot = 0;
 }
 
+// frame = 0
 void stats_frame_init (stats_frame *frame) {
     frame->hp = 0;
     frame->weight = 0;
@@ -796,6 +798,7 @@ void stats_frame_init (stats_frame *frame) {
     LOOP(7) frame->armor[z] = 0;
 }
 
+// stats = 0
 void stats_comp_init (stats_comp *comp) {
     strcpy(comp->name, "-");
     strcpy(comp->description, "-");
@@ -807,35 +810,36 @@ void stats_comp_init (stats_comp *comp) {
     }
 }
 
-#define PRINT(obj, attr, type) { \
+
+#define PRINT_STRUCT(obj, attr, type) { \
     if (obj->attr != 0) {\
         printf("    "#attr": %"#type"\n", obj->attr); \
     }\
 }
 
 void stats_frame_printf (stats_frame *frame) {
-    PRINT(frame, hp, f);
-    PRINT(frame, weight, f);
-    PRINT(frame, weight_max, f);
-    PRINT(frame, slot_weapon, d);
-    PRINT(frame, slot_armor, d);
-    PRINT(frame, slot_aug, d);
-    PRINT(frame, speed, f);
-    PRINT(frame, upkeep, f);
-    PRINT(frame, capacity, f);
-    PRINT(frame, recharge, f);
-    LOOP(7) PRINT(frame, armor[z], f);
+    PRINT_STRUCT(frame, hp, f);
+    PRINT_STRUCT(frame, weight, f);
+    PRINT_STRUCT(frame, weight_max, f);
+    PRINT_STRUCT(frame, slot_weapon, d);
+    PRINT_STRUCT(frame, slot_armor, d);
+    PRINT_STRUCT(frame, slot_aug, d);
+    PRINT_STRUCT(frame, speed, f);
+    PRINT_STRUCT(frame, upkeep, f);
+    PRINT_STRUCT(frame, capacity, f);
+    PRINT_STRUCT(frame, recharge, f);
+    LOOP(7) PRINT_STRUCT(frame, armor[z], f);
 }
 
 void stats_weapon_printf (stats_weapon *weap) {
-    LOOP(7) PRINT(weap, damage[z], f);
-    PRINT(weap, cooldown, f);
-    PRINT(weap, aoe, f);
-    PRINT(weap, knockback, f);
-    PRINT(weap, damage_battery, f);
-    PRINT(weap, stun, f);
-    PRINT(weap, charge_per_shot, f);
-    LOOP(7) PRINT(weap, armor_reduce[z], f);
+    LOOP(7) PRINT_STRUCT(weap, damage[z], f);
+    PRINT_STRUCT(weap, cooldown, f);
+    PRINT_STRUCT(weap, aoe, f);
+    PRINT_STRUCT(weap, knockback, f);
+    PRINT_STRUCT(weap, damage_battery, f);
+    PRINT_STRUCT(weap, stun, f);
+    PRINT_STRUCT(weap, charge_per_shot, f);
+    LOOP(7) PRINT_STRUCT(weap, armor_reduce[z], f);
 }
 
 void stats_comp_printf (stats_comp *comp) {
@@ -850,9 +854,156 @@ void stats_comp_printf (stats_comp *comp) {
     }
 }
 
+
+// stats_unit = 0
+void stats_unit_init (stats_unit *s) {
+    stats_frame_init(&s->frame);
+    LOOP(8) stats_weapon_init(&s->weapon[z]);
+    s->weaponlen = 0;
+}
+
+// frame a += b
+void stats_frame_sum (stats_frame *a, stats_frame *b) {
+    a->hp += b->hp;
+    a->weight += b->weight;
+    a->weight_max += b->weight_max;
+    a->slot_weapon += b->slot_weapon;
+    a->slot_armor += b->slot_armor;
+    a->slot_aug += b->slot_aug;
+    a->speed += b->speed;
+    a->upkeep += b->upkeep;
+    a->capacity += b->capacity;
+    a->recharge += b->recharge;
+    LOOP(7) a->armor[z] += b->armor[z];
+}
+
+// weapon a += b
+void stats_weapon_sum (stats_weapon *a, stats_weapon *b) {
+    LOOP(7) a->damage[z] += b->damage[z];
+    a->cooldown += b->cooldown;
+    a->aoe += b->aoe;
+    a->knockback += b->knockback;
+    a->damage_battery += b->damage_battery;
+    a->stun += b->stun;
+    LOOP(7) a->armor_reduce[z] += b->armor_reduce[z];
+    a->charge_per_shot += b->charge_per_shot;
+}
+
+// stats_unit a += b
+void stats_unit_sum (stats_unit *a, stats_unit *b) {
+    stats_frame_sum(&a->frame, &b->frame);
+    LOOP(8) stats_weapon_sum(&a->weapon[z], &b->weapon[z]);
+}
+
+// base, perc += comp.base, comp.perc
+void stats_unit_comp_sum (stats_unit *base, stats_unit *perc, 
+    stats_comp *comp, int lvl) 
+{
+    stats_frame_sum (&base->frame, &comp->base[lvl]);
+    stats_frame_sum (&perc->frame, &comp->perc[lvl]);
+    for (int i=0; i<8; i++) {
+        stats_weapon_sum (&base->weapon[i], &comp->base_weapon[lvl]);
+        stats_weapon_sum (&perc->weapon[i], &comp->perc_weapon[lvl]);
+    }
+}
+
+#define PERC_NORM(x) x*0.01+1
+
+// frame a *= b
+void stats_frame_mul (stats_frame *a, stats_frame *b) {
+    a->hp *= PERC_NORM(b->hp);
+    a->weight *= PERC_NORM(b->weight);
+    a->weight_max *= PERC_NORM(b->weight_max);
+    a->slot_weapon *= PERC_NORM(b->slot_weapon);
+    a->slot_armor *= PERC_NORM(b->slot_armor);
+    a->slot_aug *= PERC_NORM(b->slot_aug);
+    a->speed *= PERC_NORM(b->speed);
+    a->upkeep *= PERC_NORM(b->upkeep);
+    a->capacity *= PERC_NORM(b->capacity);
+    a->recharge *= PERC_NORM(b->recharge);
+    LOOP(7) a->armor[z] *= PERC_NORM(b->armor[z]);
+}
+
+// weapon a *= b
+void stats_weapon_mul (stats_weapon *a, stats_weapon *b) {
+    LOOP(7) a->damage[z] *= PERC_NORM(b->damage[z]);
+    a->cooldown *= PERC_NORM(b->cooldown);
+    a->aoe *= PERC_NORM(b->aoe);
+    a->knockback *= PERC_NORM(b->knockback);
+    a->damage_battery *= PERC_NORM(b->damage_battery);
+    a->stun *= PERC_NORM(b->stun);
+    LOOP(7) a->armor_reduce[z] *= PERC_NORM(b->armor_reduce[z]);
+    a->charge_per_shot * PERC_NORM(b->charge_per_shot);
+}
+
+void stats_unit_apply_perc (stats_unit *base, stats_unit *perc) {
+    stats_frame_mul (&base->frame, &perc->frame);
+    for (int i=0; i<8; i++) {
+        stats_weapon_mul (&base->weapon[i], &perc->weapon[i]);
+    }
+}
+
+// compute all necessary components stats of u into base
+void stats_unit_compute (infos *info, info_unit *u, stats_unit *base) {
+    stats_unit_init(base);
+    stats_unit perc; stats_unit_init(&perc);    
+    {
+        stats_comp *comp = &info->stats[STATS_CHASSIS][u->chassis];
+        int lvl = u->levels[LEVEL_CHASSIS];
+        stats_unit_comp_sum(base, &perc, comp, lvl);
+    };
+    
+    {
+        stats_comp *comp = &info->stats[STATS_BRAIN][u->brain];
+        int lvl = u->levels[LEVEL_BRAIN];
+        stats_unit_comp_sum(base, &perc, comp, lvl);
+    };
+    
+    {
+        stats_comp *comp = &info->stats[STATS_BATTERY][u->battery];
+        int lvl = u->levels[LEVEL_BATTERY];
+        stats_unit_comp_sum(base, &perc, comp, lvl);
+    };
+    
+    int wn = 0;
+    for (int i=0; i<8; i++) {
+        if (u->weapons[i] != -1) {
+            stats_comp *comp = &info->stats[STATS_WEAPONS][u->weapons[i]];
+            int lvl = u->levels[LEVEL_WEAPONS+i];
+            stats_frame_sum (&base->frame, &comp->base[lvl]);
+            stats_frame_sum (&perc.frame, &comp->perc[lvl]);
+            stats_weapon_sum (&base->weapon[wn], &comp->base_weapon[lvl]);
+            stats_weapon_sum (&perc.weapon[wn], &comp->perc_weapon[lvl]);
+            wn ++;
+        }
+    }
+    
+    for (int i=0; i<8; i++) {
+        if (u->armor[i] != -1) {
+            stats_comp *comp = &info->stats[STATS_ARMOR][u->armor[i]];
+            int lvl = u->levels[LEVEL_ARMOR+i];
+            stats_unit_comp_sum(base, &perc, comp, lvl);
+        }
+    }
+    
+    for (int i=0; i<16; i++) {
+        if (u->augs[i] != -1) {
+            stats_comp *comp = &info->stats[STATS_AUGS][u->augs[i]];
+            int lvl = u->levels[LEVEL_AUGS+i];
+            stats_unit_comp_sum(base, &perc, comp, lvl);
+        }
+    }
+    
+    stats_unit_apply_perc(base, &perc);
+}
+
+void stats_unit_printf (stats_unit *u) {
+    stats_frame_printf (&u->frame);
+    LOOP(8) stats_weapon_printf(u->weapon +z);
+}
+
 #define MATCH(frame, attr, type) {\
     if (strcmp(key, #frame"_"#attr) == 0) {\
-        printf("  matched %s\n", #attr);\
         int rt = json_parse_subtokens(json, t, r, i+1); \
         if (type == 'f') {\
             float v[3]; json_parse_array(json, v, t+i+2, rt-1, type);\
@@ -868,7 +1019,6 @@ void stats_comp_printf (stats_comp *comp) {
 #define MATCH_ARRAY(frame, attr, attr2, type, num) {\
     char str[64]; sprintf(str, "%s%s", #frame"_"#attr"_", attr2);\
     if (strcmp(key, str) == 0) {\
-        printf("  matched\n");\
         int rt = json_parse_subtokens(json, t, r, i+1); \
         float v[3]; json_parse_array(json, v, t+i+2, rt-1, type);\
         LOOP(MAXLEVEL) comp->frame[z].attr[num] = v[z];\
@@ -968,7 +1118,7 @@ void info_stats_parse (infos *info, char *json, int stats_type) {
             info->statslen[stats_type] ++;
             i += rt-1;
             
-            stats_comp_printf(comp);
+            //stats_comp_printf(comp);
         }
     } 
 }
@@ -1022,6 +1172,11 @@ void info_load (infos *info) {
             info_stats_parse(info, json, i);
         } else { printf("error: out of memory in allocating for stats"); }
     }
+    
+    info_unit *u = info->templates+0;
+    stats_unit base;
+    stats_unit_compute(info, u, &base);
+    stats_unit_printf(&base);
 }
 
 
