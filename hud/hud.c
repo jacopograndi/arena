@@ -987,7 +987,7 @@ void hud_render_overlay_game (overlay_game *og, MKb *mkb,
     
     float cost = 0;
     for (int i=0; i<gst->army_bp[0].uslen; i++) {
-        cost += info_unit_get_cost(info, &gst->army_bp[0].us[i].info);
+        cost += 10;
     }
     float cx = og->rect_army.x+5;
     float cy = og->rect_army.y+5 + 30;
@@ -1102,7 +1102,7 @@ void hud_render_overlay_battle (overlay_battle *ob, MKb *mkb,
     { 
         float cost = 0;
         for (int i=0; i<gst->army_bp[0].uslen; i++) {
-            cost += info_unit_get_cost(info, &gst->army_bp[0].us[i].info);
+            cost += 10;
         }
         float p[2] = { x+10, y+h };
         char s[64]; sprintf(s, "COST: %.0f", cost);
@@ -1110,7 +1110,7 @@ void hud_render_overlay_battle (overlay_battle *ob, MKb *mkb,
         
         float cost2 = 0;
         for (int i=0; i<gst->army_bp[1].uslen; i++) {
-            cost2 += info_unit_get_cost(info, &gst->army_bp[1].us[i].info);
+            cost2 += 10;
         }
         char p2[64]; sprintf(p2, "COST: %.0f", cost2);
         float p2w = get_text_width(p2, t);
@@ -1122,7 +1122,7 @@ void hud_render_overlay_battle (overlay_battle *ob, MKb *mkb,
         for (int i=0; i<gst->ar.uslen; i++) {
             if (gst->ar.us[i].hp <= 0) continue;
             if (gst->ar.us[i].owner == 0) {
-                dps += info_unit_get_dps(info, &gst->ar.us[i].info);
+                dps += 3;
             }
         }
         float p[2] = { x+10, y+h };
@@ -1133,7 +1133,7 @@ void hud_render_overlay_battle (overlay_battle *ob, MKb *mkb,
         for (int i=0; i<gst->ar.uslen; i++) {
             if (gst->ar.us[i].hp <= 0) continue;
             if (gst->ar.us[i].owner == 1) {
-                dps2 += info_unit_get_dps(info, &gst->ar.us[i].info);
+                dps2 += 3;
             }
         }
         char p2[64]; sprintf(p2, "DAMAGE: %.0f", dps2);

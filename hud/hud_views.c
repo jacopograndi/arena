@@ -115,7 +115,6 @@ void render_view_chassis (SDL_Renderer* rend, txtd *t, int px, int py,
     infos *info, int chassis, int lvl, SDL_Texture *sprites) 
 {
     if (chassis != -1) {
-        info_chassis *ch = info->chassis+chassis;
         int h = 10;
         
         stats_comp *comp = info->stats[STATS_CHASSIS]+chassis;
@@ -136,7 +135,6 @@ void render_view_battery (SDL_Renderer* rend, txtd *t, int px, int py,
     infos *info, int batt, int lvl) 
 {
     if (batt != -1) {
-        info_battery *battery = info->batteries+batt;
         int h = 10;
         
         stats_comp *comp = info->stats[STATS_BATTERY]+batt;
@@ -156,7 +154,6 @@ void render_view_armor (SDL_Renderer* rend, txtd *t, int px, int py,
     infos *info, int armor, int lvl) 
 {
     if (armor != -1) {
-        info_armor *arm = info->armors+armor;
         int h = 10;
         
         stats_comp *comp = info->stats[STATS_ARMOR]+armor;
@@ -174,7 +171,6 @@ void render_view_armor_detail (SDL_Renderer* rend, txtd *t, int px, int py,
     infos *info, int armor, int lvl) 
 {
     if (armor != -1) {
-        info_armor *arm = info->armors+armor;
         int h = 10;
                 
         stats_comp *comp = info->stats[STATS_ARMOR]+armor;
@@ -195,7 +191,6 @@ void render_view_weapon (SDL_Renderer* rend, txtd *t, int px, int py,
     infos *info, int weapon, int lvl) 
 {
     if (weapon != -1) {
-        info_weapon *weap = info->weapons+weapon;
         int h = 10;
 
         stats_comp *comp = info->stats[STATS_WEAPONS]+weapon;
@@ -215,7 +210,6 @@ void render_view_weapon_detail (SDL_Renderer* rend, txtd *t,
     int px, int py, infos *info, int weapon, int lvl)
 {
     if (weapon != -1) {
-        info_weapon *weap = info->weapons+weapon;
         int h = 10;
 
         stats_comp *comp = info->stats[STATS_WEAPONS]+weapon;
@@ -236,7 +230,6 @@ void render_view_aug (SDL_Renderer* rend, txtd *t, int px, int py,
     infos *info, int aug, int lvl) 
 {
     if (aug != -1) {
-        info_aug *augm = info->augs+aug;
         int h = 10;
         
         stats_comp *comp = info->stats[STATS_AUGS]+aug;
@@ -254,7 +247,6 @@ void render_view_aug_detail (SDL_Renderer* rend, txtd *t, int px, int py,
     infos *info, int aug, int lvl) 
 {
     if (aug != -1) {
-        info_aug *augm = info->augs+aug;
         int h = 10;
         
         stats_comp *comp = info->stats[STATS_AUGS]+aug;
