@@ -1,5 +1,10 @@
 tasks: (date)
 
+[ ] implement aoe (issued on 02:03:21)
+[ ] implement knockback (issued on 02:03:21)
+[ ] implement stun (issued on 02:03:21)
+[ ] implement armor reduction (issued on 02:03:21)
+[ ] implement battery damage (issued on 02:03:21)
 [ ] implement healing beam (issued on 24:02:21)
 [ ] implement battery recharge beam (issued on 24:02:21)
 [ ] implement net hud and minilobby (issued on 18:02:21)
@@ -7,7 +12,6 @@ tasks: (date)
 [ ] implement lobby cost constraints (issued on 18:02:21)
 [ ] implement edit unit directly (issued on 18:02:21)
 [ ] implement persistent settings ini (issued on 18:02:21)
-[ ] implement stats hud view (issued on 18:02:21)
 [ ] implement explosions (issued on 18:02:21)
 [ ] design 3d units (issued on 18:02:21)
 [ ] design 3d map tiles (issued on 18:02:21)
@@ -15,7 +19,8 @@ tasks: (date)
 [ ] design component sprites (issued on 18:02:21)
 [ ] implement sound (issued on 18:02:21)
 
-
+[x] migrated to cmake env (issued on 01:03:21, done on 02:03:21)
+[x] implement stats hud view (issued on 18:02:21, done on 25:02:21)
 [x] implement fire animation (issued on 18:02:21, done on 24:02:21)
 [x] implement move animation (issued on 18:02:21, done on 24:02:21)
 [x] implement army hud view (issued on 18:02:21, done on 22:02:21)
@@ -34,6 +39,7 @@ bugs:
 
 [ ] symmetric integration (found on 18:02:21)
     (on army movement and fire, equal armies should fair equally)
+[ ] cross platform net broken (found on 02:03:21)
 
 
 testing:

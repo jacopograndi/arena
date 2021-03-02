@@ -89,6 +89,8 @@ int net_client_connect (net_client *c, char ip[], int port) {
         {
             p_socket_address_free (c->addr_server);
             p_socket_free (c->socket);
+            c->socket = NULL;
+            c->addr_server = NULL;
             printf("error client socket freed\n");
             return 1;
         }

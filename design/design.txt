@@ -2,9 +2,52 @@ major component redesign:
 every component has a big struct with everything
 when using the unit, condensate every component's struct into one, which is
 used in parallel to the army array
+-> i actually did it i cant believe it.
 
+i want an overworld map graph
+why would you want to traverse the graph? 
+  to get better loot 
+  to get to the final boss
+  to evacuate -> i like this one
+what is in the nodes? 
+  battles and loot
+  
+expansion: 
+    who are you?
+        a small army
+    what is the means of transportation?
+        a transport airship
+        a train
+        by foot, they are all vehicles afterall
+    what's the thing? the objective?
+        planetary explosion, evacuate
+        important information dispatching, get to comms facility
+        retreat to safety through a battlefield
+    do everybody know about the thing?
+        no, only you
+        yes, everybody is scrambling to save themself
+    what's the incentive to not blow up the infrastructure?
+        they don't even know
+        they need it
+    i need battles to happen:
+        there is a battlefield
+        everybody walks around with an army
+        there are enemy entities with the same objective as the player       
 
-
+raid:
+    you and a small army are dropped in enemy territory
+    
+    the objective is to 
+        make a big army
+            by exploring and finding stuff
+            by battleing and scrapping enemy stuff
+            by events
+        get to a spaceship
+        
+    you go around by train, combat troops do not transport themselves
+    every station has events/battles/shops
+    when you have a large enough army, get to a large spaceship and leave
+    the enemy redirects forces to fight you off, so be quick
 
 
 descript: arena clone + autochess
