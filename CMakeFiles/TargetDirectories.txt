@@ -1,3 +1,0 @@
-C:/Users/jaksk/Desktop/dev/zbackups/descript cmake fail/CMakeFiles/edit_cache.dir
-C:/Users/jaksk/Desktop/dev/zbackups/descript cmake fail/CMakeFiles/Arena.dir
-C:/Users/jaksk/Desktop/dev/zbackups/descript cmake fail/CMakeFiles/rebuild_cache.dir
