@@ -1,8 +1,8 @@
-# Install script for directory: C:/Users/jaksk/Desktop/dev/zbackups/descript cmake fail
+# Install script for directory: C:/Users/jaksk/Desktop/dev/_cgames/descript
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
-  set(CMAKE_INSTALL_PREFIX "C:/Program Files (x86)/Descript")
+  set(CMAKE_INSTALL_PREFIX "C:/Program Files (x86)/Arena")
 endif()
 string(REGEX REPLACE "/$" "" CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
 
@@ -45,5 +45,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "C:/Users/jaksk/Desktop/dev/zbackups/descript cmake fail/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "C:/Users/jaksk/Desktop/dev/_cgames/descript/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")
