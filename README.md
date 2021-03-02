@@ -1,8 +1,11 @@
-# hello
+# :o
 
-in order to compile 
-* have the sdl2 library at C:\MinGW_libs\include
-* have the pylibsys library at C:\MinGW_libs\include
-* have .a files in C:\MinGW_libs\libs
+in order to compile in windows
+* have cmake
+* have mingw32 (from the 64 bit version)
+* have the sdl2 includes at C:/MinGW_libs/include/SDL2
+* have the plibsys includes at C:/MinGW_libs/include/plibsys
+* have lib files at C:/MinGW_libs/libs
 
-run lcb (link compile build), build will be in build folder
+run cmake -G "MinGW Makefiles"
+run mingw32-make
