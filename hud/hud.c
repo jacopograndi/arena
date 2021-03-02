@@ -44,7 +44,7 @@ void init_form_new_unit (graphic_settings *gs, form_new_unit *fnu, txtd *t) {
     
     SDL_Rect_init(&fnu->rect_chassis, x+20, y+20+145+10+30, 300, 300);
     SDL_Rect_init(&fnu->rect_brain, x+20, y+20+30, 145, 145);
-    SDL_Rect_init(&fnu->rect_battery, 0+25, y+20+30, 145, 145);
+    SDL_Rect_init(&fnu->rect_battery, x+150+25, y+20+30, 145, 145);
     for (int i=0; i<8; i++) {
         SDL_Rect_init(&fnu->rect_weapons[i], 
             x+20+300+10+30, y+20+120*i +30, 200, 110);
@@ -376,7 +376,7 @@ void hud_process_form_new_unit (graphic_settings *gs, hud *h, MKb *mkb,
                     }
                 }
             }
-            for (int i=0; i<comp->base[lc].slot_armor; i++) {
+            for (int i=0; i<comp->base[lc].slot_aug; i++) {
                 float possa[2] = { 
                     h->fnu.rect_augs[i].x, h->fnu.rect_augs[i].y };
                 float sizesa[2] = { 
@@ -655,7 +655,7 @@ void hud_process_overlay_game (graphic_settings *gs, hud *h, MKb *mkb,
             float wjoin = get_text_width("join game", t);
             float pn[2] = { h->og.join_game.pos[0]+wjoin + 4*2+10, 
                 h->og.join_game.pos[1]+4 };
-            char sn[64]; sprintf(sn, "IP: %s", h->og.playername);
+            char sn[64]; sprintf(sn, "IP: %s", h->og.ip);
             float sizen[2] = { get_text_width(sn, t), 10 };
             if (pt_rect(mousepos, pn, sizen)) {
                 h->nameedit = h->og.ip;
@@ -996,7 +996,12 @@ void hud_render_overlay_game (overlay_game *og, MKb *mkb,
     
     float cost = 0;
     for (int i=0; i<gst->army_bp[0].uslen; i++) {
-        cost += 10;
+        if (gst->army_bp[0].us[i].info.chassis != -1 
+        && gst->army_bp[0].us[i].owner == 0) {
+            stats_unit base;
+            stats_unit_compute(info, &gst->army_bp[0].us[i].info, &base);
+            cost += stats_compute_cost(&info->cost_weights, &base);
+        }
     }
     float cx = og->rect_army.x+5;
     float cy = og->rect_army.y+5 + 30;
@@ -1111,7 +1116,12 @@ void hud_render_overlay_battle (overlay_battle *ob, MKb *mkb,
     { 
         float cost = 0;
         for (int i=0; i<gst->army_bp[0].uslen; i++) {
-            cost += 10;
+            if (gst->army_bp[0].us[i].info.chassis != -1 
+            && gst->army_bp[0].us[i].owner == 0) {
+                stats_unit base;
+                stats_unit_compute(info, &gst->army_bp[0].us[i].info, &base);
+                cost += stats_compute_cost(&info->cost_weights, &base);
+            }
         }
         float p[2] = { x+10, y+h };
         char s[64]; sprintf(s, "COST: %.0f", cost);
@@ -1119,7 +1129,12 @@ void hud_render_overlay_battle (overlay_battle *ob, MKb *mkb,
         
         float cost2 = 0;
         for (int i=0; i<gst->army_bp[1].uslen; i++) {
-            cost2 += 10;
+            if (gst->army_bp[0].us[i].info.chassis != -1 
+            && gst->army_bp[0].us[i].owner == 1) {
+                stats_unit base;
+                stats_unit_compute(info, &gst->army_bp[0].us[i].info, &base);
+                cost += stats_compute_cost(&info->cost_weights, &base);
+            }
         }
         char p2[64]; sprintf(p2, "COST: %.0f", cost2);
         float p2w = get_text_width(p2, t);

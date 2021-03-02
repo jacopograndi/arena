@@ -80,6 +80,8 @@ typedef struct {
 
 typedef struct {
     char damage_types[7][32];
+    stats_unit cost_weights;
+    
     info_unit templates[MAXTEMPLATES];
     int templateslen;
     
@@ -89,13 +91,14 @@ typedef struct {
 
 void info_unit_init (info_unit *u);
 
-
 int stats_frame_sprintf (infos *info, stats_frame *frame, char arr[][64]);
 int stats_weapon_sprintf (infos *info, stats_weapon *weap, char arr[][64]);
 void stats_unit_compute (infos *info, info_unit *u, stats_unit *base);
 
 float stats_compute_damage (stats_weapon *weapon, stats_frame *frame, 
     float *red); 
+    
+float stats_compute_cost (stats_unit *w, stats_unit *base);
 
 void info_load (infos *info);
 

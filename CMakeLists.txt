@@ -40,6 +40,10 @@ add_executable(Arena
     umath/vec.h
     umath/intersect.c
     umath/intersect.h
+    test/test.c
+    test/test.h
+    test/test_gst.c
+    test/test_gst.h
     main.c)
 
 target_include_directories(Arena PUBLIC "C:/MinGW_libs/include")

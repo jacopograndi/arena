@@ -76,6 +76,7 @@ void gst_tobattle (gamestate *gst, infos *info) {
             gst->ar.us[gst->ar.uslen].owner = i;
         }
     }
+    
     gst_compute_stats(gst, info);
     gst_lastpos(gst);
     gst->starttime = FLT_MAX;
@@ -139,7 +140,9 @@ void gst_spawn_bullets (gamestate *gst, fxs *fx, a_dmg dmgs[], int dmgslen,
 
 int gst_check_victory (gamestate *gst) {
     int counts[gst->playernum], max=-1, imax = -1;
-    for (int i=0; i<gst->ar.uslen; i++) {
+    for (int i=0; i<gst->ar.uslen; i++) {        
+        if (gst->ar.us[i].hp <= 0) continue;
+        if (gst->ar.us[i].charge <= 0) continue;
         counts[gst->ar.us[i].owner] ++;
         if (counts[gst->ar.us[i].owner] > max) {
             imax = gst->ar.us[i].owner;
@@ -149,29 +152,32 @@ int gst_check_victory (gamestate *gst) {
     return imax;
 }
 
+void gst_next_turn (gamestate *gst, infos *info, fxs *fx, float t) {
+    gst_lastpos(gst);
+    gst->coveredtime += gst->turnspeed;
+    gst->turn ++;
+    map *m; army *ar;
+    gst_get_maparmy(gst, &m, &ar);
+    int move = army_move(info, ar, m, gst->ustats);
+    
+    a_dmg dmgs[1024*8];
+    int fire = army_fire(info, ar, m, dmgs, gst->ustats);
+    army_upkeep(info, ar, m, gst->ustats);
+    if (move == 0 && fire == 0) {
+        gst->turn_until_finish--;
+    } else { gst->turn_until_finish = 5; }
+    if (gst->turn_until_finish <= 0) {
+        gst->over = 1;
+    }
+    gst_spawn_bullets(gst, fx, dmgs, fire, t);
+}
+
 void gst_process (gamestate *gst, infos *info, fxs *fx, float t) {
     if (gst->state == 1) {
         if (gst->starttime > t) gst->starttime = t; 
         float t_elapsed = t-gst->starttime;
-        if (t_elapsed > gst->coveredtime) {
-            // next turn
-            gst_lastpos(gst);
-            gst->coveredtime += gst->turnspeed;
-            gst->turn ++;
-            map *m; army *ar;
-            gst_get_maparmy(gst, &m, &ar);
-            int move = army_move(info, ar, m, gst->ustats);
-            
-            a_dmg dmgs[1024*8];
-            int fire = army_fire(info, ar, m, dmgs, gst->ustats);
-            army_upkeep(info, ar, m, gst->ustats);
-            if (move == 0 && fire == 0) {
-                gst->turn_until_finish--;
-            } else { gst->turn_until_finish = 5; }
-            if (gst->turn_until_finish <= 0) {
-                gst->over = 1;
-            }
-            gst_spawn_bullets(gst, fx, dmgs, fire, t);
+        if (t_elapsed >= gst->coveredtime) {
+            gst_next_turn(gst, info, fx, t);
         }
     }
 }

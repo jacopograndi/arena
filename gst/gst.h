@@ -39,6 +39,9 @@ void gst_get_maparmy(gamestate *gst, map **m, army **ar);
 void gst_tobattle (gamestate *gst, infos *info);
 void gst_toeditor (gamestate *gst);
 
+void gst_next_turn (gamestate *gst, infos *info, fxs *fx, float t);
+int gst_check_victory (gamestate *gst);
+
 void gst_process (gamestate *gst, infos *info, fxs *fx, float t);
 void gst_render (SDL_Renderer *rend, SDL_Texture *txsprites, txtd *textd, 
     gamestate *gst, infos *info, float t);

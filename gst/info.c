@@ -31,7 +31,6 @@ int damage_type_map (char *strdmg) {
     printf("info: damage type unknown\n"); return -1; 
 }
 
-
 void info_unit_init (info_unit *u) {
     strcpy(u->name, "nameless");
     u->chassis = -1;
@@ -334,41 +333,115 @@ void stats_unit_comp_sum (stats_unit *base, stats_unit *perc,
     }
 }
 
-#define PERC_NORM(x) x*0.01+1
+float f_perc_norm (float x) { return x*0.01+1; }
 
 // frame a *= b
 void stats_frame_mul (stats_frame *a, stats_frame *b) {
-    a->hp *= PERC_NORM(b->hp);
-    a->weight *= PERC_NORM(b->weight);
-    a->weight_max *= PERC_NORM(b->weight_max);
-    a->slot_weapon *= PERC_NORM(b->slot_weapon);
-    a->slot_armor *= PERC_NORM(b->slot_armor);
-    a->slot_aug *= PERC_NORM(b->slot_aug);
-    a->speed *= PERC_NORM(b->speed);
-    a->upkeep *= PERC_NORM(b->upkeep);
-    a->capacity *= PERC_NORM(b->capacity);
-    a->recharge *= PERC_NORM(b->recharge);
-    LOOP(7) a->armor[z] *= PERC_NORM(b->armor[z]);
+    a->hp *= b->hp;
+    a->weight *= b->weight;
+    a->weight_max *= b->weight_max;
+    a->slot_weapon *= b->slot_weapon;
+    a->slot_armor *= b->slot_armor;
+    a->slot_aug *= b->slot_aug;
+    a->speed *= b->speed;
+    a->upkeep *= b->upkeep;
+    a->capacity *= b->capacity;
+    a->recharge *= b->recharge;
+    LOOP(7) a->armor[z] *= b->armor[z];
 }
 
 // weapon a *= b
 void stats_weapon_mul (stats_weapon *a, stats_weapon *b) {
-    LOOP(7) a->damage[z] *= PERC_NORM(b->damage[z]);
-    a->cooldown *= PERC_NORM(b->cooldown);
-    a->range *= PERC_NORM(b->range);
-    a->aoe *= PERC_NORM(b->aoe);
-    a->knockback *= PERC_NORM(b->knockback);
-    a->damage_battery *= PERC_NORM(b->damage_battery);
-    a->stun *= PERC_NORM(b->stun);
-    LOOP(7) a->armor_reduce[z] *= PERC_NORM(b->armor_reduce[z]);
-    a->charge_per_shot * PERC_NORM(b->charge_per_shot);
+    LOOP(7) a->damage[z] *= b->damage[z];
+    a->cooldown *= b->cooldown;
+    a->range *= b->range;
+    a->aoe *= b->aoe;
+    a->knockback *= b->knockback;
+    a->damage_battery *= b->damage_battery;
+    a->stun *= b->stun;
+    LOOP(7) a->armor_reduce[z] *= b->armor_reduce[z];
+    a->charge_per_shot *= b->charge_per_shot;
 }
 
-void stats_unit_apply_perc (stats_unit *base, stats_unit *perc) {
+void stats_unit_mul (stats_unit *base, stats_unit *perc) {
     stats_frame_mul (&base->frame, &perc->frame);
     for (int i=0; i<8; i++) {
         stats_weapon_mul (&base->weapon[i], &perc->weapon[i]);
     }
+}
+
+// map
+void stats_frame_map (stats_frame *a, float (*f)(float)) {
+    a->hp = f(a->hp);
+    a->weight = f(a->weight);
+    a->weight_max = f(a->weight_max);
+    a->slot_weapon = f(a->slot_weapon);
+    a->slot_armor = f(a->slot_armor);
+    a->slot_aug = f(a->slot_aug);
+    a->speed = f(a->speed);
+    a->upkeep = f(a->upkeep);
+    a->capacity = f(a->capacity);
+    a->recharge = f(a->recharge);
+    LOOP(7) a->armor[z] = f(a->armor[z]);
+}
+
+void stats_weapon_map (stats_weapon *a, float (*f)(float)) {
+    LOOP(7) a->damage[z] = f(a->damage[z]);
+    a->cooldown = f(a->cooldown);
+    a->range = f(a->range);
+    a->aoe = f(a->aoe);
+    a->knockback = f(a->knockback);
+    a->damage_battery = f(a->damage_battery);
+    a->stun = f(a->stun);
+    LOOP(7) a->armor_reduce[z] = f(a->armor_reduce[z]);
+    a->charge_per_shot = f(a->charge_per_shot);
+}
+
+void stats_unit_map (stats_unit *base, float (*f)(float)) {
+    stats_frame_map (&base->frame, f);
+    for (int i=0; i<8; i++) {
+        stats_weapon_map (&base->weapon[i], f);
+    }
+}
+
+// fold
+float stats_frame_fold (stats_frame *frame, float (*f)(float, float)) {
+    float v = 0;
+    v = f(v, frame->hp);
+    v = f(v, frame->weight);
+    v = f(v, frame->weight_max);
+    v = f(v, frame->slot_weapon);
+    v = f(v, frame->slot_armor);
+    v = f(v, frame->slot_aug);
+    v = f(v, frame->speed);
+    v = f(v, frame->upkeep);
+    v = f(v, frame->capacity);
+    v = f(v, frame->recharge);
+    LOOP(7) v = f(v, frame->armor[z]);
+    return v;
+}
+
+float stats_weapon_fold (stats_weapon *weapon, float (*f)(float, float)) {
+    float v = 0;
+    LOOP(7) v = f(v, weapon->damage[z]);
+    v = f(v, weapon->cooldown);
+    v = f(v, weapon->range);
+    v = f(v, weapon->aoe);
+    v = f(v, weapon->knockback);
+    v = f(v, weapon->damage_battery);
+    v = f(v, weapon->stun);
+    LOOP(7) v = f(v, weapon->armor_reduce[z]);
+    v = f(v, weapon->charge_per_shot);
+    return v;
+}
+
+float stats_unit_fold (stats_unit *base, float (*f)(float, float)) {
+    float v = 0;
+    v = f(v, stats_frame_fold (&base->frame, f));
+    for (int i=0; i<8; i++) {
+        v = f(v, stats_weapon_fold (&base->weapon[i], f));
+    }
+    return v;
 }
 
 // compute all necessary components stats of u into base
@@ -423,7 +496,8 @@ void stats_unit_compute (infos *info, info_unit *u, stats_unit *base) {
     }
     base->weaponlen = wn;
     
-    stats_unit_apply_perc(base, &perc);
+    stats_unit_map(&perc, f_perc_norm);
+    stats_unit_mul(base, &perc);
 }
 
 float stats_compute_damage (stats_weapon *weapon, stats_frame *frame, 
@@ -435,6 +509,23 @@ float stats_compute_damage (stats_weapon *weapon, stats_frame *frame,
         damage += weapon->damage[i] * (1- frame->armor[i]*0.01);
     }
     return damage;
+}
+
+float f_add1 (float x) { return x+1; }
+
+void cost_weights_init (stats_unit *w) {
+    stats_unit_init(w);
+    stats_unit_map(w, f_add1);
+}
+
+
+float f_sum (float a, float b) { return a+b; }
+
+float stats_compute_cost (stats_unit *w, stats_unit *base) {
+    stats_unit costed = *base;
+    stats_unit_mul(&costed, w);
+    float cost = stats_unit_fold(&costed, f_sum);
+    return cost;
 }
 
 
@@ -462,7 +553,6 @@ float stats_compute_damage (stats_weapon *weapon, stats_frame *frame,
     }\
 } 
 
-/* REMOVE AFTER THIS */ #include <conio.h>
 
 void stats_comp_parse (char *json, stats_comp *comp, jsmntok_t *t, int r, 
     infos *info) 
@@ -555,8 +645,6 @@ void info_stats_parse (infos *info, char *json, int stats_type) {
             stats_comp_parse(json, comp, t+i+1, rt, info);
             info->statslen[stats_type] ++;
             i += rt-1;
-            
-            //stats_comp_printf(info, comp);
         }
     } 
 }
@@ -577,6 +665,7 @@ void info_load (infos *info) {
     int size = 1024*64;
     char json[size];
     type_damage_map(info->damage_types);
+    cost_weights_init(&info->cost_weights);
     
     info->templateslen = 0;
     info_read_file(json, "content/templates/default.txt", size);
@@ -596,14 +685,15 @@ void info_load (infos *info) {
             info->statslen[i] = 0;
             info_read_file(json, files[i], size);
             info_stats_parse(info, json, i);
-            printf("info->statslen[%d]: %d\n", i, info->statslen[i]);
         } else { printf("error: out of memory in allocating for stats"); }
     }
     
+    /*
     info_unit *u = info->templates+0;
     stats_unit base;
     stats_unit_compute(info, u, &base);
     stats_unit_printf(info, &base);
+    */
 }
 
 

@@ -17,6 +17,7 @@ void army_grid_init(army *ar) {
 }
 
 void army_init (army *ar, map *m) {
+    ar->grid = NULL;
     ar->uslen = 0;
     ar->sx = m->sx; ar->sy = m->sy;
     strcpy(ar->name, "-");

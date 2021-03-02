@@ -12,6 +12,7 @@ void fx_init (fxs *fx) {
 }
 
 void fx_add_bullet (fxs *fx, bullet *b) {
+    if (fx->bulletslen >= 1024-1) return;
     fx->bullets[fx->bulletslen] = *b;
     fx->bulletslen++;
 }

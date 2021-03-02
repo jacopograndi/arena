@@ -72,6 +72,10 @@ void render_view_stats_unit (SDL_Renderer* rend, txtd *t, int px, int py,
         int n = stats_weapon_sprintf(info, u->weapon +i, arr); 
         for (int i=0; i<n; i++) { LABEL(px+pad, py+h, arr[i], 1); h += 15; }
     }
+    h += 5;
+    float cost = stats_compute_cost(&info->cost_weights, u);
+    char s[64]; sprintf(s, "COST: %.2f", cost);
+    LABEL(px+pad, py+h, s, 1); h += 15;
 }
 
 
@@ -84,7 +88,9 @@ void render_view_stats (SDL_Renderer* rend, txtd *t, int px, int py,
     
     stats_unit base;
     stats_unit_compute(info, tm, &base);
-    render_view_stats_unit(rend, t, px+10, py+h, info, &base);
+    if (tm->chassis != -1) {
+        render_view_stats_unit(rend, t, px+10, py+h, info, &base);
+    }
 }
 
 

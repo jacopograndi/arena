@@ -22,6 +22,10 @@
 #include "hud/hud.h"
 #include "net/net.h"
 
+#define TEST 1
+#if TEST == 1
+#include "test/test.h"
+#endif
 
 //The music that will be played
 Mix_Music *gMusic = NULL;
@@ -32,8 +36,7 @@ Mix_Chunk *sounds[16];
 #define A(a, arg) printf("value: %d", a.arg);
 struct a { int v; } biga;
 
-int main( int argc, char* args[] ) {   
-    
+int main( int argc, char* args[] ) {  
     graphic_settings gs = { 1250, 700 };
     
 	SDL_Window* window = NULL;
@@ -80,7 +83,6 @@ int main( int argc, char* args[] ) {
     sounds[SOUND_SUCCESS] = Mix_LoadWAV( 
         "content/sounds/success.wav" );
     Mix_Volume(-1,MIX_MAX_VOLUME/16);
-    // Mix_PlayChannel( -1, mouse_over, 0 );
     
     // frame timing
     const double FRAME_TIME = (double)1/60; // delta time for 60 FPS
@@ -93,7 +95,6 @@ int main( int argc, char* args[] ) {
     // mouse and keyboard
     MKb mkb;
     mkb_init(&mkb);
-    
     
     // info
     infos info;
@@ -127,6 +128,12 @@ int main( int argc, char* args[] ) {
     int server = 0;
     
     int quit = 0;
+    
+    if (TEST) { 
+        int result = test_run(&info); 
+        if (result != 0) quit = 1;
+    }
+    
     SDL_Event e;
     while(!quit) {
         while(SDL_PollEvent(&e) != 0) {

@@ -43,7 +43,7 @@ raid:
             by battleing and scrapping enemy stuff
             by events
         get to a spaceship
-        
+    
     you go around by train, combat troops do not transport themselves
     every station has events/battles/shops
     when you have a large enough army, get to a large spaceship and leave

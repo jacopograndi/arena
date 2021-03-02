@@ -492,6 +492,60 @@ render/render_text.c.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\Arena.dir\build.make CMakeFiles/Arena.dir/render/render_text.c.s
 .PHONY : render/render_text.c.s
 
+test/test.obj: test/test.c.obj
+
+.PHONY : test/test.obj
+
+# target to build an object file
+test/test.c.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Arena.dir\build.make CMakeFiles/Arena.dir/test/test.c.obj
+.PHONY : test/test.c.obj
+
+test/test.i: test/test.c.i
+
+.PHONY : test/test.i
+
+# target to preprocess a source file
+test/test.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Arena.dir\build.make CMakeFiles/Arena.dir/test/test.c.i
+.PHONY : test/test.c.i
+
+test/test.s: test/test.c.s
+
+.PHONY : test/test.s
+
+# target to generate assembly for a file
+test/test.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Arena.dir\build.make CMakeFiles/Arena.dir/test/test.c.s
+.PHONY : test/test.c.s
+
+test/test_gst.obj: test/test_gst.c.obj
+
+.PHONY : test/test_gst.obj
+
+# target to build an object file
+test/test_gst.c.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Arena.dir\build.make CMakeFiles/Arena.dir/test/test_gst.c.obj
+.PHONY : test/test_gst.c.obj
+
+test/test_gst.i: test/test_gst.c.i
+
+.PHONY : test/test_gst.i
+
+# target to preprocess a source file
+test/test_gst.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Arena.dir\build.make CMakeFiles/Arena.dir/test/test_gst.c.i
+.PHONY : test/test_gst.c.i
+
+test/test_gst.s: test/test_gst.c.s
+
+.PHONY : test/test_gst.s
+
+# target to generate assembly for a file
+test/test_gst.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Arena.dir\build.make CMakeFiles/Arena.dir/test/test_gst.c.s
+.PHONY : test/test_gst.c.s
+
 umath/intersect.obj: umath/intersect.c.obj
 
 .PHONY : umath/intersect.obj
@@ -594,6 +648,12 @@ help:
 	@echo ... render/render_text.obj
 	@echo ... render/render_text.i
 	@echo ... render/render_text.s
+	@echo ... test/test.obj
+	@echo ... test/test.i
+	@echo ... test/test.s
+	@echo ... test/test_gst.obj
+	@echo ... test/test_gst.i
+	@echo ... test/test_gst.s
 	@echo ... umath/intersect.obj
 	@echo ... umath/intersect.i
 	@echo ... umath/intersect.s
