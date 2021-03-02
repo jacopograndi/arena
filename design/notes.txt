@@ -1,4 +1,4 @@
-tasks: (date)
+tasks:
 
 [ ] implement aoe (issued on 02:03:21)
 [ ] implement knockback (issued on 02:03:21)
@@ -36,6 +36,21 @@ tasks: (date)
 [x] implement augment hud view (issued on 18:02:21, done on 18:02:21)
 
 
+tasks for raid:
+
+[ ] implement menu system (issued on 02:03:21)
+[ ] implement main menu (issued on 02:03:21)
+[ ] implement map screen and hud (issued on 02:03:21)
+[ ] implement graph map representation (issued on 02:03:21)
+[ ] implement node procedural battles (issued on 02:03:21)
+[ ] implement node procedural events (issued on 02:03:21)
+[ ] implement node shops (issued on 02:03:21)
+[ ] implement traveling (issued on 02:03:21)
+[ ] implement persistent army (issued on 02:03:21)
+[ ] implement node objective (issued on 02:03:21)
+[ ] implement progression (issued on 02:03:21)
+
+
 bugs:
 
 [ ] symmetric integration (found on 18:02:21)
@@ -64,6 +79,10 @@ view from 18:02:21 to the end:
     multiplayer up to 2 ppl
     armies, templates and settings are persistent
     
+view from 02:03:21 to the end:
+    game is raid mode (roguelike) and arena mode
+    multiplayer for arena, no for raid
+    raid mode is fun (yeah sure)
 
 
 details:

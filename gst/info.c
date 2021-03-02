@@ -518,7 +518,6 @@ void cost_weights_init (stats_unit *w) {
     stats_unit_map(w, f_add1);
 }
 
-
 float f_sum (float a, float b) { return a+b; }
 
 float stats_compute_cost (stats_unit *w, stats_unit *base) {
