@@ -103,6 +103,7 @@ void info_save_templates (infos *info, char *filename);
 void info_template_add (infos *info, info_unit *temp);
 
 
+#include "units.h"
 void info_load_army(struct army_ *ar, char *filename);
 void info_save_army(struct army_ *ar, char *filename);
 

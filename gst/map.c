@@ -1,9 +1,10 @@
 #include <stdlib.h>
 #include <stdio.h>
-#include <units.h>
 #include <string.h>
 
-#include <map.h>
+#include "units.h"
+
+#include "map.h"
 
 int ptoi (map *m, int *p) { return p[0]+p[1]*m->sx; }
 int xytoi (map *m, int x, int y) { return x+y*m->sx; }

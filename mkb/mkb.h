@@ -1,7 +1,7 @@
 #ifndef MKB_H
 #define MKB_H
 
-#include <SDL.h>
+#include <SDL2/SDL.h> 
 
 // SDL2 mouse and keyboard
 
@@ -16,8 +16,8 @@ typedef struct {
 } MKb;
 
 void mkb_init(MKb *mkb);
-bool mkb_search(MKb *mkb, SDL_Scancode scancode);
-bool mkb_statesearch(MKb *mkb, SDL_Scancode scancode);
+int mkb_search(MKb *mkb, SDL_Scancode scancode);
+int mkb_statesearch(MKb *mkb, SDL_Scancode scancode);
 void mkb_event(MKb *mkb, SDL_Event *e);
 void mkb_process(MKb *mkb);
 

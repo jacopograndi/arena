@@ -1,14 +1,15 @@
 #ifndef GST_H
 #define GST_H
 
-#include <info.h>
-#include <units.h>
-#include <map.h>
-#include <fxs.h>
-#include <render_text.h>
+#include "info.h"
+#include "units.h"
+#include "map.h"
+#include "fxs.h"
+#include "../render/render_text.h"
 
-#include <SDL.h>
-#include <SDL_mixer.h>
+
+#include <SDL2/SDL.h> 
+#include <SDL2/SDL_mixer.h> 
 
 #define MAXMAP 10
 

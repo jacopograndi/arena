@@ -1,18 +1,19 @@
 #ifndef HUD_H
 #define HUD_H
 
-#include <SDL.h>
-#include <SDL_mixer.h>
 
-#include <render_text.h>
-#include <button.h>
-#include <graphicsettings.h>
-#include <mkb.h>
-#include <info.h>
-#include <units.h>
-#include <map.h>
-#include <gst.h>
-#include <net.h>
+#include <SDL2/SDL.h> 
+#include <SDL2/SDL_mixer.h> 
+
+#include "../render/render_text.h"
+#include "../render/button.h"
+#include "../render/graphicsettings.h"
+#include "../mkb/mkb.h"
+#include "../gst/info.h"
+#include "../gst/units.h"
+#include "../gst/map.h"
+#include "../gst/gst.h"
+#include "../net/net.h"
 
 typedef struct {
     float start;

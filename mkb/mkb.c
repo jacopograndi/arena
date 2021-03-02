@@ -1,17 +1,17 @@
-#include <mkb.h>
+#include "mkb.h"
 
-bool mkb_search(MKb *mkb, SDL_Scancode scancode) {
+int mkb_search(MKb *mkb, SDL_Scancode scancode) {
     for (int i=0; i<mkb->kbnum; i++) {
         if (mkb->kb[i] == scancode) 
-            return true;
+            return 1;
     }
-    return false;
+    return 0;
 }
 
-bool mkb_statesearch (MKb *mkb, SDL_Scancode scancode) {
+int mkb_statesearch (MKb *mkb, SDL_Scancode scancode) {
     const Uint8 *state = SDL_GetKeyboardState(NULL);
-    if (state[scancode]) return true;
-    return false;
+    if (state[scancode]) return 1;
+    return 0;
 }
 
 void mkb_init(MKb *mkb) {

@@ -1,15 +1,15 @@
 #ifndef HUD_VIEWS_H
 #define HUD_VIEWS_H
 
-#include <SDL.h>
+#include <SDL2/SDL.h> 
 
-#include <render_text.h>
-#include <button.h>
-#include <graphicsettings.h>
-#include <mkb.h>
-#include <info.h>
-#include <units.h>
-#include <hud.h>
+#include "../render/render_text.h"
+#include "../render/button.h"
+#include "../render/graphicsettings.h"
+#include "../mkb/mkb.h"
+#include "../gst/info.h"
+#include "../gst/units.h"
+#include "hud.h"
 
 void render_view_stats (SDL_Renderer* rend, txtd *t, int px, int py, 
     infos *info, info_unit *tm);

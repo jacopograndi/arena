@@ -3,7 +3,7 @@
 #include <string.h>
 #include <stdint.h>
 
-#include <jsonparse.h>
+#include "jsonparse.h"
 
 void substr_token (char *json, char *temp, jsmntok_t *t) {
     memcpy(temp, json+t->start, t->end - t->start);

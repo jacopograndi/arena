@@ -1,7 +1,7 @@
 #ifndef FXS_H
 #define FXS_H
 
-#include <SDL.h>
+#include <SDL2/SDL.h> 
 
 typedef struct {
     float from[2];

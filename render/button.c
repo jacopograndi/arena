@@ -1,14 +1,14 @@
 #include <stdlib.h>
 #include <stdio.h>
-#include <button.h>
+#include "button.h"
 
-#include <intersect.h>
+#include "../umath/intersect.h"
 
-bool mouse_in_button (float pt[], txtd *t, button *b) {
+int mouse_in_button (float pt[], txtd *t, button *b) {
     int width = get_text_width(b->txt, t);
     float size[2] = { width+b->pad*2, 10+b->pad*2 };
-    if (pt_rect(pt, b->pos, size)) return true;
-    return false;
+    if (pt_rect(pt, b->pos, size)) return 1;
+    return 0;
 }
 
 void render_button (SDL_Renderer* rend, txtd *t, button *b) {

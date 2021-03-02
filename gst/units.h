@@ -4,7 +4,7 @@
 #define MAXUNITS 128
 #define MAXSOLVESTEPS 128
 
-#include <info.h>
+#include "info.h"
 
 typedef struct unit_ {
     float pos[2];
@@ -28,7 +28,7 @@ typedef struct army_ {
 } army;
 
 
-#include <map.h>
+#include "map.h"
 
 void unit_init (infos *info, army *ar, map *m, 
     int x, int y, info_unit *iu, int owner, unit *u);

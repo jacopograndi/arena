@@ -3,7 +3,7 @@
 #include <string.h>
 #include <float.h>
 
-#include <gst.h>
+#include "gst.h"
 
 void gst_init (gamestate *gst) {
     map_init(&gst->map_editor, MAXMAP, MAXMAP, 32);

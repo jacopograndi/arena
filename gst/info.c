@@ -3,12 +3,12 @@
 #include <string.h>
 #include <math.h>
 
-#include <units.h>
-#include <info.h>
+#include "info.h"
+#include "units.h"
 
-#include <vec.h>
-#include <jsmn.h>
-#include <jsonparse.h>
+#include "../umath/vec.h"
+#include "../json/jsmn.h"
+#include "../json/jsonparse.h"
 
 int type_damage_map (char strdmg[][32]) {
     strcpy(strdmg[0], "pierce");
@@ -578,6 +578,7 @@ void info_load (infos *info) {
     char json[size];
     type_damage_map(info->damage_types);
     
+    info->templateslen = 0;
     info_read_file(json, "content/templates/default.txt", size);
     info_parse_json(info, json, "template");
     

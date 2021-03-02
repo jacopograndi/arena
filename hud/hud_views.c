@@ -3,7 +3,7 @@
 #include <string.h>
 #include <math.h>
 
-#include <hud_views.h>
+#include "hud_views.h"
 
 #define LABEL(x, y, s, d) {\
     float p[2]={x,y};\

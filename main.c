@@ -1,23 +1,27 @@
 //#define LCB_NO_CONSOLE
 
-#include <SDL.h>
-#include <SDL_mixer.h>
+#define SDL_MAIN_HANDLED
+#include <SDL2/SDL.h> 
+#include <SDL2/SDL_mixer.h> 
+
 #include <stdio.h>
 #include <math.h>
 
-#include <jsonparse.h>
-#include <render_text.h>
-#include <graphicsettings.h>
-#include <button.h>
-#include <mkb.h>
-#include <vec.h>
-#include <net.h>
+#include "json/jsonparse.h"
+#include "render/render_text.h"
+#include "render/graphicsettings.h"
+#include "render/button.h"
+#include "mkb/mkb.h"
+#include "umath/vec.h"
 
-#include <units.h>
-#include <map.h>
-#include <info.h>
-#include <hud.h>
-#include <gst.h>
+#include "gst/units.h"
+#include "gst/map.h"
+#include "gst/info.h"
+#include "gst/gst.h"
+
+#include "hud/hud.h"
+#include "net/net.h"
+
 
 //The music that will be played
 Mix_Music *gMusic = NULL;
@@ -29,7 +33,6 @@ Mix_Chunk *sounds[16];
 struct a { int v; } biga;
 
 int main( int argc, char* args[] ) {   
-    net_init();
     
     graphic_settings gs = { 1250, 700 };
     
@@ -38,6 +41,8 @@ int main( int argc, char* args[] ) {
     SDL_Renderer* rend = NULL;
 
 	SDL_Init(SDL_INIT_VIDEO);
+    
+    net_init();
     
     SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "0");
     
@@ -94,11 +99,13 @@ int main( int argc, char* args[] ) {
     infos info;
     info_load(&info);
     
+    
     gamestate gst;
     gst_init(&gst);
     gst.cam[0] = -gs.resx/2+gst.map_editor.sx*gst.map_editor.ts/2;
     gst.cam[1] = -gs.resy/2+gst.map_editor.sy*gst.map_editor.ts/2;
 
+    
     // hud
     hud _hud;
     hud_init(&gs, &_hud, &textd);
@@ -106,6 +113,7 @@ int main( int argc, char* args[] ) {
     if (_hud.og.army_listlen > 0)
         info_load_army(gst.army_bp+0, _hud.og.army_list[0]);
     info_load_playername(_hud.og.playername);
+    
     
     float mlast[2] = {0, 0};
     
@@ -118,12 +126,12 @@ int main( int argc, char* args[] ) {
     net_server nets;
     int server = 0;
     
-    bool quit = false;
+    int quit = 0;
     SDL_Event e;
     while(!quit) {
         while(SDL_PollEvent(&e) != 0) {
             if(e.type == SDL_QUIT) {
-                quit = true;
+                quit = 1;
             }
             if(e.type == SDL_WINDOWEVENT
             && e.window.event == SDL_WINDOWEVENT_RESIZED ) {
@@ -134,7 +142,7 @@ int main( int argc, char* args[] ) {
             mkb_event(&mkb, &e);
         }
         
-        bool render = false;
+        int render = 0;
 
         double startTime = SDL_GetTicks();
         double passedTime = (startTime - last_time)/1000;
@@ -164,7 +172,7 @@ int main( int argc, char* args[] ) {
             gst_process(&gst, &info, &fx, tot_time);
             fx_process(&fx, tot_time);
             
-            render = true;
+            render = 1;
             unprocessed_time -= FRAME_TIME;
             mlast[0] = mkb.mx; mlast[1] = mkb.my;
             mkb_process(&mkb);
@@ -194,7 +202,8 @@ int main( int argc, char* args[] ) {
     Mix_Quit();
 	SDL_Quit();
     net_client_close(&netc);
+    net_server_close(&nets);
     gst_destroy(&gst);
-
+    
 	return 0;
 }

@@ -1,9 +1,10 @@
 #include <stdlib.h>
 #include <stdio.h>
-#include <units.h>
-#include <vec.h>
 
-#include <fxs.h>
+#include "../umath/vec.h"
+
+#include "fxs.h"
+#include "units.h"
 
 void fx_init (fxs *fx) {
     fx->bullets = (bullet*)malloc(sizeof(bullet)*1024);

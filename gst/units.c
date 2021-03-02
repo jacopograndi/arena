@@ -1,10 +1,9 @@
 #include <stdlib.h>
 #include <stdio.h>
-#include <units.h>
 #include <string.h>
 
-#include <vec.h>
-#include <jsonparse.h>
+#include "../umath/vec.h"
+#include "units.h"
 
 void army_grid_init(army *ar) {
     if (ar->grid != NULL) free(ar->grid);

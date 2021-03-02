@@ -3,10 +3,10 @@
 #include <string.h>
 #include <math.h>
 
-#include <hud.h>
-#include <hud_views.h>
+#include "hud.h"
+#include "hud_views.h"
 
-#include <intersect.h>
+#include "../umath/intersect.h"
 
 // TODO: make sound module mabye?
 #define SOUND_MOUSE_OVER 0
@@ -15,13 +15,18 @@
 #define SOUND_SUCCESS 3
 
 
+void SDL_Rect_init (SDL_Rect *rect, float x, float y, float w, float h) {
+    rect->x = x; rect->y = y; rect->w = w; rect->h = h;
+}
+
+
 // INIT
 void init_overlay_battle (graphic_settings *gs, overlay_battle *ob,
     txtd *t) 
 {
     int w = 400, h = 100;
     int x = gs->resx-w-10, y = 10;
-    ob->rect_back = { x, y, w, h };
+    SDL_Rect_init(&ob->rect_back, x, y, w, h);
 }
 
 void init_sel_chassis (graphic_settings *gs, hud_sel *sc, txtd *t, 
@@ -35,22 +40,25 @@ void init_sel_chassis (graphic_settings *gs, hud_sel *sc, txtd *t,
 void init_form_new_unit (graphic_settings *gs, form_new_unit *fnu, txtd *t) {
     int w = 290+200+300+20*2+10*4 + 30*3 + 200, h = 145+300+20*2+10*1 + 30*2;
     int x = gs->resx/2-w/2, y = gs->resy/2-h/2;
-    fnu->rect_back = { x, y, w, h };
+    SDL_Rect_init(&fnu->rect_back, x, y, w, h);
     
-    fnu->rect_chassis = { x+20, y+20+145+10+30, 300, 300 };
-    fnu->rect_brain = { x+20, y+20+30, 145, 145 };
-    fnu->rect_battery = { x+150+25, y+20+30, 145, 145 };
+    SDL_Rect_init(&fnu->rect_chassis, x+20, y+20+145+10+30, 300, 300);
+    SDL_Rect_init(&fnu->rect_brain, x+20, y+20+30, 145, 145);
+    SDL_Rect_init(&fnu->rect_battery, 0+25, y+20+30, 145, 145);
     for (int i=0; i<8; i++) {
-        fnu->rect_weapons[i] = { x+20+300+10+30, y+20+120*i +30, 200, 110 };
+        SDL_Rect_init(&fnu->rect_weapons[i], 
+            x+20+300+10+30, y+20+120*i +30, 200, 110);
     }
     for (int i=0; i<8; i++) {
-        fnu->rect_armor[i] = { x+20+500+20+30*2, y+20+60*i +30, 150, 50 };
+        SDL_Rect_init(&fnu->rect_armor[i], 
+            x+20+500+20+30*2, y+20+60*i +30, 150, 50);
     }
     for (int i=0; i<8; i++) {
-        fnu->rect_augs[i] = { x+20+500+20+160+30*2, y+20+60*i +30, 150, 50 };
+        SDL_Rect_init(&fnu->rect_augs[i],
+            x+20+500+20+160+30*2, y+20+60*i +30, 150, 50);
     }
     
-    fnu->rect_stats = { x+w-20-200, y+20, 200, h-70 };
+    SDL_Rect_init(&fnu->rect_stats, x+w-20-200, y+20, 200, h-70 );
     
     int width = get_text_width("save", t);
     button bdone = { "save", 4, { x+w-4*2-width-20, y+h-4*2-11-20 } };
@@ -59,7 +67,7 @@ void init_form_new_unit (graphic_settings *gs, form_new_unit *fnu, txtd *t) {
 
 void init_overlay_game (graphic_settings *gs, overlay_game *og, txtd *t) {
     int w = 250, h = gs->resy-20;
-    og->rect_templates = { 10, gs->resy-10-h, w, h };
+    SDL_Rect_init(&og->rect_templates, 10, gs->resy-10-h, w, h);
     
     float wnu = get_text_width("new template", t);
     button b = { "new template", 4, { w-wnu-4*2+5, 10+5 } };
@@ -70,7 +78,8 @@ void init_overlay_game (graphic_settings *gs, overlay_game *og, txtd *t) {
     og->save_templates = b2;
     
     int warmy = 250, harmy = gs->resy-20;
-    og->rect_army = { gs->resx-warmy-10, gs->resy-harmy-10, warmy, harmy };
+    SDL_Rect_init(&og->rect_army, 
+        gs->resx-warmy-10, gs->resy-harmy-10, warmy, harmy);
     button b3 = { "save army", 4, { gs->resx-warmy-5, gs->resy-20-4*2-5 } };
     og->save_army = b3;
     
@@ -89,7 +98,7 @@ void init_overlay_game (graphic_settings *gs, overlay_game *og, txtd *t) {
     }
     
     int wbattle = 400, hbattle = 100;
-    og->rect_battle = { gs->resx/2-wbattle/2, 10, wbattle, hbattle };
+    SDL_Rect_init(&og->rect_battle, gs->resx/2-wbattle/2, 10, wbattle, hbattle);
     
     float wsb = get_text_width("start battle", t);
     button b1 = { "start battle", 4, 

@@ -1,7 +1,7 @@
 #ifndef RENDER_TEXT_H
 #define RENDER_TEXT_H
 
-#include <SDL.h>
+#include <SDL2/SDL.h> 
 
 typedef struct {
     SDL_Texture *tex;

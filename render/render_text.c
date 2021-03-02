@@ -1,6 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
-#include <render_text.h>
+#include "render_text.h"
 
 void char_width_init (int *char_width) {
     for (int i=0; i<128; char_width[i++]=5);
