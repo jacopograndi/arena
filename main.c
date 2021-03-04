@@ -18,6 +18,7 @@
 #include "gst/map.h"
 #include "gst/info.h"
 #include "gst/gst.h"
+#include "gst/generate.h"
 
 #include "hud/hud.h"
 #include "net/net.h"
@@ -33,9 +34,6 @@ Mix_Music *gMusic = NULL;
 //The sound effects that will be used
 Mix_Chunk *sounds[16];
 
-#define A(a, arg) printf("value: %d", a.arg);
-struct a { int v; } biga;
-
 int main( int argc, char* args[] ) {  
     graphic_settings gs = { 1250, 700 };
     
@@ -46,6 +44,7 @@ int main( int argc, char* args[] ) {
 	SDL_Init(SDL_INIT_VIDEO);
     
     net_init();
+    generate_init();
     
     SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "0");
     
@@ -100,6 +99,11 @@ int main( int argc, char* args[] ) {
     infos info;
     info_load(&info);
     
+    info_unit ugen; generate_unit(&info, &ugen, 10000);
+    stats_unit base; stats_unit_compute(&info, &ugen, &base);
+    stats_unit_printf(&info, &base);
+    info_unit_printf(&ugen);
+    printf("COST: %.2f\n", stats_compute_cost(&info.cost_weights, &base));
     
     gamestate gst;
     gst_init(&gst);

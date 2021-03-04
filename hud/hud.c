@@ -254,11 +254,19 @@ void hud_edit_close(hud *h, infos *info) {
 void hud_open_fnu (hud *h, infos *info, info_unit *u, int i) {
     h->state = 1;
     h->fnu.uinfo = *u;
+    h->fnu.uinfo_ptr = u;
     h->og.temp_modify = i;
     hud_edit_close(h, info);
 }
 
 void hud_close_fnu (hud *h, infos *info) {
+    if (h->og.temp_modify < -1) {
+        if (h->og.temp_modify == -2) {
+            *h->fnu.uinfo_ptr = h->fnu.uinfo;
+        }
+        h->state = 0; 
+        return;
+    }
     if (hud_fnu_check(&h->fnu.uinfo, info) > 0) return;
     if (h->og.temp_modify == -1) {
         info_template_add(info, &h->fnu.uinfo);
@@ -391,6 +399,15 @@ void hud_process_form_new_unit (graphic_settings *gs, hud *h, MKb *mkb,
                 }
             }
         }
+        
+        float pback[2] = { 
+            h->fnu.rect_back.x+h->fnu.rect_back.w-10, 
+            h->fnu.rect_back.y };
+        float sback[2] = { 10, 10 };
+        if (pt_rect(mousepos, pback, sback)) {
+            h->og.temp_modify = -3;
+            hud_close_fnu(h, info);
+        }
     }
 }
 
@@ -468,7 +485,7 @@ void hud_process_overlay_game (graphic_settings *gs, hud *h, MKb *mkb,
             hud_edit_close(h, info);
         }
     }
-            
+
     float mousepos[2] = { mkb->mx, mkb->my };
     if (mkb->mheld[0] == 1) {
         if (mouse_in_button(mousepos, t, &h->og.new_template)) {
@@ -669,10 +686,20 @@ void hud_process_overlay_game (graphic_settings *gs, hud *h, MKb *mkb,
         if (mouse_in_button(mousepos, t, &h->og.start_battle)) {
             h->og.start_battle_flag = 1;
         }
+    
+        // edit unit
+        int x = (int)((mkb->mx+gst->cam[0])/32);
+        int y = (int)((mkb->my+gst->cam[1])/32);
+        if (x >= 0 && y >= 0 && x < m->sx && y < m->sy) {
+            if (ar->grid[xytoi(m,x,y)] != NULL) {
+                hud_open_fnu(h, info, &ar->grid[xytoi(m,x,y)]->info, -2);
+                h->og.temp_place = -1;
+            }
+        }
     }
     
-    // rm unit
     if (mkb->mheld[2] == 1) {
+        // rm unit
         Mix_PlayChannel( -1, sounds[SOUND_MOUSE_CLICK_0], 0 );
         int x = (int)((mkb->mx+gst->cam[0])/32);
         int y = (int)((mkb->my+gst->cam[1])/32);
@@ -681,6 +708,19 @@ void hud_process_overlay_game (graphic_settings *gs, hud *h, MKb *mkb,
                 unit_remove(ar, m, ar->grid[xytoi(m,x,y)]);
             }
         } 
+        
+        // rm template
+        for (int i=0; i<info->templateslen; i++) {
+            float x = h->og.rect_templates.x+5;
+            float y = h->og.rect_templates.y+5 + i*20 + 30;
+            float wedit = get_text_width("edit", t);
+            float possa[2] = { x, y };
+            float sizesa[2] = { wedit+4*2, 11+4*2 };
+            if (pt_rect(mousepos, possa, sizesa)) {
+                info_template_rm(info, i);
+                break;
+            }
+        }
     }
 }
 
@@ -724,7 +764,7 @@ void hud_edit_name(hud *h, infos *info, MKb *mkb, Mix_Chunk *sounds[]) {
     }
     if (mkb_search(mkb, SDL_SCANCODE_BACKSPACE)) {
         if (strlen(h->nameedit) > 0)
-        h->nameedit[strlen(h->nameedit)-1] = '\0';
+            h->nameedit[strlen(h->nameedit)-1] = '\0';
     }
     if (mkb_search(mkb, SDL_SCANCODE_ESCAPE) 
      || mkb_search(mkb, SDL_SCANCODE_RETURN)) {
@@ -941,6 +981,16 @@ void hud_render_form_new_unit (form_new_unit *fnu, MKb *mkb,
     render_view_brain(rend, t, 
         fnu->rect_brain.x, fnu->rect_brain.y, info, fnu->uinfo.brain, 
         fnu->uinfo.levels[LEVEL_BRAIN]); 
+        
+    float pback[2] = {
+        fnu->rect_back.x+fnu->rect_back.w-10,
+        fnu->rect_back.y };
+    float sback[2] = { 10, 10 };
+    SDL_Rect rx = { pback[0], pback[1], sback[0], sback[1] };
+    SDL_SetRenderDrawColor(rend, 200, 0, 0, 255);
+    SDL_RenderFillRect(rend, &rx);
+    SDL_SetRenderDrawColor(rend, 0, 0, 0, 255);
+    SDL_RenderDrawRect(rend, &rx);
 }
 
 void hud_render_overlay_game (overlay_game *og, MKb *mkb, 

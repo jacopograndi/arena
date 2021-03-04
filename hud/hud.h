@@ -38,9 +38,9 @@ typedef struct {
     button join_game;
     SDL_Rect rect_battle;
     SDL_Rect rect_templates;
+    SDL_Rect rect_army;
     int temp_modify;
     int temp_place;
-    SDL_Rect rect_army;
     char army_list[64][32];
     int army_listlen;
     int army_listcur;
@@ -66,6 +66,7 @@ typedef struct {
     SDL_Rect rect_stats;
     button done;
     info_unit uinfo;
+    info_unit *uinfo_ptr;
     int sel, ind;
 } form_new_unit;
 

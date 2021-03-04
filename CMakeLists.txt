@@ -27,6 +27,8 @@ add_executable(Arena
     gst/map.h
     gst/units.c
     gst/units.h
+    gst/generate.c
+    gst/generate.h
     hud/hud.c
     hud/hud.h
     hud/hud_views.c

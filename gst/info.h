@@ -90,9 +90,12 @@ typedef struct {
 } infos;
 
 void info_unit_init (info_unit *u);
+void info_unit_printf (info_unit *u);
 
 int stats_frame_sprintf (infos *info, stats_frame *frame, char arr[][64]);
 int stats_weapon_sprintf (infos *info, stats_weapon *weap, char arr[][64]);
+void stats_unit_printf (infos *info, stats_unit *u);
+
 void stats_unit_compute (infos *info, info_unit *u, stats_unit *base);
 
 float stats_compute_damage (stats_weapon *weapon, stats_frame *frame, 
@@ -104,6 +107,7 @@ void info_load (infos *info);
 
 void info_save_templates (infos *info, char *filename);
 void info_template_add (infos *info, info_unit *temp);
+void info_template_rm (infos *info, int n);
 
 
 #include "units.h"

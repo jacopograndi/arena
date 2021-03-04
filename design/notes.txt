@@ -10,7 +10,6 @@ tasks:
 [ ] implement net hud and minilobby (issued on 18:02:21)
 [ ] implement brain behaviour (issued on 18:02:21)
 [ ] implement lobby cost constraints (issued on 18:02:21)
-[ ] implement edit unit directly (issued on 18:02:21)
 [ ] implement persistent settings ini (issued on 18:02:21)
 [ ] implement explosions (issued on 18:02:21)
 [ ] design 3d units (issued on 18:02:21)
@@ -20,6 +19,8 @@ tasks:
 [ ] implement sound (issued on 18:02:21)
 [ ] implement component aoe bonus (issued on 02:03:21)
 
+[x] implement edit unit directly (issued on 18:02:21, done on 04:03:21)
+[x] implement rm template (issued on 04:03:21, done on 04:03:21)
 [x] migrated to cmake env (issued on 01:03:21, done on 02:03:21)
 [x] implement stats hud view (issued on 18:02:21, done on 25:02:21)
 [x] implement fire animation (issued on 18:02:21, done on 24:02:21)
@@ -59,6 +60,8 @@ bugs:
 
 [x] ip text edit rect too small (found on 02:03:21, done on 02:03:21)
 [x] cannot modify level of first aug (found on 02:03:21, done on 02:03:21)
+[x] damage calculation (found on 04:03:21, done on 04:03:21)
+[x] slots unit_stats not counted (found on 04:03:21, done on 04:03:21)
 
 
 testing:

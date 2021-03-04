@@ -168,6 +168,33 @@ gst/fxs.c.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\Arena.dir\build.make CMakeFiles/Arena.dir/gst/fxs.c.s
 .PHONY : gst/fxs.c.s
 
+gst/generate.obj: gst/generate.c.obj
+
+.PHONY : gst/generate.obj
+
+# target to build an object file
+gst/generate.c.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Arena.dir\build.make CMakeFiles/Arena.dir/gst/generate.c.obj
+.PHONY : gst/generate.c.obj
+
+gst/generate.i: gst/generate.c.i
+
+.PHONY : gst/generate.i
+
+# target to preprocess a source file
+gst/generate.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Arena.dir\build.make CMakeFiles/Arena.dir/gst/generate.c.i
+.PHONY : gst/generate.c.i
+
+gst/generate.s: gst/generate.c.s
+
+.PHONY : gst/generate.s
+
+# target to generate assembly for a file
+gst/generate.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Arena.dir\build.make CMakeFiles/Arena.dir/gst/generate.c.s
+.PHONY : gst/generate.c.s
+
 gst/gst.obj: gst/gst.c.obj
 
 .PHONY : gst/gst.obj
@@ -612,6 +639,9 @@ help:
 	@echo ... gst/fxs.obj
 	@echo ... gst/fxs.i
 	@echo ... gst/fxs.s
+	@echo ... gst/generate.obj
+	@echo ... gst/generate.i
+	@echo ... gst/generate.s
 	@echo ... gst/gst.obj
 	@echo ... gst/gst.i
 	@echo ... gst/gst.s

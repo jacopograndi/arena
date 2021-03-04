@@ -40,6 +40,23 @@ void info_unit_init (info_unit *u) {
     for(int i=0; i<16; u->augs[i] = -1, i++);
     for(int i=0; i<34; u->levels[i] = 0, i++);
 }
+
+void info_unit_printf (info_unit *u) {
+    printf("name: %s\n", u->name);
+    printf("chassis: %d; ", u->chassis);
+    printf("battery: %d; ", u->battery);
+    printf("brain: %d\n", u->brain);
+    printf("weapon: ");
+    for(int i=0; i<8; printf("%d, ", u->weapons[i]), i++);
+    printf("\narmor: ");
+    for(int i=0; i<8; printf("%d, ", u->armor[i]), i++);
+    printf("\naugs: ");
+    for(int i=0; i<16; printf("%d, ", u->augs[i]), i++);
+    printf("\nlevels: ");
+    for(int i=0; i<34; printf("%d, ", u->levels[i]), i++);
+    printf("\n");
+}
+
 /*
 float info_unit_get_cost (infos *info, info_unit *u) {
     // see design/notes.txt:implement cost function
@@ -273,8 +290,9 @@ void stats_comp_printf (infos *info, stats_comp *comp) {
 void stats_unit_printf (infos *info, stats_unit *u) {
     char arr[32][64];
     { int n = stats_frame_sprintf (info, &u->frame, arr); printf_arr(arr, n); }
-    LOOP(8) { 
+    LOOP(u->weaponlen) { 
         int n = stats_weapon_sprintf(info, u->weapon +z, arr); 
+        if (n>0) printf("  weapon: \n");
         printf_arr(arr, n); 
     }
 }
@@ -444,6 +462,8 @@ float stats_unit_fold (stats_unit *base, float (*f)(float, float)) {
     return v;
 }
 
+float f_clamp_positive (float x) { if (x < 0) x = 0; }
+
 // compute all necessary components stats of u into base
 void stats_unit_compute (infos *info, info_unit *u, stats_unit *base) {
     stats_unit_init(base);
@@ -467,7 +487,7 @@ void stats_unit_compute (infos *info, info_unit *u, stats_unit *base) {
     };
     
     for (int i=0; i<8; i++) {
-        if (u->armor[i] != -1) {
+        if (u->armor[i] != -1 && i<base->frame.slot_armor) {
             stats_comp *comp = &info->stats[STATS_ARMOR][u->armor[i]];
             int lvl = u->levels[LEVEL_ARMOR+i];
             stats_unit_comp_sum(base, &perc, comp, lvl);
@@ -475,7 +495,7 @@ void stats_unit_compute (infos *info, info_unit *u, stats_unit *base) {
     }
     
     for (int i=0; i<16; i++) {
-        if (u->augs[i] != -1) {
+        if (u->augs[i] != -1 && i<base->frame.slot_aug) {
             stats_comp *comp = &info->stats[STATS_AUGS][u->augs[i]];
             int lvl = u->levels[LEVEL_AUGS+i];
             stats_unit_comp_sum(base, &perc, comp, lvl);
@@ -497,6 +517,10 @@ void stats_unit_compute (infos *info, info_unit *u, stats_unit *base) {
     base->weaponlen = wn;
     
     stats_unit_map(&perc, f_perc_norm);
+    for (int w=0; w<wn; w++) {
+        stats_weapon_map(perc.weapon +w, f_clamp_positive);
+    }
+    
     stats_unit_mul(base, &perc);
 }
 
@@ -744,6 +768,15 @@ void info_template_add (infos *info, info_unit *temp) {
     }
 }
 
+void info_template_rm (infos *info, int n) {
+    for (int i=0; i<info->templateslen-1; i++) {
+        if (i >= n) {
+            info->templates[i] = info->templates[i+1];
+        }
+    }
+    info->templateslen--;
+}
+
 void info_load_army(struct army_ *ar, char *filename) {
     strcpy(ar->name, filename);
     char buf[1024*64];
@@ -800,3 +833,4 @@ void info_army_remove (char name[]) {
     char pathname[64]; sprintf(pathname, "army/%s.txt", name);
     remove(pathname);
 }
+

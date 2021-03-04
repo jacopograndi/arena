@@ -221,37 +221,37 @@
             -37.5,
             -45.0
         ],
-        "base_weapon_damage_pierce": [
+        "perc_weapon_damage_pierce": [
             -25.0,
             -31.25,
             -37.5
         ],
-        "base_weapon_damage_laser": [
+        "perc_weapon_damage_laser": [
             -25.0,
             -31.25,
             -37.5
         ],
-        "base_weapon_damage_impact": [
+        "perc_weapon_damage_impact": [
             -25.0,
             -31.25,
             -37.5
         ],
-        "base_weapon_damage_fusion": [
+        "perc_weapon_damage_fusion": [
             -25.0,
             -31.25,
             -37.5
         ],
-        "base_weapon_damage_explosive": [
+        "perc_weapon_damage_explosive": [
             -25.0,
             -31.25,
             -37.5
         ],
-        "base_weapon_damage_emp": [
+        "perc_weapon_damage_emp": [
             -25.0,
             -31.25,
             -37.5
         ],
-        "base_weapon_damage_spread": [
+        "perc_weapon_damage_spread": [
             -25.0,
             -31.25,
             -37.5
