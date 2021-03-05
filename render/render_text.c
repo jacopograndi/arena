@@ -10,6 +10,7 @@ void char_width_init (int *char_width) {
     char_width[','] = 1; char_width['-'] = 3; char_width['.'] = 1; 
     char_width['/'] = 4; char_width['!'] = 1;
     char_width[':'] = 1; char_width[';'] = 1;
+    char_width['%'] = 4;
     char_width['<'] = 3; char_width['>'] = 3; char_width['='] = 4;
     char_width['I'] = 1;
     char_width['f'] = 4; char_width['i'] = 1; char_width['j'] = 3;

@@ -1,7 +1,7 @@
 #ifndef INFO_H
 #define INFO_H
 
-#define MAXTEMPLATES 128
+#define MAXTEMPLATES 1024
 #define MAXLEVEL 3
 
 #include <stdint.h>

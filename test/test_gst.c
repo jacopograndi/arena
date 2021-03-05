@@ -31,7 +31,7 @@ int test_gst_mirror_match (infos *info, int n) {
     
     float t = 0; int i=0;
     for (; i < 2000; i++) {
-        gst_process(&gst, info, &fx, t);
+        gst_next_turn(&gst, info, &fx, t);
         t += gst.turnspeed;
         if (gst.over == 1) {
             break;

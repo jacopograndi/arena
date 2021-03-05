@@ -43,7 +43,11 @@ void render_view_comp (SDL_Renderer* rend, txtd *t, int px, int py,
     }
     { 
         int n = stats_frame_sprintf(info, comp->perc +lvl, arr); 
-        for (int i=0; i<n; i++) { LABEL(px+pad, py+h, arr[i], 1); h += 15; }
+        for (int i=0; i<n; i++) { 
+            char sperc[128]; sprintf(sperc, "%s%%", arr[i]);
+            
+            LABEL(px+pad, py+h, sperc, 1); h += 15; 
+        }
     }
     { 
         int n = stats_weapon_sprintf(info, comp->base_weapon +lvl, arr);
@@ -51,7 +55,10 @@ void render_view_comp (SDL_Renderer* rend, txtd *t, int px, int py,
     }
     { 
         int n = stats_weapon_sprintf(info, comp->perc_weapon +lvl, arr);
-        for (int i=0; i<n; i++) { LABEL(px+pad, py+h, arr[i], 1); h += 15; }
+        for (int i=0; i<n; i++) { 
+            char sperc[128]; sprintf(sperc, "%s%%", arr[i]);
+            LABEL(px+pad, py+h, sperc, 1); h += 15; 
+        }
     }
 }
 

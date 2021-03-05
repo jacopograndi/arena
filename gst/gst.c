@@ -14,6 +14,7 @@ void gst_init (gamestate *gst) {
     gst->turn = 0;
     gst->coveredtime = 0;
     gst->turnspeed = 0.75;
+    gst->waitstep = 0;
 }
 
 void gst_destroy (gamestate *gst) {
@@ -172,12 +173,18 @@ void gst_next_turn (gamestate *gst, infos *info, fxs *fx, float t) {
     gst_spawn_bullets(gst, fx, dmgs, fire, t);
 }
 
-void gst_process (gamestate *gst, infos *info, fxs *fx, float t) {
+void gst_process (gamestate *gst, infos *info, MKb *mkb, fxs *fx, float t) {
     if (gst->state == 1) {
-        if (gst->starttime > t) gst->starttime = t; 
-        float t_elapsed = t-gst->starttime;
-        if (t_elapsed >= gst->coveredtime) {
-            gst_next_turn(gst, info, fx, t);
+        if (gst->waitstep) {
+            if (mkb_search(mkb, SDL_SCANCODE_SPACE)) {
+                gst_next_turn(gst, info, fx, t);
+            }
+        } else {
+            if (gst->starttime > t) gst->starttime = t; 
+            float t_elapsed = t-gst->starttime;
+            if (t_elapsed >= gst->coveredtime) {
+                gst_next_turn(gst, info, fx, t);
+            }
         }
     }
 }

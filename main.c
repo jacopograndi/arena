@@ -99,11 +99,12 @@ int main( int argc, char* args[] ) {
     infos info;
     info_load(&info);
     
+    /* move to tests
     info_unit ugen; generate_unit(&info, &ugen, 10000);
     stats_unit base; stats_unit_compute(&info, &ugen, &base);
     stats_unit_printf(&info, &base);
     info_unit_printf(&ugen);
-    printf("COST: %.2f\n", stats_compute_cost(&info.cost_weights, &base));
+    printf("COST: %.2f\n", stats_compute_cost(&info.cost_weights, &base));*/
     
     gamestate gst;
     gst_init(&gst);
@@ -180,7 +181,7 @@ int main( int argc, char* args[] ) {
                 gst.army_bp+0, &gst.map_editor, &textd, &gst, 
                 &netc, &nets, sounds);
                 
-            gst_process(&gst, &info, &fx, tot_time);
+            gst_process(&gst, &info, &mkb, &fx, tot_time);
             fx_process(&fx, tot_time);
             
             render = 1;

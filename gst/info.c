@@ -240,8 +240,8 @@ int stats_frame_sprintf (infos *info, stats_frame *frame, char arr[][64]) {
     PRINT_STRUCT(frame, "capacity", capacity, .0f);
     PRINT_STRUCT(frame, "recharge", recharge, .1f);
     LOOP(7) {
-        char str[64]; sprintf(str, "%s armor", info->damage_types[i]);
-        PRINT_STRUCT(frame, str, armor[z], f);
+        char str[64]; sprintf(str, "%s armor", info->damage_types[z]);
+        PRINT_STRUCT(frame, str, armor[z], .1f);
     }
     return i;
 }
@@ -249,7 +249,7 @@ int stats_frame_sprintf (infos *info, stats_frame *frame, char arr[][64]) {
 int stats_weapon_sprintf (infos *info, stats_weapon *weap, char arr[][64]) {
     int i = 0;
     LOOP(7)  {
-        char str[64]; sprintf(str, "%s damage", info->damage_types[i]);
+        char str[64]; sprintf(str, "%s damage", info->damage_types[z]);
         PRINT_STRUCT(weap, str, damage[z], .1f);
     }
     PRINT_STRUCT(weap, "cooldown", cooldown, .2f);
@@ -260,7 +260,7 @@ int stats_weapon_sprintf (infos *info, stats_weapon *weap, char arr[][64]) {
     PRINT_STRUCT(weap, "stun", stun, .0f);
     PRINT_STRUCT(weap, "charge per shot", charge_per_shot, .2f);
     LOOP(7) {
-        char str[64]; sprintf(str, "%s armor reduce", info->damage_types[i]);
+        char str[64]; sprintf(str, "%s armor reduce", info->damage_types[z]);
         PRINT_STRUCT(weap, str, armor_reduce[z], .1f);
     }
     return i;
@@ -540,6 +540,25 @@ float f_add1 (float x) { return x+1; }
 void cost_weights_init (stats_unit *w) {
     stats_unit_init(w);
     stats_unit_map(w, f_add1);
+    w->frame.hp = 0.2;
+    w->frame.weight = 0;
+    w->frame.weight_max = 0;
+    w->frame.slot_weapon = 50;
+    w->frame.slot_armor = 20;
+    w->frame.slot_aug = 10;
+    w->frame.speed = 35;
+    w->frame.capacity = 0.05;
+    LOOP(7) w->frame.armor[z] = 0.1;
+    for (int i=0; i<8; i++) {
+        LOOP(7) w->weapon[i].damage[z] = 1;
+        LOOP(7) w->weapon[i].armor_reduce[z] = 0.02;
+        w->weapon[i].cooldown = -20;
+        w->weapon[i].range = 30;
+        w->weapon[i].aoe = 240;
+        w->weapon[i].knockback = 20;
+        w->weapon[i].damage_battery = 0.01;
+        w->weapon[i].stun = 100;
+    }
 }
 
 float f_sum (float a, float b) { return a+b; }
@@ -548,6 +567,7 @@ float stats_compute_cost (stats_unit *w, stats_unit *base) {
     stats_unit costed = *base;
     stats_unit_mul(&costed, w);
     float cost = stats_unit_fold(&costed, f_sum);
+    if (cost < 0) cost = 0;
     return cost;
 }
 

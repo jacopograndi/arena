@@ -155,10 +155,8 @@ int army_move_step (infos *info, army *ar, map *m, stats_unit *ustats) {
         }
     }
     // execution
-    int sum = 0, lastsum = -1, step = 0;
+    int sum = 0, step = 0;
     for (; step<MAXSOLVESTEPS; step++) {
-        if (sum == lastsum) { break; }
-        lastsum = sum;
         sum = 0;
         for (int i=0; i<mclen; i++) {
             int dest[2] = {
@@ -170,9 +168,10 @@ int army_move_step (infos *info, army *ar, map *m, stats_unit *ustats) {
                 mcs[i].done = 1;
                 mcs[i].u->move_points -= 1;
                 orders++;
+                sum++;
             }
-            sum += mcs[i].done;
         }
+        if (sum == 0) { break; }
     }
     if (step == MAXSOLVESTEPS) { printf("army: max steps reached\n"); }
     if (orders > 0) return 0;

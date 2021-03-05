@@ -7,6 +7,7 @@
 #include "hud_views.h"
 
 #include "../umath/intersect.h"
+#include "../gst/generate.h"
 
 // TODO: make sound module mabye?
 #define SOUND_MOUSE_OVER 0
@@ -38,7 +39,8 @@ void init_sel_chassis (graphic_settings *gs, hud_sel *sc, txtd *t,
 }
 
 void init_form_new_unit (graphic_settings *gs, form_new_unit *fnu, txtd *t) {
-    int w = 290+200+300+20*2+10*4 + 30*3 + 200, h = 145+300+20*2+10*1 + 30*2;
+    int w = 290+200+300+20*2+10*4 + 30*3 + 200; 
+    int h = 145+300+20*2+10*1 +30*2 +10;
     int x = gs->resx/2-w/2, y = gs->resy/2-h/2;
     SDL_Rect_init(&fnu->rect_back, x, y, w, h);
     
@@ -58,11 +60,14 @@ void init_form_new_unit (graphic_settings *gs, form_new_unit *fnu, txtd *t) {
             x+20+500+20+160+30*2, y+20+60*i +30, 150, 50);
     }
     
-    SDL_Rect_init(&fnu->rect_stats, x+w-20-200, y+20, 200, h-70 );
+    SDL_Rect_init(&fnu->rect_stats, x+w-20-200, y+20, 200, h-52 );
     
-    int width = get_text_width("save", t);
-    button bdone = { "save", 4, { x+w-4*2-width-20, y+h-4*2-11-20 } };
+    button bdone = { "save", 4, { x+5, y+h-4*2-10-5 } };
     fnu->done = bdone;
+    
+    int width = get_text_width("randomize", t);
+    button brand = { "randomize", 4, { x+w-4*2-width-5, y+h-4*2-10-5 } };
+    fnu->randomize = brand;
 }
 
 void init_overlay_game (graphic_settings *gs, overlay_game *og, txtd *t) {
@@ -314,12 +319,10 @@ void hud_process_form_new_unit (graphic_settings *gs, hud *h, MKb *mkb,
         if (mouse_in_button(mousepos, t, &h->fnu.done)) {
             hud_close_fnu(h, info);
             Mix_PlayChannel( -1, sounds[SOUND_SUCCESS], 0 );
-            /*
-            for (int i=0; i<ar->uslen; i++) {
-                unit *u = ar->us+i;
-                unit_init(info, ar, m, u->gridpos[0], u->gridpos[1], 
-                        &u->info, 0, u);
-            }*/
+        }
+        if (mouse_in_button(mousepos, t, &h->fnu.randomize)) {
+            generate_unit(info, &h->fnu.uinfo, 10000);
+            Mix_PlayChannel( -1, sounds[SOUND_SUCCESS], 0 );
         }
         float possc[2] = { h->fnu.rect_chassis.x, h->fnu.rect_chassis.y };
         float sizesc[2] = { h->fnu.rect_chassis.w, h->fnu.rect_chassis.h };
@@ -911,7 +914,7 @@ void hud_render_form_new_unit (form_new_unit *fnu, MKb *mkb,
     char schassis[32] = "CHASSIS"; 
     float wchassis = get_text_width(schassis, t)*2;
     float pchassis[2] = { 
-        fnu->rect_chassis.x+fnu->rect_chassis.w/2 - wchassis / 2, 
+        fnu->rect_chassis.x+fnu->rect_chassis.w / 2 - wchassis / 2, 
         fnu->rect_chassis.y+fnu->rect_chassis.h + 7
     };
     render_text_scaled(rend, schassis, pchassis, t, 2);
@@ -964,12 +967,14 @@ void hud_render_form_new_unit (form_new_unit *fnu, MKb *mkb,
     if (err==2) strcpy(serr, "select a battery");
     if (err==3) strcpy(serr, "select a controller");
     if (err==4) strcpy(serr, "overburdened, remove weight");
-    float werr = get_text_width(serr, t);
+    float werr = get_text_width("done", t);
     float perr[2] = { 
-        fnu->done.pos[0]-werr-10, 
+        fnu->done.pos[0]+werr+4*2+10, 
         fnu->done.pos[1]+fnu->done.pad
     };
     render_text_scaled(rend, serr, perr, t, 1);
+    
+    render_button(rend, t, &fnu->randomize);
 
     render_view_chassis(rend, t, 
         fnu->rect_chassis.x, fnu->rect_chassis.y, 

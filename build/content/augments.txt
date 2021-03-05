@@ -6,7 +6,7 @@
             12.5,
             15.0
         ],
-        "base_weapon_damage_emp": [
+        "perc_weapon_damage_emp": [
             5.0,
             6.25,
             7.5
@@ -19,7 +19,7 @@
             12.5,
             15.0
         ],
-        "base_weapon_damage_fusion": [
+        "perc_weapon_damage_fusion": [
             4.0,
             5.0,
             6.0
@@ -32,7 +32,7 @@
             37.5,
             45.0
         ],
-        "base_armor_explosive": [
+        "perc_armor_explosive": [
             8.0,
             10.0,
             12.0
@@ -81,7 +81,7 @@
             1.25,
             1.5
         ],
-        "base_aoe": [
+        "base_effect_aoe": [
             2.0,
             2.0,
             2.0
@@ -94,10 +94,10 @@
             0.0,
             0.0
         ],
-        "perc_range": [
-            1.0,
-            1.25,
-            1.5
+        "perc_weapon_range": [
+            10.0,
+            12.5,
+            15.0
         ]
     },
     {
@@ -108,9 +108,9 @@
             7.5
         ],
         "perc_weapon_cooldown": [
-            -0.1,
-            -0.125,
-            -0.15000000000000002
+            -10,
+            -12.5,
+            -15
         ]
     },
     {
@@ -120,7 +120,7 @@
             12.5,
             15.0
         ],
-        "base_weapon_damage_laser": [
+        "perc_weapon_damage_laser": [
             8.0,
             10.0,
             12.0
@@ -138,7 +138,7 @@
             3.75,
             4.5
         ],
-        "base_weapon_damage_laser": [
+        "perc_weapon_damage_laser": [
             3.0,
             3.75,
             4.5
@@ -151,12 +151,12 @@
             37.5,
             45.0
         ],
-        "base_weapon_damage_laser": [
+        "perc_weapon_damage_laser": [
             3.0,
             3.75,
             4.5
         ],
-        "base_weapon_damage_fusion": [
+        "perc_weapon_damage_fusion": [
             5.0,
             6.25,
             7.5
@@ -169,7 +169,7 @@
             6.25,
             7.5
         ],
-        "base_weapon_damage_explosive": [
+        "perc_weapon_damage_explosive": [
             5.0,
             6.25,
             7.5

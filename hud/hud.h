@@ -65,6 +65,7 @@ typedef struct {
     SDL_Rect rect_augs[8];
     SDL_Rect rect_stats;
     button done;
+    button randomize;
     info_unit uinfo;
     info_unit *uinfo_ptr;
     int sel, ind;
