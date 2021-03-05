@@ -64,11 +64,14 @@ typedef struct {
     SDL_Rect rect_armor[8];
     SDL_Rect rect_augs[8];
     SDL_Rect rect_stats;
+    SDL_Rect rect_gen_cost;
     button done;
     button randomize;
     info_unit uinfo;
     info_unit *uinfo_ptr;
     int sel, ind;
+    float gen_cost_max;
+    float nav_stats;
 } form_new_unit;
 
 typedef struct {

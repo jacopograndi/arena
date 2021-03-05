@@ -244,7 +244,10 @@ void army_upkeep (infos *info, army *ar, map *m, stats_unit *ustats) {
     for (int i=0; i<ar->uslen; i++) {
         unit *u = ar->us+i;
         if (u->hp <= 0) continue;
-        u->charge -= ustats[i].frame.upkeep;
+        float dcharge = -ustats[i].frame.upkeep;
+        // if delta charge >0, see if the battery can be recharged
+        if (dcharge > 0) dcharge *= ustats[i].frame.recharge;
+        u->charge += dcharge;
         if (u->charge < 0) u->charge = 0;
     }
 }

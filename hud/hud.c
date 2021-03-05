@@ -40,7 +40,7 @@ void init_sel_chassis (graphic_settings *gs, hud_sel *sc, txtd *t,
 
 void init_form_new_unit (graphic_settings *gs, form_new_unit *fnu, txtd *t) {
     int w = 290+200+300+20*2+10*4 + 30*3 + 200; 
-    int h = 145+300+20*2+10*1 +30*2 +10;
+    int h = 145+300+20*2+10*1 +30*2 + 10;
     int x = gs->resx/2-w/2, y = gs->resy/2-h/2;
     SDL_Rect_init(&fnu->rect_back, x, y, w, h);
     
@@ -60,7 +60,7 @@ void init_form_new_unit (graphic_settings *gs, form_new_unit *fnu, txtd *t) {
             x+20+500+20+160+30*2, y+20+60*i +30, 150, 50);
     }
     
-    SDL_Rect_init(&fnu->rect_stats, x+w-20-200, y+20, 200, h-52 );
+    SDL_Rect_init(&fnu->rect_stats, x+w-20-200, y+20, 200, h-70 );
     
     button bdone = { "save", 4, { x+5, y+h-4*2-10-5 } };
     fnu->done = bdone;
@@ -68,6 +68,9 @@ void init_form_new_unit (graphic_settings *gs, form_new_unit *fnu, txtd *t) {
     int width = get_text_width("randomize", t);
     button brand = { "randomize", 4, { x+w-4*2-width-5, y+h-4*2-10-5 } };
     fnu->randomize = brand;
+    
+    SDL_Rect_init(&fnu->rect_gen_cost,
+         x+w-200-20, y+h-5-10-4*2, 200-width+4*2-5, 10+4*2);
 }
 
 void init_overlay_game (graphic_settings *gs, overlay_game *og, txtd *t) {
@@ -131,6 +134,8 @@ void hud_reset (graphic_settings *gs, hud *h, txtd *t) {
 
 void hud_init (graphic_settings *gs, hud *h, txtd *t) {    
     h->fnu.sel = 0; h->fnu.ind = 0;
+    h->fnu.gen_cost_max = 3000;
+    h->fnu.nav_stats = 0;
     h->sc.ref = &h->fnu.rect_chassis;
     h->og.temp_place = -1;
     info_unit_init(&h->fnu.uinfo);
@@ -261,6 +266,7 @@ void hud_open_fnu (hud *h, infos *info, info_unit *u, int i) {
     h->fnu.uinfo = *u;
     h->fnu.uinfo_ptr = u;
     h->og.temp_modify = i;
+    h->fnu.nav_stats = 0;
     hud_edit_close(h, info);
 }
 
@@ -321,7 +327,8 @@ void hud_process_form_new_unit (graphic_settings *gs, hud *h, MKb *mkb,
             Mix_PlayChannel( -1, sounds[SOUND_SUCCESS], 0 );
         }
         if (mouse_in_button(mousepos, t, &h->fnu.randomize)) {
-            generate_unit(info, &h->fnu.uinfo, 10000);
+            generate_unit(info, &h->fnu.uinfo, h->fnu.gen_cost_max);
+            h->fnu.nav_stats = 0;
             Mix_PlayChannel( -1, sounds[SOUND_SUCCESS], 0 );
         }
         float possc[2] = { h->fnu.rect_chassis.x, h->fnu.rect_chassis.y };
@@ -354,12 +361,11 @@ void hud_process_form_new_unit (graphic_settings *gs, hud *h, MKb *mkb,
                 hud_open_sel(gs, h, t, info, &h->fnu.rect_brain);
             }
         }
-        if (h->fnu.uinfo.chassis != -1) {
-            int lc = h->fnu.uinfo.levels[LEVEL_CHASSIS];
-            stats_comp *comp = 
-                info->stats[STATS_CHASSIS] +h->fnu.uinfo.chassis;
+        if (h->fnu.uinfo.chassis != -1) {                
+            stats_unit base;
+            stats_unit_compute(info, &h->fnu.uinfo, &base);
                 
-            for (int i=0; i<comp->base[lc].slot_armor; i++) {
+            for (int i=0; i<base.frame.slot_armor; i++) {
                 float possa[2] = { 
                     h->fnu.rect_armor[i].x, h->fnu.rect_armor[i].y };
                 float sizesa[2] = { 
@@ -373,7 +379,8 @@ void hud_process_form_new_unit (graphic_settings *gs, hud *h, MKb *mkb,
                     }
                 }
             }
-            for (int i=0; i<comp->base[lc].slot_weapon; i++) {
+            
+            for (int i=0; i<base.frame.slot_weapon; i++) {
                 float possa[2] = { 
                     h->fnu.rect_weapons[i].x, h->fnu.rect_weapons[i].y };
                 float sizesa[2] = { 
@@ -387,7 +394,7 @@ void hud_process_form_new_unit (graphic_settings *gs, hud *h, MKb *mkb,
                     }
                 }
             }
-            for (int i=0; i<comp->base[lc].slot_aug; i++) {
+            for (int i=0; i<base.frame.slot_aug; i++) {
                 float possa[2] = { 
                     h->fnu.rect_augs[i].x, h->fnu.rect_augs[i].y };
                 float sizesa[2] = { 
@@ -411,6 +418,24 @@ void hud_process_form_new_unit (graphic_settings *gs, hud *h, MKb *mkb,
             h->og.temp_modify = -3;
             hud_close_fnu(h, info);
         }
+    }
+    
+    if (mkb->mheld[0] > 1) {
+        float possa[2] = { h->fnu.rect_gen_cost.x, h->fnu.rect_gen_cost.y };
+        float sizea[2] = { h->fnu.rect_gen_cost.w, h->fnu.rect_gen_cost.h };
+        if (pt_rect(mousepos, possa, sizea)) {
+            float amt = mousepos[0]-h->fnu.rect_gen_cost.x;
+            amt /= h->fnu.rect_gen_cost.w;
+            h->fnu.gen_cost_max = amt*3000;
+        }
+    }
+    
+    float pss[2] = { h->fnu.rect_stats.x, h->fnu.rect_stats.y };
+    float sss[2] = { h->fnu.rect_stats.w, h->fnu.rect_stats.h };
+    if (pt_rect(mousepos, pss, sss)) {
+        h->fnu.nav_stats += mkb->mwheeldelta*15;
+        if (h->fnu.nav_stats > 0) h->fnu.nav_stats = 0;
+        if (mkb->mheld[1] == 1) { h->fnu.nav_stats = 0; }
     }
 }
 
@@ -856,6 +881,17 @@ void hud_render_form_new_unit (form_new_unit *fnu, MKb *mkb,
     SDL_SetRenderDrawColor(rend, 150, 200, 255, 255);
     SDL_RenderFillRect(rend, &fnu->rect_back);
     
+    SDL_SetRenderDrawColor(rend, 150, 200, 255, 255);
+    SDL_RenderFillRect(rend, &fnu->rect_back);
+    
+    float hbar = 5*2+4*2+10;
+    SDL_Rect rbar = { 
+        fnu->rect_back.x, fnu->rect_back.y + fnu->rect_back.h - hbar,
+        fnu->rect_back.w-1, hbar
+    };
+    SDL_SetRenderDrawColor(rend, 200, 230, 255, 255);
+    SDL_RenderFillRect(rend, &rbar);
+    
     SDL_SetRenderDrawColor(rend, 200, 0, 255, 255);
     SDL_RenderFillRect(rend, &fnu->rect_chassis);
     SDL_RenderFillRect(rend, &fnu->rect_brain);
@@ -871,15 +907,22 @@ void hud_render_form_new_unit (form_new_unit *fnu, MKb *mkb,
     SDL_RenderDrawRect(rend, &fnu->rect_battery);
     SDL_RenderDrawRect(rend, &fnu->rect_stats);
     
-    render_view_stats(rend, t, fnu->rect_stats.x, fnu->rect_stats.y, 
+    SDL_RenderDrawLine(rend, rbar.x, rbar.y, rbar.x+rbar.w, rbar.y);
+    
+    
+    SDL_RenderSetClipRect(rend, &fnu->rect_stats);
+    render_view_stats(rend, t, 
+        fnu->rect_stats.x, 
+        fnu->rect_stats.y + fnu->nav_stats, 
         info, &fnu->uinfo);
+    SDL_RenderSetClipRect(rend, NULL);
     
     int lc = fnu->uinfo.levels[LEVEL_CHASSIS];
     if (fnu->uinfo.chassis != -1) {
-        stats_comp *comp = 
-            info->stats[STATS_CHASSIS] +fnu->uinfo.chassis;
+        stats_unit base;
+        stats_unit_compute(info, &fnu->uinfo, &base);
             
-        for (int i=0; i<comp->base[lc].slot_weapon; i++) {
+        for (int i=0; i<base.frame.slot_weapon; i++) {
             SDL_SetRenderDrawColor(rend, 200, 100, 255, 255);
             SDL_RenderFillRect(rend, fnu->rect_weapons+i);
             SDL_SetRenderDrawColor(rend, 0, 0, 0, 255);
@@ -889,7 +932,7 @@ void hud_render_form_new_unit (form_new_unit *fnu, MKb *mkb,
                 fnu->rect_weapons[i].y, info, fnu->uinfo.weapons[i], 
                 fnu->uinfo.levels[LEVEL_WEAPONS+i]); 
         }
-        for (int i=0; i<comp->base[lc].slot_armor; i++) {
+        for (int i=0; i<base.frame.slot_armor; i++) {
             SDL_SetRenderDrawColor(rend, 200, 200, 255, 255);
             SDL_RenderFillRect(rend, fnu->rect_armor+i);
             SDL_SetRenderDrawColor(rend, 0, 0, 0, 255);
@@ -899,7 +942,7 @@ void hud_render_form_new_unit (form_new_unit *fnu, MKb *mkb,
                 fnu->rect_armor[i].y, info, fnu->uinfo.armor[i], 
                 fnu->uinfo.levels[LEVEL_ARMOR+i]); 
         }
-        for (int i=0; i<comp->base[lc].slot_aug; i++) {
+        for (int i=0; i<base.frame.slot_aug; i++) {
             SDL_SetRenderDrawColor(rend, 200, 200, 255, 255);
             SDL_RenderFillRect(rend, fnu->rect_augs+i);
             SDL_SetRenderDrawColor(rend, 0, 0, 0, 255);
@@ -975,7 +1018,28 @@ void hud_render_form_new_unit (form_new_unit *fnu, MKb *mkb,
     render_text_scaled(rend, serr, perr, t, 1);
     
     render_button(rend, t, &fnu->randomize);
-
+    
+    SDL_SetRenderDrawColor(rend, 200, 200, 200, 255);
+    SDL_RenderFillRect(rend, &fnu->rect_gen_cost);
+    SDL_SetRenderDrawColor(rend, 0, 0, 0, 255);
+    SDL_RenderDrawRect(rend, &fnu->rect_gen_cost);
+    
+    float amt = fnu->gen_cost_max/3000;
+    SDL_Rect rcost = { 
+        fnu->rect_gen_cost.x, fnu->rect_gen_cost.y, 
+        fnu->rect_gen_cost.w*amt, fnu->rect_gen_cost.h 
+    };
+    SDL_SetRenderDrawColor(rend, 255, 100, 100, 255);
+    SDL_RenderFillRect(rend, &rcost);
+    SDL_SetRenderDrawColor(rend, 0, 0, 0, 255);
+    SDL_RenderDrawRect(rend, &rcost);
+        
+    char sgen[64]; sprintf(sgen, "cost target: %.0f", fnu->gen_cost_max);
+    float pgen[2] = { fnu->rect_gen_cost.x+4, fnu->rect_gen_cost.y+4 };
+    render_text_scaled(rend, sgen, pgen, t, 1);
+    
+    render_button(rend, t, &fnu->done);
+    
     render_view_chassis(rend, t, 
         fnu->rect_chassis.x, fnu->rect_chassis.y, 
         info, fnu->uinfo.chassis, 
