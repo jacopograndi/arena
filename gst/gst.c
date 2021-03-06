@@ -4,6 +4,7 @@
 #include <float.h>
 
 #include "gst.h"
+#include "../umath/vec.h"
 
 void gst_init (gamestate *gst) {
     map_init(&gst->map_editor, MAXMAP, MAXMAP, 32);
@@ -33,11 +34,9 @@ void gst_get_maparmy(gamestate *gst, map **m, army **ar) {
     }
 }
 
-void gst_lastpos (gamestate *gst) {
-    for (int i=0; i<gst->ar.uslen; i++) {
-        gst->ar_lastpos[i][0] = gst->ar.us[i].pos[0];
-        gst->ar_lastpos[i][1] = gst->ar.us[i].pos[1];
-    }
+void gst_ar_past_cycle (gamestate *gst) {
+    gst->ar_past[1] = gst->ar_past[0];
+    gst->ar_past[0] = gst->ar;
 }
 
 void gst_compute_stats (gamestate *gst, infos *info) {
@@ -48,7 +47,6 @@ void gst_compute_stats (gamestate *gst, infos *info) {
 
 void gst_tobattle (gamestate *gst, infos *info) {
     if (gst->playernum == 1) {
-        //info_load_army(gst->army_bp+1, "army");
         gst->army_bp[1] = gst->army_bp[0];
         gst->playernum = 2;
     }
@@ -79,7 +77,7 @@ void gst_tobattle (gamestate *gst, infos *info) {
     }
     
     gst_compute_stats(gst, info);
-    gst_lastpos(gst);
+    gst_ar_past_cycle(gst);
     gst->starttime = FLT_MAX;
     gst->turn = 0;
     gst->coveredtime = 0;
@@ -117,21 +115,62 @@ void gst_spawn_bullets (gamestate *gst, fxs *fx, a_dmg dmgs[], int dmgslen,
             unit *u = ar->us+i;
             if (dmgs[j].u == u) {
                 unit *t = dmgs[j].t;
-                b.from[0] = u->pos[0]+16;
-                b.from[1] = u->pos[1]+16;
-                b.to[0] = t->pos[0]+16;
-                b.to[1] = t->pos[1]+16;
                 float n = (float)curr[i]/counts[i];
-                float travel_time = 0.1;
+                
+                float u_past_x = gst->ar_past[1].us[i].pos[0];
+                float u_past_y = gst->ar_past[1].us[i].pos[1];
+                float u_pres_x = gst->ar_past[0].us[i].pos[0];
+                float u_pres_y = gst->ar_past[0].us[i].pos[1];
+                
+                int t_i = 0;
+                for (int k=0; k<ar->uslen; k++) {
+                    if (ar->us+k == t) { t_i = k; break; }
+                }
+                
+                float t_past_x = gst->ar_past[1].us[t_i].pos[0];
+                float t_past_y = gst->ar_past[1].us[t_i].pos[1];
+                float t_pres_x = gst->ar_past[0].us[t_i].pos[0];
+                float t_pres_y = gst->ar_past[0].us[t_i].pos[1];
+                
+                // interpolate from the past
+                b.from[0] = u_pres_x*(n) + u_past_x*(1-n)+16 +rand()%8-4;
+                b.from[1] = u_pres_y*(n) + u_past_y*(1-n)+16 +rand()%8-4;
+                b.to[0] = t_pres_x*(n) + t_past_x*(1-n)+16 +rand()%16-8;
+                b.to[1] = t_pres_y*(n) + t_past_y*(1-n)+16 +rand()%16-8;
+                
+                float travel_time = 0.3;
                 float shot_time = time + n*gst->turnspeed;
                 b.starttime = shot_time;
                 b.endtime = shot_time + travel_time;
-                if (u->owner == 0) {
-                    b.color[0] = 0; b.color[1] = 255; b.color[2] = 0;
-                } else {
-                    b.color[0] = 255; b.color[1] = 0; b.color[2] = 0;
-                }
+                
+                float colors[2][3] = { {0,255,0}, {255,0,0} };
+                int selcol = 0;
+                
+                if (u->owner == 0) { selcol = 0; } 
+                else { selcol = 1; }
+                b.color[0] = colors[selcol][0]; 
+                b.color[1] = colors[selcol][1]; 
+                b.color[2] = colors[selcol][2]; 
                 fx_add_bullet(fx, &b);
+                
+                
+                { /* shooting particles */ 
+                    float vel[2]; vec2_sub(vel, b.to, b.from);
+                    float force[2] = { 0, 0 };
+                    explosion e;
+                    fx_explosion_init(fx, &e, b.from, vel, colors[selcol], 
+                        force, 0.1, 2, 4, b.starttime, 0.2);
+                    fx_add_explosion(fx, &e);
+                }
+                
+                { /* hit particles */
+                    float vel[2]; vec2_sub(vel, b.to, b.from);
+                    float force[2] = { 0, 0 };
+                    explosion e;
+                    fx_explosion_init(fx, &e, b.to, vel, colors[1-selcol], 
+                        force, 0.15, 4, 8, b.endtime, 0.8);
+                    fx_add_explosion(fx, &e);
+                }
                 curr[i] ++;
             }
         }
@@ -154,7 +193,6 @@ int gst_check_victory (gamestate *gst) {
 }
 
 void gst_next_turn (gamestate *gst, infos *info, fxs *fx, float t) {
-    gst_lastpos(gst);
     gst->coveredtime += gst->turnspeed;
     gst->turn ++;
     map *m; army *ar;
@@ -170,6 +208,7 @@ void gst_next_turn (gamestate *gst, infos *info, fxs *fx, float t) {
     if (gst->turn_until_finish <= 0) {
         gst->over = 1;
     }
+    gst_ar_past_cycle(gst);
     gst_spawn_bullets(gst, fx, dmgs, fire, t);
 }
 
@@ -214,24 +253,34 @@ void gst_render (SDL_Renderer *rend, SDL_Texture *txsprites, txtd *textd,
     amt = (amt / gst->turnspeed) + 1;
     if (amt > 1) amt = 1; if (amt < 0) amt = 0; // clamping away fuzzyness
     
+    army *past = ar;
+    army *present = ar;
+    if (gst->state == 1) {
+        past = gst->ar_past +1;
+        present = gst->ar_past +0;
+    }
+    
     // render units
     for (int i=0; i<ar->uslen; i++) {
-        if (ar->us[i].hp <= 0) continue;
-        float present_x = ar->us[i].pos[0];
-        float present_y = ar->us[i].pos[1];
+        if (present->us[i].hp <= 0) continue;
         
-        float x = present_x, y = present_y;
-        if (gst->state == 1) {
-            x = present_x*(amt) + gst->ar_lastpos[i][0]*(1-amt);
-            y = present_y*(amt) + gst->ar_lastpos[i][1]*(1-amt);
-        } 
+        float past_x = past->us[i].pos[0];
+        float past_y = past->us[i].pos[1];
         
-        SDL_Rect srcRect = { ar->us[i].info.chassis*ts, ts, ts, ts };
+        float present_x = present->us[i].pos[0];
+        float present_y = present->us[i].pos[1];
+        
+        float x = present_x*(amt) + past_x*(1-amt);
+        float y = present_y*(amt) + past_y*(1-amt);
+        
+        SDL_Rect srcRect = { 
+            present->us[i].info.chassis*ts, ts, ts, ts };
         SDL_Rect dstRect = { (int)x-posx, (int)y-posy, ts, ts };
         SDL_RenderCopy(rend, txsprites, &srcRect, &dstRect);
         
-        stats_unit base; stats_unit_compute(info, &ar->us[i].info, &base);
-        float amt = ar->us[i].hp / base.frame.hp;
+        stats_unit base; 
+        stats_unit_compute(info, &present->us[i].info, &base);
+        float amt = present->us[i].hp / base.frame.hp;
         SDL_Rect hprect = { 
             (int)x-posx, (int)y-posy+ts-5, 
             ts*amt, 6 };
@@ -240,12 +289,12 @@ void gst_render (SDL_Renderer *rend, SDL_Texture *txsprites, txtd *textd,
         SDL_RenderFillRect(rend, &hprect);
         
         SDL_SetTextureColorMod(textd->tex_small, sw*100, 100*(1-sw), 0);
-        char shp[32]; sprintf(shp, "%.0f", ar->us[i].hp);
+        char shp[32]; sprintf(shp, "%.0f", present->us[i].hp);
         float php[2] = { (int)x-posx, (int)y-posy+ts-5 };
         render_text_small(rend, shp, php, textd);
         
         SDL_SetTextureColorMod(textd->tex_small, 255, 160, 0);
-        char sch[32]; sprintf(sch, "%.0f", ar->us[i].charge);
+        char sch[32]; sprintf(sch, "%.0f", present->us[i].charge);
         float pch[2] = { (int)x-posx, (int)y-posy+ts+1 };
         render_text_small(rend, sch, pch, textd);
         SDL_SetTextureColorMod(textd->tex_small, 0, 0, 0);

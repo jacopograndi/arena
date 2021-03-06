@@ -20,7 +20,7 @@ typedef struct {
     int playernum;
     map map_battle;
     army ar;
-    float ar_lastpos[MAXUNITS][2];
+    army ar_past[2];
     stats_unit ustats[MAXUNITS];
     
     int state;

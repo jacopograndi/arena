@@ -715,13 +715,15 @@ void hud_process_overlay_game (graphic_settings *gs, hud *h, MKb *mkb,
             h->og.start_battle_flag = 1;
         }
     
-        // edit unit
-        int x = (int)((mkb->mx+gst->cam[0])/32);
-        int y = (int)((mkb->my+gst->cam[1])/32);
-        if (x >= 0 && y >= 0 && x < m->sx && y < m->sy) {
-            if (ar->grid[xytoi(m,x,y)] != NULL) {
-                hud_open_fnu(h, info, &ar->grid[xytoi(m,x,y)]->info, -2);
-                h->og.temp_place = -1;
+        if (SDL_GetModState() & KMOD_SHIFT) {
+            // edit unit
+            int x = (int)((mkb->mx+gst->cam[0])/32);
+            int y = (int)((mkb->my+gst->cam[1])/32);
+            if (x >= 0 && y >= 0 && x < m->sx && y < m->sy) {
+                if (ar->grid[xytoi(m,x,y)] != NULL) {
+                    hud_open_fnu(h, info, &ar->grid[xytoi(m,x,y)]->info, -2);
+                    h->og.temp_place = -1;
+                }
             }
         }
     }

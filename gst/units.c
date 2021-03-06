@@ -181,6 +181,7 @@ int army_move_step (infos *info, army *ar, map *m, stats_unit *ustats) {
 int army_move (infos *info, army *ar, map *m, stats_unit *ustats) {
     for (int i=0; i<ar->uslen; i++) {
         ar->us[i].move_points += ustats[i].frame.speed;
+        if (ar->us[i].move_points > 1) ar->us[i].move_points = 1;
     }
     int iter = 0, finished = army_move_step(info, ar, m, ustats);
     for (; iter<5 && !finished; iter++) {
@@ -197,6 +198,7 @@ int army_fire (infos *info, army *ar, map *m, a_dmg dmgs[],
         int lw = u->info.levels[LEVEL_CHASSIS];
         for (int j=0; j<ustats[i].weaponlen; j++) {
             u->cooldown[j] += 1;
+            if (u->cooldown[j] > 1) u->cooldown[j] = 1;
         }
     }
     int dmgslen = 0;
@@ -209,24 +211,26 @@ int army_fire (infos *info, army *ar, map *m, a_dmg dmgs[],
         for (int j=0; j<ustats[i].weaponlen; j++) {
             if (u->cooldown[j] <= 0) continue;
             float range = ustats[i].weapon[j].range;
-            unit_search(info, ar, m, u, t, range);
-            if (t[0]!=NULL) {
-                dmgs[dmgslen].u = u;
-                dmgs[dmgslen].t = t[0];
-                
-                int t_i = 0;
-                for (int k=0; k<ar->uslen; k++) {
-                    if (ar->us+k == t[0]) { t_i = k; break; }
-                }
-                float dam = stats_compute_damage(
-                    &ustats[i].weapon[j], 
-                    &ustats[t_i].frame, u->reduced_armor);
-                
-                dmgs[dmgslen].dam = dam;
-                dmgslen++;
-                u->cooldown[j] -= ustats[i].weapon[j].cooldown;
-                u->charge -= ustats[i].weapon[j].charge_per_shot;
-                if (u->charge < 0) u->charge = 0;
+            while (u->cooldown[j] > 0) {
+                unit_search(info, ar, m, u, t, range);
+                if (t[0]!=NULL) {
+                    dmgs[dmgslen].u = u;
+                    dmgs[dmgslen].t = t[0];
+                    
+                    int t_i = 0;
+                    for (int k=0; k<ar->uslen; k++) {
+                        if (ar->us+k == t[0]) { t_i = k; break; }
+                    }
+                    float dam = stats_compute_damage(
+                        &ustats[i].weapon[j], 
+                        &ustats[t_i].frame, u->reduced_armor);
+                    
+                    dmgs[dmgslen].dam = dam;
+                    dmgslen++;
+                    u->cooldown[j] -= ustats[i].weapon[j].cooldown;
+                    u->charge -= ustats[i].weapon[j].charge_per_shot;
+                    if (u->charge < 0) u->charge = 0;
+                } else break;
             }
         }
     }

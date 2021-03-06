@@ -1,5 +1,6 @@
 tasks:
 
+[ ] unify gui design (issued on 05:03:21)
 [ ] implement aoe (issued on 02:03:21)
 [ ] implement knockback (issued on 02:03:21)
 [ ] implement stun (issued on 02:03:21)
@@ -17,7 +18,7 @@ tasks:
 [ ] implement 3d units (issued on 18:02:21)
 [ ] design component sprites (issued on 18:02:21)
 [ ] implement sound (issued on 18:02:21)
-[ ] implement component aoe bonus (issued on 02:03:21)
+[ ] implement component aoe effects (issued on 02:03:21)
 
 [x] implement edit unit directly (issued on 18:02:21, done on 04:03:21)
 [x] implement rm template (issued on 04:03:21, done on 04:03:21)
