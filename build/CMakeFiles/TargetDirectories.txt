@@ -1,0 +1,3 @@
+/home/j/ws/arena/build/CMakeFiles/Arena.dir
+/home/j/ws/arena/build/CMakeFiles/edit_cache.dir
+/home/j/ws/arena/build/CMakeFiles/rebuild_cache.dir

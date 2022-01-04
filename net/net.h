@@ -1,7 +1,7 @@
 #ifndef NET_H
 #define NET_H
 
-#include "plibsys/plibsys.h"
+#include <plibsys.h>
 
 #define SERVER_PORT 25565
 

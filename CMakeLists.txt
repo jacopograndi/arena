@@ -48,7 +48,7 @@ add_executable(Arena
     test/test_gst.h
     main.c)
 
-target_include_directories(Arena PUBLIC "C:/MinGW_libs/include")
-target_include_directories(Arena PUBLIC "C:/MinGW_libs/include/plibsys")
-target_link_libraries(Arena -LC:/MinGW_libs/lib)
-target_link_libraries(Arena -lSDL2main -lSDL2 -lSDL2_mixer -lplibsys)
+target_include_directories(Arena PUBLIC "/usr/local/include")
+target_include_directories(Arena PUBLIC "/usr/local/include/plibsys")
+target_link_libraries(Arena -Lusr/local/lib)
+target_link_libraries(Arena -lplibsys -lSDL2main -lSDL2 -lSDL2_mixer -lm)
