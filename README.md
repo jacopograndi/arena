@@ -1,4 +1,4 @@
-# Age
+# Arena
 Autochess game in which the player constructs and places it's army of robots.
 The game is developed in C.
 
