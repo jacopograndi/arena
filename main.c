@@ -51,7 +51,6 @@ int main( int argc, char* args[] ) {
     window = SDL_CreateWindow("DESCRIPT", SDL_WINDOWPOS_UNDEFINED, 
         SDL_WINDOWPOS_UNDEFINED, gs.resx, gs.resy, SDL_WINDOW_SHOWN 
         | SDL_WINDOW_RESIZABLE);
-    screenSurface = SDL_GetWindowSurface(window);
     
     rend = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
     
