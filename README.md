@@ -21,3 +21,4 @@ The game features:
 * A random unit generator controlled by the desired strenght
 * A custom bitmap font (with kerning support)
 * CMake build support
+* Particle Systems
